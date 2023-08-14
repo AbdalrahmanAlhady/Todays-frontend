@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators} from '@angular/forms';
 import { CustomvalidationService } from '../customvalidation.service';
 
 @Component({
@@ -58,5 +58,8 @@ export class SignupComponent {
     gender: ['',Validators.compose([Validators.required])],
   });
   switchToSignin(){}
-  signup(){}
+  signup(form:any){
+    console.log(this.signupForm);
+    
+  }
 }

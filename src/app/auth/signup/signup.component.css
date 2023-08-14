@@ -1,3 +1,11 @@
 .account{
     color: blue;
 }
+mat-form-field , .mat-form-field{
+    margin: 5px;
+}
+form{
+    background-color: white;
+    margin: auto;
+    padding: 20px;
+}

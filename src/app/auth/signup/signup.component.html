@@ -1,0 +1,97 @@
+<form [formGroup]="signupForm" #form1="ngForm">
+  <div class="row">
+    <div class="col">
+      <mat-form-field appearance="fill">
+        <mat-label>E-mail</mat-label>
+        <input
+          matInput
+          type="email"
+          id="email"
+          formControlName="email"
+          placeholder="example@gmail.com"
+        />
+        <mat-icon matSuffix> email </mat-icon>
+        <!-- <mat-hint>Hint</mat-hint> -->
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          type="password"
+          id="password"
+          formControlName="password"
+          placeholder="Enter Password"
+        />
+        <mat-icon matSuffix> password </mat-icon>
+        <!-- <mat-hint>Hint</mat-hint> -->
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Re-enter Password</mat-label>
+        <input
+          matInput
+          type="password"
+          id="cPassword"
+          formControlName="cPassword"
+          placeholder="Re-enter Password"
+        />
+        <mat-icon matSuffix> password </mat-icon>
+        <!-- <mat-hint>Hint</mat-hint> -->
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Phone</mat-label>
+        <input
+          matInput
+          type="tel"
+          id="phone"
+          formControlName="phone"
+          placeholder="Enter Phone Number"
+        />
+        <mat-icon matSuffix> phone </mat-icon>
+        <!-- <mat-hint>Hint</mat-hint> -->
+      </mat-form-field>
+      
+    </div>
+    <div class="col">
+      <div class="names-row">
+        <mat-form-field appearance="fill">
+          <mat-label>First Name</mat-label>
+          <input
+            matInput
+            type="text"
+            id="fn"
+            formControlName="first_name"
+            placeholder="Enter First Name"
+          />
+          <mat-icon matSuffix> name </mat-icon>
+          <!-- <mat-hint>Hint</mat-hint> -->
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Last Name</mat-label>
+          <input
+            matInput
+            type="text"
+            id="ln"
+            formControlName="last_name"
+            placeholder="Enter Last Name"
+          />
+          <mat-icon matSuffix> name </mat-icon>
+          <!-- <mat-hint>Hint</mat-hint> -->
+        </mat-form-field>
+        <div>
+          <label>Gender: </label>
+          <mat-radio-group formControlName="gender">
+            <mat-radio-button value="male">Male</mat-radio-button>
+            <mat-radio-button value="female">Female</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <button type="submit" mat-raised-button color="primary" (click)="signup()">Signup</button>
+    <p class="account">
+      Already have account?
+      <a (click)="switchToSignin()">log In</a>
+    </p>
+  </div>
+</form>

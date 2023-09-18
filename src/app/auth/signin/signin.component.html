@@ -1,1 +1,52 @@
-<p>signin works!</p>
+<div class="d-flex flex-row container">
+    <img src="../../../assets/Todays.png" />
+    <form *ngIf="signinForm" [formGroup]="signinForm" #form2="ngForm">
+      <h2>Sign in</h2>
+      <div class="d-flex flex-column">
+        <mat-form-field appearance="fill">
+          <mat-label>E-mail</mat-label>
+          <input
+            matInput
+            type="email"
+            id="email"
+            formControlName="email"
+            placeholder="example@gmail.com"
+          />
+          <mat-icon matSuffix> email </mat-icon>
+          <!-- <mat-hint>Hint</mat-hint> -->
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            type="password"
+            id="password"
+            formControlName="password"
+            placeholder="Enter Password"
+          />
+          <mat-icon matSuffix> password </mat-icon>
+          <!-- <mat-hint>Hint</mat-hint> -->
+        </mat-form-field>
+      </div>
+      <div class="submit-btn d-flex flex-column justify-content-center mx-auto">
+        <button
+          type="submit"
+          mat-raised-button
+          color="primary"
+          (click)="signin(form2)"
+        >
+          Signup
+        </button>
+        <p class="account">
+          Don't have account?
+          <a
+          routerLink="/signup"
+            (click)="switchToSignup()"
+            style="color: blue; text-decoration: none"
+            >Signup</a
+          >
+        </p>
+      </div>
+    </form>
+  </div>
+  

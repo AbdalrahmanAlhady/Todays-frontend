@@ -1,6 +1,8 @@
-<form *ngIf="signupForm" [formGroup]="signupForm" #form1="ngForm">
-  <div class="row">
-    <div class="col">
+<div class="d-flex flex-row container">
+  <img src="../../../assets/Todays.png" />
+  <form *ngIf="signupForm" [formGroup]="signupForm" #form1="ngForm">
+    <h2>Create an account</h2>
+    <div class="d-flex flex-column">
       <mat-form-field appearance="fill">
         <mat-label>E-mail</mat-label>
         <input
@@ -49,8 +51,6 @@
         <mat-icon matSuffix> phone </mat-icon>
         <!-- <mat-hint>Hint</mat-hint> -->
       </mat-form-field>
-    </div>
-    <div class="names-row">
       <mat-form-field appearance="fill">
         <mat-label>First Name</mat-label>
         <input
@@ -75,6 +75,12 @@
         <mat-icon matSuffix> name </mat-icon>
         <!-- <mat-hint>Hint</mat-hint> -->
       </mat-form-field>
+      <mat-form-field>
+        <mat-label>MM/DD/YYYY</mat-label>
+        <input matInput [matDatepicker]="picker"  formControlName="birthdate" >
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field> 
       <div class="mat-form-field">
         <label>Gender: </label>
         <mat-radio-group formControlName="gender">
@@ -83,19 +89,24 @@
         </mat-radio-group>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <button
-      type="submit"
-      mat-raised-button
-      color="primary"
-      (click)="signup(form1)"
-    >
-      Signup
-    </button>
-    <p class="account">
-      Already have account?
-      <a (click)="switchToSignin()">log In</a>
-    </p>
-  </div>
-</form>
+    <div class="submit-btn d-flex flex-column justify-content-center mx-auto">
+      <button
+        type="submit"
+        mat-raised-button
+        color="primary"
+        (click)="signup(form1.value)"
+      >
+        Signup
+      </button>
+      <p class="account">
+        Already have account?
+        <a
+          routerLink="/signin"
+          (click)="switchToSignin()"
+          style="color: blue; text-decoration: none"
+          >Signin</a
+        >
+      </p>
+    </div>
+  </form>
+</div>

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators} from '@angular/forms';
 import { CustomvalidationService } from '../customvalidation.service';
+import { AuthService } from '../auth.service';
+import { User } from 'src/app/shared/user.model';
 
 @Component({
   selector: 'app-signup',
@@ -8,10 +10,7 @@ import { CustomvalidationService } from '../customvalidation.service';
   styleUrls: ['./signup.component.css'],
 })
 export class SignupComponent {
-  constructor(
-    private formBuilder: FormBuilder,
-    private customValidator: CustomvalidationService
-  ) {}
+  
   signupForm = this.formBuilder.group({
     first_name: [
       '',
@@ -55,11 +54,18 @@ export class SignupComponent {
       ]),
     ],
     birthdate: [Date, Validators.compose([Validators.required])],
-    gender: ['',Validators.compose([Validators.required])],
+    gender: ['', Validators.compose([Validators.required])],
   });
+  constructor(
+    private formBuilder: FormBuilder,
+    private customValidator: CustomvalidationService,
+    private authService: AuthService
+  ) {}
   switchToSignin(){}
-  signup(form:any){
-    console.log(this.signupForm);
-    
+  formatDate(){}
+  signup(formData:User){
+    this.authService.signup(formData).subscribe(res=>{
+      console.log(res)
+    })   
   }
 }

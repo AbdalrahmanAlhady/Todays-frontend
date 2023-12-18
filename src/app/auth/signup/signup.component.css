@@ -2,6 +2,20 @@
     background-color: white;
     padding: 0;
 }
+.spinner-container{
+    height: 400px;
+    align-items: center;
+    opacity: 0.75;
+    margin-top: 150px;
+    width: 500px;
+    justify-content: center;
+    background-color: white;
+    padding: 0;
+    margin: auto;
+    margin-top: 20%;
+    padding: 20px;
+}
+
 img{
     width: 60%;
 }
@@ -22,4 +36,22 @@ form{
 .submit-btn{
 width: 40%;
 
+}
+.validation-container{
+    color:red;
+    padding-left: 16px;
+}
+.validation-container div{
+    padding-bottom: 5px;
+}
+.backendError{
+    color: red;
+    margin: auto;
+    width: fit-content;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 500;
+}
+mat-form-field{
+margin: 0;
 }

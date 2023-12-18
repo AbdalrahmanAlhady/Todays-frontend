@@ -1,25 +1,47 @@
-.container{
+.container {
     background-color: white;
     padding: 0;
 }
-img{
+
+img {
     width: 60%;
 }
-.account{
+
+.account {
     color: black;
     font-weight: bold;
     margin-top: 10px;
 }
-mat-form-field , .mat-form-field{
+
+mat-form-field,
+.mat-form-field {
     margin: 5px;
 }
-form{
+
+form {
     margin: auto;
     width: 50%;
     padding: 20px;
     margin-left: 0;
 }
-.submit-btn{
-width: 40%;
 
+.submit-btn {
+    width: 40%;
+
+}
+
+.validation-container {
+    color: red;
+    padding-left: 16px;
+}
+.validation-container div{
+    padding-bottom: 5px;
+}
+.backendError{
+    color: red;
+    margin: auto;
+    width: fit-content;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 500;
 }

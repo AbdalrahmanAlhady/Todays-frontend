@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators} from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { CustomvalidationService } from '../customvalidation.service';
 import { AuthService } from '../auth.service';
 import { User } from 'src/app/shared/user.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -10,7 +11,8 @@ import { User } from 'src/app/shared/user.model';
   styleUrls: ['./signup.component.css'],
 })
 export class SignupComponent {
-  
+  backendError: string = '';
+  signedup: boolean = false;
   signupForm = this.formBuilder.group({
     first_name: [
       '',
@@ -59,13 +61,27 @@ export class SignupComponent {
   constructor(
     private formBuilder: FormBuilder,
     private customValidator: CustomvalidationService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router,
   ) {}
-  switchToSignin(){}
-  formatDate(){}
-  signup(formData:User){
-    this.authService.signup(formData).subscribe(res=>{
-      console.log(res)
-    })   
+  switchToSignin() {
+    this.router.navigate(['/signin'])
+  }
+  signup(formData: User) {
+    this.authService.signup(formData).subscribe({
+      next: (res) => {
+        if (res.status === 200 || 201) {
+          this.signedup = true;
+          setTimeout(() => {
+            this.signedup = false;
+            this.router.navigate(['/signin'])
+          }, 4000);
+        }
+      },
+      error: (error) => {
+
+        this.backendError = error.error.message;
+      },
+    });
   }
 }

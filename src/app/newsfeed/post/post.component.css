@@ -1,0 +1,28 @@
+.post{
+    width: max-content;
+    min-width: 50%;
+    background: white;
+    padding: 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.post-header{
+    align-items: center;
+    margin-bottom: 20px;
+}
+.post-sub-header{
+    align-items: center;
+}
+.user-name{
+    font-weight: 800;
+    margin: 2px;
+}
+.post-date{
+    color: #696767;
+    font-size: 12px;
+    margin: 0;
+}
+.sub-media-wrapper {
+    border-radius: 15px;
+}
+

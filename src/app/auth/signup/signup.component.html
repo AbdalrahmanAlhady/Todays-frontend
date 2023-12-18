@@ -1,108 +1,265 @@
-<div class="d-flex flex-row container">
+<div *ngIf="signedup" class="d-flex flex-column spinner-container" >
+  <mat-spinner style="height: 250px; width: 250px; margin-bottom: 10px;"></mat-spinner>
+  <P style="width:fit-content ;font-weight: 600;font-size: 18px;">redirecting you to Signin page ...</P>
+</div>
+<div *ngIf="!signedup" class="d-flex flex-row container">
   <img src="../../../assets/Todays.png" />
-  <form *ngIf="signupForm" [formGroup]="signupForm" #form1="ngForm">
+  <form
+    #form1="ngForm"
+    class="d-flex flex-column"
+    *ngIf="signupForm"
+    [formGroup]="signupForm"
+  >
     <h2>Create an account</h2>
     <div class="d-flex flex-column">
       <mat-form-field appearance="fill">
         <mat-label>E-mail</mat-label>
         <input
-          matInput
-          type="email"
-          id="email"
           formControlName="email"
+          id="email"
+          matInput
           placeholder="example@gmail.com"
+          type="email"
         />
-        <mat-icon matSuffix> email </mat-icon>
-        <!-- <mat-hint>Hint</mat-hint> -->
+        <mat-icon matSuffix> email</mat-icon>
       </mat-form-field>
+      <div
+        class="validation-container"
+        *ngIf="
+          signupForm.controls['email']?.invalid &&
+          signupForm.controls['email']?.touched
+        "
+      >
+        <div
+          *ngIf="signupForm.controls['email'].errors?.['pattern']"
+          style="font-size: 12px"
+        >
+          Enter in the format:name@example.com
+        </div>
+        <div
+          *ngIf="signupForm.controls['email']?.touched &&  signupForm.controls['email'].errors?.['required']"
+        >
+          *Email is required!
+        </div>
+      </div>
       <mat-form-field appearance="fill">
         <mat-label>Password</mat-label>
         <input
-          matInput
-          type="password"
-          id="password"
           formControlName="password"
+          id="password"
+          matInput
           placeholder="Enter Password"
+          type="password"
         />
-        <mat-icon matSuffix> password </mat-icon>
-        <!-- <mat-hint>Hint</mat-hint> -->
+        <mat-icon matSuffix> password</mat-icon>
       </mat-form-field>
+      <div
+        class="validation-container"
+        *ngIf="
+          signupForm.controls['password']?.invalid &&
+          signupForm.controls['password']?.touched
+        "
+      >
+        <div *ngIf="signupForm.controls['password'].errors?.['required']">
+          *password is required
+        </div>
+        <div
+          class="valText1"
+          *ngIf="signupForm.controls['password'].errors?.['minlength']"
+        >
+          *password must be minimum 10 characters
+        </div>
+
+        <div
+          *ngIf="signupForm.controls['password'].errors?.['passwordStrength']"
+        >
+          *password must have lower case, upper case and numeric characters and
+          symbols.
+        </div>
+      </div>
       <mat-form-field appearance="fill">
         <mat-label>Re-enter Password</mat-label>
         <input
-          matInput
-          type="password"
-          id="cPassword"
           formControlName="cPassword"
+          id="cPassword"
+          matInput
           placeholder="Re-enter Password"
+          type="password"
         />
-        <mat-icon matSuffix> password </mat-icon>
-        <!-- <mat-hint>Hint</mat-hint> -->
+        <mat-icon matSuffix> password</mat-icon>
       </mat-form-field>
+      <div
+        class="validation-container"
+        *ngIf="
+          signupForm.controls['cPassword']?.invalid &&
+          signupForm.controls['cPassword']?.touched
+        "
+      >
+        <div *ngIf="signupForm.controls['cPassword'].errors?.['required']">
+          *confirm Password is required
+        </div>
+        <div
+          *ngIf="
+            !signupForm.controls['cPassword'].errors ||
+            signupForm.controls['cPassword']?.invalid
+          "
+        >
+          *confirm password must match password
+        </div>
+      </div>
       <mat-form-field appearance="fill">
         <mat-label>Phone</mat-label>
         <input
-          matInput
-          type="tel"
-          id="phone"
           formControlName="phone"
+          id="phone"
+          matInput
           placeholder="Enter Phone Number"
+          type="tel"
         />
-        <mat-icon matSuffix> phone </mat-icon>
-        <!-- <mat-hint>Hint</mat-hint> -->
+        <mat-icon matSuffix> phone</mat-icon>
       </mat-form-field>
-      <mat-form-field appearance="fill">
+      <div
+        class="validation-container"
+        *ngIf="
+          signupForm.controls['phone']?.invalid &&
+          signupForm.controls['phone']?.touched
+        "
+      >
+        <div
+          *ngIf="signupForm.controls['phone']?.touched 
+            &&signupForm.controls['phone'].errors?.['required']"
+        >
+          *Phone number is required
+        </div>
+        <div
+          class="valText1"
+          *ngIf="signupForm.controls['phone'].errors?.['pattern']"
+        >
+          Phone number is not in a form:
+          <div>01X XXXX XXXX with 11 digits</div>
+        </div>
+        <div
+          class="valText1"
+          *ngIf="signupForm.controls['phone'].errors?.['invalidNumber']"
+        >
+          Please enter digits only!
+        </div>
+      </div>
+      <mat-form-field appearance="fill" [hideRequiredMarker]="true">
         <mat-label>First Name</mat-label>
         <input
-          matInput
-          type="text"
-          id="fn"
           formControlName="first_name"
+          id="fn"
+          matInput
           placeholder="Enter First Name"
         />
-        <mat-icon matSuffix> name </mat-icon>
-        <!-- <mat-hint>Hint</mat-hint> -->
+        <mat-icon matSuffix> name</mat-icon>
       </mat-form-field>
-      <mat-form-field appearance="fill">
+      <div
+        class="validation-container"
+        *ngIf="
+          signupForm.controls['first_name']?.invalid &&
+          signupForm.controls['first_name']?.touched
+        "
+      >
+        <div
+          *ngIf="signupForm.controls['first_name']?.touched 
+                  &&signupForm.controls['first_name'].errors?.['required']"
+        >
+          *first name is required
+        </div>
+        <div *ngIf="signupForm.controls['first_name'].errors?.['minlength']">
+          *Name should be minimum 5 characters
+        </div>
+        <div *ngIf="signupForm.controls['first_name'].errors?.['maxlength']">
+          *Name should be maximum 20 characters
+        </div>
+      </div>
+      <mat-form-field appearance="fill" [hideRequiredMarker]="true">
         <mat-label>Last Name</mat-label>
         <input
-          matInput
-          type="text"
-          id="ln"
           formControlName="last_name"
+          id="ln"
+          matInput
           placeholder="Enter Last Name"
+          type="text"
         />
-        <mat-icon matSuffix> name </mat-icon>
-        <!-- <mat-hint>Hint</mat-hint> -->
+        <mat-icon matSuffix> name</mat-icon>
       </mat-form-field>
+      <div
+        class="validation-container"
+        *ngIf="
+          signupForm.controls['last_name']?.invalid &&
+          signupForm.controls['last_name']?.touched
+        "
+      >
+        <div
+          *ngIf="signupForm.controls['last_name']?.touched 
+                &&signupForm.controls['last_name'].errors?.['required']"
+        >
+          *last name is required
+        </div>
+        <div *ngIf="signupForm.controls['last_name'].errors?.['minlength']">
+          *Name should be minimum 5 characters
+        </div>
+        <div *ngIf="signupForm.controls['last_name'].errors?.['maxlength']">
+          *Name should be maximum 20 characters
+        </div>
+      </div>
       <mat-form-field>
         <mat-label>MM/DD/YYYY</mat-label>
-        <input matInput [matDatepicker]="picker"  formControlName="birthdate" >
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <input [matDatepicker]="picker" formControlName="birthdate" matInput />
+        <mat-datepicker-toggle
+          [for]="picker"
+          matIconSuffix
+        ></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field> 
+      </mat-form-field>
+      <div
+        class="validation-container"
+        *ngIf="
+          signupForm.controls['birthdate']?.invalid &&
+          signupForm.controls['birthdate']?.touched
+        "
+      >
+        <div>*birthdate is required</div>
+        <div>*example: 1/1/2001</div>
+      </div>
       <div class="mat-form-field">
         <label>Gender: </label>
         <mat-radio-group formControlName="gender">
           <mat-radio-button value="male">Male</mat-radio-button>
           <mat-radio-button value="female">Female</mat-radio-button>
         </mat-radio-group>
+        <div
+          class="validation-container"
+          *ngIf="
+            signupForm.controls['gender']?.invalid &&
+            signupForm.controls['gender']?.touched
+          "
+        >
+          <div>*gender is required</div>
+        </div>
       </div>
+    </div>
+    <div class="backendError" *ngIf="backendError">
+      {{ backendError }}
     </div>
     <div class="submit-btn d-flex flex-column justify-content-center mx-auto">
       <button
-        type="submit"
-        mat-raised-button
-        color="primary"
+        [disabled]="!signupForm.valid"
         (click)="signup(form1.value)"
+        color="primary"
+        mat-raised-button
+        type="submit"
       >
         Signup
       </button>
-      <p class="account">
+      <p class="account" style=" width: max-content;">
         Already have account?
         <a
-          routerLink="/signin"
           (click)="switchToSignin()"
+          routerLink="/signin"
           style="color: blue; text-decoration: none"
           >Signin</a
         >

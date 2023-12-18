@@ -1,5 +1,5 @@
 export interface User {
-  _id?: string;
+  id?: string;
   first_name: string;
   last_name: string;
   email: string;
@@ -9,4 +9,6 @@ export interface User {
   profileImg?: string;
   birthdate: Date;
   gender: 'male' | 'female';
+  createdAt?:Date;
+  updatedAt?:Date;
 }

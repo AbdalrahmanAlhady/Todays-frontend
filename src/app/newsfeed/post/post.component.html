@@ -1,0 +1,42 @@
+<div class="d-flex flex-column post">
+  <div class="d-flex flex-row post-header">
+    <img
+      class="user-img"
+      [src]="post.user?.profileImg"
+      alt="user-img"
+      *ngIf="post.user?.profileImg"
+    />
+    <i
+      class="bi bi-person-circle h2"
+      style="margin-right: 5px; margin-bottom: 0"
+      *ngIf="!post.user?.profileImg"
+    ></i>
+    <div class="d-flex flex-column post-sub-header">
+      <p class="user-name">
+        {{ post.user?.first_name + " " + post.user?.last_name }}
+      </p>
+      <P class="post-date">{{ timeAgo }}</P>
+    </div>
+  </div>
+  <div class="post-body">
+    <p>{{ post.body }}</p>
+    <!-- <carousel>
+        <slide>
+          <img src="assets/images/nature/1.jpg" alt="first slide" style="display: block; width: 100%;">
+        </slide>
+        <slide>
+          <img src="assets/images/nature/2.jpg" alt="second slide" style="display: block; width: 100%;">
+        </slide>
+        <slide>
+          <img src="assets/images/nature/3.jpg" alt="third slide" style="display: block; width: 100%;">
+        </slide>
+      </carousel> -->
+  </div>
+
+  <div class="post-btns">
+    <button mat-stroked-button><i class="bi bi-heart"></i> like</button>
+    <button mat-stroked-button>
+      <i class="bi bi-chat-left-text"></i> comment
+    </button>
+  </div>
+</div>

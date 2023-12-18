@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CustomvalidationService } from '../customvalidation.service';
+import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signin',
@@ -8,6 +10,7 @@ import { CustomvalidationService } from '../customvalidation.service';
   styleUrls: ['./signin.component.css'],
 })
 export class SigninComponent {
+  backendError:string = '';
   signinForm = this.formBuilder.group({
     email: [
       '',
@@ -21,22 +24,31 @@ export class SigninComponent {
     password: [
       '',
       Validators.compose([
-        Validators.required,
-        Validators.minLength(10),
-        this.customValidator.passwordValidator(),
+        Validators.required
       ]),
     ],
-  
-   
   });
-  switchToSignup(){}
-  signin(form:any){
-    console.log(this.signinForm);
-    
-  }
   constructor(
     private formBuilder: FormBuilder,
-    private customValidator: CustomvalidationService
+    private customValidator: CustomvalidationService,
+    private authService: AuthService,
+    private router: Router,
   ) {}
-  
+  switchToSignup() {
+    this.router.navigate(['/signup'])
+  }
+  signin(formData: { email: string; password: string }) {
+    this.authService.signin(formData.email,formData.password).subscribe({
+      next: (res) => {
+        if (res.body?.token) {
+          localStorage.setItem('userToken',JSON.stringify(res.body.token!)!);
+          this.authService.userToken.next(res.body?.token);
+          this.router.navigate(['/']);
+        }
+      },
+      error: (error) => {
+        this.backendError = error.error.message 
+      },
+    });
+  }
 }

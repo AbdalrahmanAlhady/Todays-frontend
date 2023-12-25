@@ -1,28 +1,62 @@
-.post{
-    width: max-content;
-    min-width: 50%;
-    background: white;
-    padding: 16px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-}
-.post-header{
-    align-items: center;
-    margin-bottom: 20px;
-}
-.post-sub-header{
-    align-items: center;
-}
-.user-name{
-    font-weight: 800;
-    margin: 2px;
-}
-.post-date{
-    color: #696767;
-    font-size: 12px;
-    margin: 0;
-}
-.sub-media-wrapper {
-    border-radius: 15px;
+.post {
+  width: 50%;
+  background: white;
+  padding: 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
 }
 
+.post-header {
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.post-sub-header {
+  align-items: center;
+}
+
+.user-name {
+  font-weight: 800;
+  margin: 2px;
+}
+
+.post-date {
+  color: #696767;
+  font-size: 12px;
+  margin: 0;
+}
+
+.post-img {
+  height: 200px;
+  width: 100%;
+}
+
+.sub-media-wrapper {
+  border-radius: 15px;
+}
+
+::ng-deep .carousel-control-prev,
+::ng-deep .carousel-control-next {
+  filter: invert(100%);
+}
+
+::ng-deep .carousel-indicators {
+  background-color: #d1cdcd61;
+  margin-bottom: 0;
+}
+
+slide {
+  height: 200px;
+  width: 100%;
+}
+
+carousel {
+  width: 100%;
+}
+.count{
+  margin-bottom: 0;
+  height: fit-content;
+}
+hr{
+  border-top: 1px solid #999;
+}

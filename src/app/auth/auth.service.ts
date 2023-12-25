@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from '../shared/user.model';
+import { User } from '../shared/models/user.model';
 import { BehaviorSubject, Subject, map } from 'rxjs';
 import { JwtPayload, jwtDecode } from 'jwt-decode';
 
@@ -27,12 +27,19 @@ export class AuthService {
       { observe: 'response' }
     );
   }
-  getUserId() {
+  getCurrentUserId() {
     this.getUserToken();
     this.user_id = jwtDecode<{any: any,id:string}>(this.userToken.getValue()!).id;
     return this.user_id;
   }
-  getUser(id: string) {}
+  getUser(id: string) {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append('id', id);
+    return this.http.get<{ user: User }>(
+      'http://localhost:3000/api/v1/user',
+      { observe: 'response' , params: queryParams}
+    );
+  }
   getUserToken() {
     this.userToken.next(JSON.parse(localStorage.getItem('userToken')!));
   }

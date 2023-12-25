@@ -1,0 +1,41 @@
+.comment {
+    width: 100%;
+}
+
+.sub-comment {
+    width: 80%;
+    background: rgb(167 167 167 / 22%);
+    padding: 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+}
+
+.comment-header {
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.comment-sub-header {
+    align-items: center;
+}
+
+.user-name {
+    font-weight: 800;
+    margin: 2px;
+}
+
+.comment-date {
+    color: #696767;
+    font-size: 12px;
+    margin: 0;
+}
+
+.comment-img {
+    height: 200px;
+    width: 100%;
+}
+
+.comment-body {
+    width: 100%;
+}

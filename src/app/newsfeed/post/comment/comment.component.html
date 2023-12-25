@@ -1,0 +1,30 @@
+<div class="d-flex flex-row comment">
+  <img
+    class="user-img"
+    [src]="comment.user?.profileImg"
+    alt="user-img"
+    *ngIf="comment.user?.profileImg"
+  />
+  <i
+    class="bi bi-person-circle h2"
+    style="margin-right: 5px; margin-bottom: 0"
+    *ngIf="!comment.user?.profileImg"
+  ></i>
+  <div class="d-flex flex-column sub-comment">
+    <div class="d-flex flex-column comment-header">
+      <p class="user-name">
+        {{ comment.user?.first_name + " " + comment.user?.last_name }}
+      </p>
+      <P class="comment-date">{{ timeAgo }}</P>
+    </div>
+    <div class="comment-body">
+      <p>{{ comment.body }}</p>
+      <img
+      class="comment-img"
+      [src]="comment.media!.url"
+      alt="comment-img"
+      *ngIf="comment.media && comment.media.type == 'img'"
+    />
+    </div>
+  </div>
+</div>

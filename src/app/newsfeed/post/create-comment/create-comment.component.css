@@ -1,0 +1,34 @@
+.mat-form-field-underline {
+    display: none;
+}
+.add-img-wrapper {
+    background-color: #80808038;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    height: 150px;
+    align-items: center;
+    width: 80%;
+    margin: 10px auto;
+
+}
+.sub-media-wrapper {
+    border-radius: 15px;
+}
+img{
+    border-radius: 15px;
+    max-height: 150px;
+    max-width: 150px;
+}
+.cancel-img {
+    color: red;
+    position: absolute;
+    margin: 5px;
+    cursor: pointer
+}
+.btns-container {
+    justify-content: center;
+    padding: 5px;
+    padding-bottom: 0;
+    justify-content: space-evenly;
+}

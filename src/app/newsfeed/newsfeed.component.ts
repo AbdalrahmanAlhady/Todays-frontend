@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
-import { PostsService } from '../shared/posts.service';
-import { Post } from '../shared/post.model';
+import { PostsService } from '../shared/services/posts.service';
+import { Post } from '../shared/models/post.model';
 
 @Component({
   selector: 'app-newsfeed',
@@ -13,7 +13,12 @@ export class NewsfeedComponent implements OnInit {
   constructor(private postsService: PostsService) {}
   ngOnInit() {
     this.postsService.getPosts().subscribe((res) => {
-      this.posts = res.body?.posts.rows!;
+      this.posts = res.body?.posts.rows!;      
     });
+    this.postsService.$newPost.subscribe(post=>{ 
+        console.log(post);    
+         this.posts.push(post)
+    })
   }
+  
 }

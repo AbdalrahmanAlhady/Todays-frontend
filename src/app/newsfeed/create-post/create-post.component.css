@@ -60,3 +60,10 @@ mat-form-field {
     margin: 5px;
     cursor: pointer
 }
+
+.btns-container {
+    justify-content: center;
+    padding: 5px;
+    padding-bottom: 0;
+    justify-content: space-evenly;
+}

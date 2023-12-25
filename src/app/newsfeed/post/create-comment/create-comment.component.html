@@ -1,0 +1,28 @@
+<div class="create-comment">
+  <mat-form-field style="height: 100%; width: 100%" subscriptSizing="dynamic">
+    <textarea matInput [placeholder]="'wirte comment..'" #comment_body></textarea>
+    <div
+      class="d-flex flex-row btns-container"
+    >
+      <button class="post-btn" mat-stroked-button (click)="createComment()">Comment</button>
+      <button mat-button (click)="fileInput.click()">
+        <input
+        style="display: none"
+        type="file"
+        (change)="onFileChanged($event)"
+        #fileInput
+      />
+        <i class="bi bi-image"></i>image/video
+      </button>
+    </div>
+  </mat-form-field>
+</div>
+
+  <div class="sub-media-wrapper" *ngIf="imgUrlToBeUploaded">
+    <i
+      (click)="cancelUploadingImg(imgToBeUploaded!)"
+      class="bi bi-x-circle cancel-img"
+    ></i>
+    <img [src]="imgUrlToBeUploaded" />
+  </div>
+

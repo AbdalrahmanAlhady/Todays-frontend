@@ -18,6 +18,8 @@ import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { AngularFireModule } from '@angular/fire/compat';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { ModalModule } from 'ngx-bootstrap/modal';
+
 
 import { AppComponent } from './app.component';
 import { AuthComponent } from './auth/auth.component';
@@ -29,7 +31,9 @@ import { NewsfeedComponent } from './newsfeed/newsfeed.component';
 import { CreatePostComponent } from './newsfeed/create-post/create-post.component';
 import { AuthInterceptor } from './auth/auth_interceptor.service';
 import { PostComponent } from './newsfeed/post/post.component';
-
+import { CommentComponent } from './newsfeed/post/comment/comment.component';
+import {ModalComponent} from './shared/components/modal/modal.component'
+import { CreateCommentComponent } from './newsfeed/post/create-comment/create-comment.component';
 
 
 
@@ -44,6 +48,9 @@ import { PostComponent } from './newsfeed/post/post.component';
     NewsfeedComponent,
     CreatePostComponent,
     PostComponent,
+    CommentComponent,
+    ModalComponent,
+    CreateCommentComponent
   ],
   imports: [
     BrowserModule,
@@ -63,6 +70,8 @@ import { PostComponent } from './newsfeed/post/post.component';
     MatProgressSpinnerModule,
     MatToolbarModule,
     MatGridListModule,
+    CarouselModule.forRoot(),
+    ModalModule.forRoot(),
     AngularFireModule.initializeApp({
       apiKey: "AIzaSyA4xN_-VZDfBpz3i6XFw4en_XSigKED77E",
       authDomain: "todays-2023.firebaseapp.com",

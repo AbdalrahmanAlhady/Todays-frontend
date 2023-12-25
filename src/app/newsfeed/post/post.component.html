@@ -20,23 +20,39 @@
   </div>
   <div class="post-body">
     <p>{{ post.body }}</p>
-    <!-- <carousel>
-        <slide>
-          <img src="assets/images/nature/1.jpg" alt="first slide" style="display: block; width: 100%;">
-        </slide>
-        <slide>
-          <img src="assets/images/nature/2.jpg" alt="second slide" style="display: block; width: 100%;">
-        </slide>
-        <slide>
-          <img src="assets/images/nature/3.jpg" alt="third slide" style="display: block; width: 100%;">
-        </slide>
-      </carousel> -->
+    <carousel [interval]="0" *ngIf="post.media!.length > 0">
+      <slide *ngFor="let media of post.media">
+        <img
+          class="post-img"
+          [src]="media.url"
+          alt="post-img"
+          *ngIf="media.type == 'img'"
+        />
+      </slide>
+    </carousel>
   </div>
 
-  <div class="post-btns">
-    <button mat-stroked-button><i class="bi bi-heart"></i> like</button>
-    <button mat-stroked-button>
-      <i class="bi bi-chat-left-text"></i> comment
-    </button>
+  <div class="post-footer d-flex flex-column">
+    <hr />
+    <div class="post-footer-btns d-flex flex-row" >
+      <button mat-stroked-button style="margin-right: 5px;" (click)=" likePost() ">
+        <i class="" [ngClass]="postLikedByCurrentUser? 'bi bi-heart-fill  text-danger':'bi bi-heart'" ></i> {{ " " + likesCount }}
+      </button>
+      <button mat-stroked-button (click)="openComments(commentsModel)">
+        <i class="bi bi-chat-left-text"></i> {{ " " + commentsCount }}
+      </button>
+    </div>
   </div>
+  <ng-template #commentsModel>
+    <app-modal [modalRef]="modalRef" [title]="'Comments'">
+      <div class="comments">
+        <app-comment
+        *ngFor="let comment of post.comments"
+        [comment]="comment"
+        ></app-comment>
+        
+      </div>
+      <app-create-comment  footer style="width: 100%;"[post_id]="post.id!"></app-create-comment>
+    </app-modal>
+  </ng-template>
 </div>

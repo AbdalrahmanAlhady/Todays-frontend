@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CustomvalidationService } from '../customvalidation.service';
 import { AuthService } from '../auth.service';
-import { User } from 'src/app/shared/user.model';
+import { User } from 'src/app/shared/models/user.model';
 import { Router } from '@angular/router';
 
 @Component({

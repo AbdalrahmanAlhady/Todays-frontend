@@ -51,7 +51,6 @@ export class MediaUploadService {
                     }else if (containerType === 'comment') {
                       this.$commentImg.next(res.body!.media)
                     }
-                    console.log(res);
                   },
                   error: (err) => {},
                 });
@@ -60,6 +59,7 @@ export class MediaUploadService {
         })
       )
       .subscribe();
+      return task.percentageChanges()
   }
   deleteImg(url: string) {
     return this.storage.refFromURL(url).delete();

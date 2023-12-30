@@ -45,9 +45,7 @@ export class PostComponent implements OnInit {
     this.commentsCount = this.post.comments!.length;
     this.likesCount = this.post.likes!.length;
   }
-  toggelComments() {
-    this.showComments = !this.showComments;
-  }
+
   openComments(template: TemplateRef<void>) {    
     this.modalRef = this.modalService.show(template);
   }
@@ -55,9 +53,9 @@ export class PostComponent implements OnInit {
     this.postService.likePost(this.post.id!).subscribe({
       next: (res) => {
         if (res.status === 201) {
-          this.likesCount = res.body!.likesCount;
+          this.post.likes?.push( res.body!.newLike);
+          this.countCommentsAndLikes();
           this.postLikedByCurrentUser = true;
-
         }
       },
       error: (error) => {

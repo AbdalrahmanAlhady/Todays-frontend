@@ -22,6 +22,11 @@
               class="bi bi-x-circle cancel-img"
             ></i>
             <img [src]="imgUrl" alt="img" />
+            <progressbar
+            *ngIf="percentages[i]"
+              [value]="percentages[i]"
+              >{{ percentages[i] }}</progressbar
+            >
           </div>
         </mat-grid-tile>
         <mat-grid-tile>
@@ -45,13 +50,18 @@
       </mat-grid-list>
     </div>
 
-    <div
-      class="d-flex flex-row btns-container"
-    >
+    <div class="d-flex flex-row btns-container">
       <button class="post-btn" mat-stroked-button (click)="createPost()">
         Post
       </button>
-      <button class="cancel-btn" mat-stroked-button color="warn" (click)="clear()">clear</button>
+      <button
+        class="cancel-btn"
+        mat-stroked-button
+        color="warn"
+        (click)="clear()"
+      >
+        clear
+      </button>
     </div>
   </mat-form-field>
 </div>

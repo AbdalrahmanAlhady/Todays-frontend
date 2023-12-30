@@ -19,6 +19,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
 
 
 import { AppComponent } from './app.component';
@@ -50,7 +51,8 @@ import { CreateCommentComponent } from './newsfeed/post/create-comment/create-co
     PostComponent,
     CommentComponent,
     ModalComponent,
-    CreateCommentComponent
+    CreateCommentComponent,
+ 
   ],
   imports: [
     BrowserModule,
@@ -70,6 +72,7 @@ import { CreateCommentComponent } from './newsfeed/post/create-comment/create-co
     MatProgressSpinnerModule,
     MatToolbarModule,
     MatGridListModule,
+    ProgressbarModule,
     CarouselModule.forRoot(),
     ModalModule.forRoot(),
     AngularFireModule.initializeApp({

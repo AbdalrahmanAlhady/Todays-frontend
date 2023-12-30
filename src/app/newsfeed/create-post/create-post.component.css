@@ -67,3 +67,13 @@ mat-form-field {
     padding-bottom: 0;
     justify-content: space-evenly;
 }
+progressbar{
+    position: absolute;
+    top: 50%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 140px;
+    opacity: 0.8;
+}

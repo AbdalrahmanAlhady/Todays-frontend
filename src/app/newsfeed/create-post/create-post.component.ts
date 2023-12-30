@@ -20,8 +20,8 @@ export class CreatePostComponent {
   imgsUrlsToDisplay: SafeUrl[] = [];
   showUploadedImg: boolean = false;
   imgCounter: number = 0;
-  imgsArr: Media[] = [];
   post!: Post;
+  percentages: number[] = [];
   ngOnInit() {}
   constructor(
     private mediaUploadService: MediaUploadService,
@@ -43,13 +43,13 @@ export class CreatePostComponent {
   cancelUploadingImg(index: number) {
     this.imgsUrlsToDisplay.splice(index, 1);
   }
-  clear(){
-    this.postBody.nativeElement.value = ''
-    this.imgCounter=0;
+  clear() {
+    this.postBody.nativeElement.value = '';
+    this.imgCounter = 0;
     this.imgsToDisplay = [];
-    this.imgsUrlsToDisplay=[];
-    this.imgsArr=[];
-    this.addImg=false;
+    this.imgsUrlsToDisplay = [];
+    this.addImg = false;
+    this.percentages=[]
   }
   createPost() {
     this.postService
@@ -63,20 +63,36 @@ export class CreatePostComponent {
           const postId = res.body?.post.id;
           if ((res.status === 200 || 201) && postId) {
             this.imgsToDisplay.forEach((img, index) => {
-              this.mediaUploadService.uploadImg(img, postId,  'post','img',index);
+              this.mediaUploadService
+                .uploadImg(img, postId, 'post', 'img', index)
+                .subscribe((percent) => {
+                  this.percentages[index] = percent!;
+                });
             });
           }
-         
           this.mediaUploadService.$postImgsArr.subscribe((postImgsArr) => {
             if (this.imgCounter === postImgsArr.length) {
               this.post.media = postImgsArr;
+              // initialize likes and comments for new post
               this.post.likes = [];
-              this.post.comments =[];
-              console.log(this.post.media);
-              this.postService.$newPost.next(this.post)
+              this.post.comments = [];
+              this.postService.$newPost.next(this.post);
               this.imgCounter = 0;
-              this.mediaUploadService.$postImgsArr = new BehaviorSubject<Media[]>([]);
+              this.mediaUploadService.$postImgsArr = new BehaviorSubject<
+                Media[]
+              >([]);
             }
+            let uploadComplete = 0;
+            this.percentages.forEach((percent) => {
+              percent > 100
+                ? uploadComplete++
+                : (uploadComplete = uploadComplete);
+            });
+            if (uploadComplete === this.percentages.length) {
+              setTimeout(() => {
+                this.clear();
+              }, 2000);
+            }  
           });
         },
         error: (err) => {

@@ -18,11 +18,16 @@
   </mat-form-field>
 </div>
 
-  <div class="sub-media-wrapper" *ngIf="imgUrlToBeUploaded">
+  <div class="sub-media-wrapper" *ngIf="imgUrlToDisplay">
     <i
-      (click)="cancelUploadingImg(imgToBeUploaded!)"
+      (click)="cancelUploadingImg(imgToDisplay!)"
       class="bi bi-x-circle cancel-img"
     ></i>
-    <img [src]="imgUrlToBeUploaded" />
+    <img *ngIf="imgUrlToDisplay" [src]="imgUrlToDisplay" />
+    <progressbar
+    *ngIf="percentage"
+    [value]="percentage"
+    >{{ percentage }}</progressbar
+  >
   </div>
 

@@ -14,6 +14,8 @@
 }
 .sub-media-wrapper {
     border-radius: 15px;
+    position: relative;
+    width: max-content;
 }
 img{
     border-radius: 15px;
@@ -31,4 +33,10 @@ img{
     padding: 5px;
     padding-bottom: 0;
     justify-content: space-evenly;
+}
+
+progressbar {
+    position: absolute;
+    top: 50%;
+    opacity: 0.8;
 }

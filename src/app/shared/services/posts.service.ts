@@ -27,8 +27,19 @@ export class PostsService {
   likePost(post_id: string) {
     let queryParams = new HttpParams();
     queryParams = queryParams.append('post_id', post_id);
-    queryParams = queryParams.append('user_id', this.authService.getCurrentUserId());
-    return this.http.post<{ message: string,likesCount:number }>(
+    queryParams = queryParams.append(
+      'user_id',
+      this.authService.getCurrentUserId()
+    );
+    return this.http.post<{
+      message: string;
+      likesCount: number;
+      newLike: {
+        id: string;
+        first_name: string;
+        last_name: string;
+      };
+    }>(
       'http://localhost:3000/api/v1/posts/likePost',
       {},
       { observe: 'response', params: queryParams }
@@ -37,7 +48,10 @@ export class PostsService {
   isLikedPost(post_id: string) {
     let queryParams = new HttpParams();
     queryParams = queryParams.append('post_id', post_id);
-    queryParams = queryParams.append('user_id', this.authService.getCurrentUserId());
+    queryParams = queryParams.append(
+      'user_id',
+      this.authService.getCurrentUserId()
+    );
     return this.http.get<{ postLiked: boolean }>(
       'http://localhost:3000/api/v1/posts/isLikedPost',
       { observe: 'response', params: queryParams }

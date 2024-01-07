@@ -9,10 +9,11 @@
     border-radius: 10px;
     margin-bottom: 20px;
     align-items: flex-start;
+    height: max-content;
 }
 
 .comment-header {
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 20px;
 }
 
@@ -22,7 +23,7 @@
 
 .user-name {
     font-weight: 800;
-    margin: 2px;
+    margin: 1px;
 }
 
 .comment-date {

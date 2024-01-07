@@ -20,6 +20,10 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
+import {VgCoreModule} from '@videogular/ngx-videogular/core';
+import {VgControlsModule} from '@videogular/ngx-videogular/controls';
+import {VgOverlayPlayModule} from '@videogular/ngx-videogular/overlay-play';
+import {VgBufferingModule} from '@videogular/ngx-videogular/buffering';
 
 
 import { AppComponent } from './app.component';
@@ -35,6 +39,7 @@ import { PostComponent } from './newsfeed/post/post.component';
 import { CommentComponent } from './newsfeed/post/comment/comment.component';
 import {ModalComponent} from './shared/components/modal/modal.component'
 import { CreateCommentComponent } from './newsfeed/post/create-comment/create-comment.component';
+import { VideoPlayerComponent } from './shared/components/video-player/video-player.component';
 
 
 
@@ -52,6 +57,7 @@ import { CreateCommentComponent } from './newsfeed/post/create-comment/create-co
     CommentComponent,
     ModalComponent,
     CreateCommentComponent,
+    VideoPlayerComponent
  
   ],
   imports: [
@@ -75,6 +81,10 @@ import { CreateCommentComponent } from './newsfeed/post/create-comment/create-co
     ProgressbarModule,
     CarouselModule.forRoot(),
     ModalModule.forRoot(),
+    VgCoreModule,
+    VgControlsModule,
+    VgOverlayPlayModule,
+    VgBufferingModule,
     AngularFireModule.initializeApp({
       apiKey: "AIzaSyA4xN_-VZDfBpz3i6XFw4en_XSigKED77E",
       authDomain: "todays-2023.firebaseapp.com",

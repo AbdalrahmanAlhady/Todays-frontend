@@ -25,6 +25,7 @@
       alt="comment-img"
       *ngIf="comment.media && comment.media.type == 'img'"
     />
+    <app-video-player *ngIf="comment.media && comment.media.type == 'video'" [url]="comment.media!.url"></app-video-player>
     </div>
   </div>
 </div>

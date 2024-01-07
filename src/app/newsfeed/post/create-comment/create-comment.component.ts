@@ -15,10 +15,11 @@ import { PostsService } from 'src/app/shared/services/posts.service';
 export class CreateCommentComponent {
   @ViewChild('comment_body') commentBody!: ElementRef;
   @Input() post_id: string = '';
-  addImg: boolean = false;
-  imgToDisplay?: File;
-  imgUrlToDisplay!: SafeUrl;
-  showedUploadedImg: boolean = false;
+  mediaToDisplay?: File;
+  mediaUrlToDisplay: {
+    displayUrl: SafeUrl | null;
+    fileType: 'video' | 'img' | '';
+  } = { displayUrl: null, fileType: '' };
   comment!: Comment;
   percentage!: number;
   ngOnInit() {}
@@ -29,18 +30,14 @@ export class CreateCommentComponent {
     private sanitizer: DomSanitizer
   ) {}
   onFileChanged(event: any) {
-    this.imgToDisplay = event.target!.files[0];
-    this.imgUrlToDisplay = this.sanitizer.bypassSecurityTrustUrl(
-      window.URL.createObjectURL(this.imgToDisplay!)
+    this.mediaToDisplay = event.target!.files[0];
+    const fileType = this.mediaToDisplay!.type.split('/')[0];
+    this.mediaUrlToDisplay!.displayUrl = this.sanitizer.bypassSecurityTrustUrl(
+      window.URL.createObjectURL(this.mediaToDisplay!)
     );
-    if (this.imgUrlToDisplay) {
-      this.showedUploadedImg = true;
-    }
+    this.mediaUrlToDisplay!.fileType = fileType === 'video' ? 'video' : 'img';
   }
-  cancelUploadingImg(file: File) {
-    this.imgToDisplay = undefined;
-    this.imgUrlToDisplay = '';
-  }
+
   createComment() {
     this.commentsService
       .createComment({
@@ -50,31 +47,33 @@ export class CreateCommentComponent {
       })
       .subscribe({
         next: (res) => {
-          const commentId = res.body?.comment.id;
           this.comment = res.body?.comment!;
-          if ((res.status === 200 || 201) && commentId) {
-            if (this.imgToDisplay) {
-                this.mediaUploadService
-              .uploadImg(this.imgToDisplay!, commentId, 'comment', 'img', 0)
-              .subscribe((percent) => {
-                this.percentage = percent!;
-              });
-
+          if ((res.status === 200 || 201) && this.comment.id) {
+            if (this.mediaToDisplay) {
+              this.mediaUploadService
+                .uploadMedia(
+                  this.mediaToDisplay!,
+                  this.comment.id,
+                  'comment',
+                  this.mediaUrlToDisplay.fileType === 'img' ? 'img' : 'video',
+                  0
+                )
+                .subscribe((percent) => {
+                  this.percentage = Math.trunc(percent!);
+                });
             }
           }
-          if (!this.imgToDisplay) {
+          if (!this.mediaToDisplay) {
             this.commentsService.$newComment.next(this.comment);
             setTimeout(() => {
               this.clear();
             }, 2000);
           }
-          this.mediaUploadService.$commentImg.subscribe((media) => {
+          this.mediaUploadService.$commentMedia.subscribe((media) => {
             this.comment.media = media;
             this.commentsService.$newComment.next(this.comment);
             if (this.percentage === 100) {
-              setTimeout(() => {
-                this.clear();
-              }, 2000);
+              this.clear();
             }
           });
         },
@@ -84,10 +83,11 @@ export class CreateCommentComponent {
       });
   }
   clear() {
-    this.commentBody.nativeElement.value = '';
-    this.imgToDisplay = undefined;
-    this.imgUrlToDisplay = '';
-    this.addImg = false;
-    this.percentage = NaN;
+    setTimeout(() => {
+      this.commentBody.nativeElement.value = '';
+      this.mediaToDisplay = undefined;
+      this.mediaUrlToDisplay = { displayUrl: null, fileType: '' };
+      this.percentage = NaN;
+    }, 2000);
   }
 }

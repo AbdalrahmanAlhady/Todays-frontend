@@ -20,7 +20,7 @@
   </div>
   <div class="post-body">
     <p>{{ post.body }}</p>
-    <carousel [interval]="0" *ngIf="post.media!.length > 0">
+    <carousel [interval]="0" *ngIf="post.media&&post.media!.length > 0">
       <slide *ngFor="let media of post.media">
         <img
           class="post-img"
@@ -28,6 +28,7 @@
           alt="post-img"
           *ngIf="media.type == 'img'"
         />
+        <app-video-player *ngIf="media.type === 'video'" [url]="media.url"></app-video-player>
       </slide>
     </carousel>
   </div>

@@ -42,7 +42,7 @@ export class SigninComponent {
       next: (res) => {
         if (res.body?.token) {
           localStorage.setItem('userToken',JSON.stringify(res.body.token!)!);
-          this.authService.userToken.next(res.body?.token);
+          this.authService.$userToken.next(res.body?.token);
           this.router.navigate(['/']);
         }
       },

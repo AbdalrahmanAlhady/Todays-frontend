@@ -1,8 +1,8 @@
 <div class="d-flex flex-row">
-  <button mat-button (click)="addImg = false">
+  <button mat-button (click)="addMedia = false">
     <i class="bi bi-pencil"></i>wirte Post
   </button>
-  <button mat-button (click)="addImg = true">
+  <button mat-button (click)="addMedia = true">
     <i class="bi bi-image"></i>image/video
   </button>
 </div>
@@ -11,26 +11,32 @@
     <textarea matInput [placeholder]="'wirte post..'" #post_body></textarea>
     <div class="media-wrapper grid">
       <mat-grid-list
-        *ngIf="addImg"
-        [cols]="imgsUrlsToDisplay.length / 2"
+        *ngIf="addMedia"
+        [cols]="(mediaUrlsToDisplay.length / 2) + 1"
         rowHeight="160px"
       >
-        <mat-grid-tile *ngFor="let imgUrl of imgsUrlsToDisplay; index as i">
+        <mat-grid-tile *ngFor="let mediaUrl of mediaUrlsToDisplay; index as i">
           <div class="sub-media-wrapper">
             <i
               (click)="cancelUploadingImg(i)"
               class="bi bi-x-circle cancel-img"
             ></i>
-            <img [src]="imgUrl" alt="img" />
-            <progressbar
-            *ngIf="percentages[i]"
-              [value]="percentages[i]"
-              >{{ percentages[i] }}</progressbar
-            >
+            <img
+              *ngIf="mediaUrl.fileType === 'img'"
+              [src]="mediaUrl.displayUrl"
+              alt="img"
+            />
+            <app-video-player
+              *ngIf="mediaUrl.fileType === 'video'"
+              [url]="mediaUrl.displayUrl!"
+            ></app-video-player>
+            <progressbar *ngIf="percentages[i]" [value]="percentages[i]">{{
+              percentages[i]
+            }}</progressbar>
           </div>
         </mat-grid-tile>
         <mat-grid-tile>
-          <div class="add-img-wrapper d-flex flex-column" *ngIf="addImg">
+          <div class="add-img-wrapper d-flex flex-column" *ngIf="addMedia">
             <input
               style="display: none"
               type="file"

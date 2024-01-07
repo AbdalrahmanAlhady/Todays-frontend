@@ -7,7 +7,7 @@
 }
 
 .post-header {
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 20px;
 }
 
@@ -17,7 +17,7 @@
 
 .user-name {
   font-weight: 800;
-  margin: 2px;
+  margin: 1px;
 }
 
 .post-date {
@@ -37,7 +37,7 @@
 
 ::ng-deep .carousel-control-prev,
 ::ng-deep .carousel-control-next {
-  filter: invert(100%);
+  opacity: 0.99;
 }
 
 ::ng-deep .carousel-indicators {
@@ -46,7 +46,7 @@
 }
 
 slide {
-  height: 200px;
+  height: max-content;
   width: 100%;
 }
 

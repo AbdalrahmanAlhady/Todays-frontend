@@ -4,14 +4,12 @@ i {
 
 .add-img-wrapper {
     background-color: #80808038;
-    border-radius: 15px;
     display: flex;
     justify-content: center;
     height: 150px;
     align-items: center;
     width: 80%;
     margin: 10px auto;
-
 }
 
 textarea {
@@ -22,9 +20,8 @@ textarea {
 }
 
 img {
-    border-radius: 15px;
-    max-height: 150px;
-    max-width: 150px;
+    width: 100%; 
+    height: 100%; 
 }
 
 
@@ -51,14 +48,17 @@ mat-form-field {
 }
 
 .sub-media-wrapper {
-    border-radius: 15px;
+    max-width: 255px;
+    height: 100%;
+    margin: 5px;
 }
 
 .cancel-img {
     color: red;
     position: absolute;
     margin: 5px;
-    cursor: pointer
+    cursor: pointer;
+    z-index: 2;
 }
 
 .btns-container {

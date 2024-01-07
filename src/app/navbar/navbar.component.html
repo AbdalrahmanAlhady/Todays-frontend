@@ -1,4 +1,4 @@
-<mat-toolbar style="   background-color: #016d81d4;">
+<mat-toolbar style="background-color: #016d81d4">
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="150"
@@ -19,4 +19,21 @@
       fill-rule="evenodd"
     />
   </svg>
+  <a
+    *ngIf="isAuth && user"
+    style="margin-left: auto; cursor: pointer; text-decoration: none"
+    (click)="toProfile()"
+  >
+    <img
+      class="user-img"
+      [src]="user.profileImg"
+      alt="user-img"
+      *ngIf="user.profileImg"
+    />
+    <i
+      class="bi bi-person-circle h2"
+      style="margin-right: 5px; margin-bottom: 0; color: white"
+      *ngIf="!user.profileImg"
+    ></i>
+  </a>
 </mat-toolbar>

@@ -8,10 +8,9 @@ import { JwtPayload, jwtDecode } from 'jwt-decode';
   providedIn: 'root',
 })
 export class AuthService {
-  public userToken = new BehaviorSubject<string | null>(
+  public $userToken = new BehaviorSubject<string | null>(
     JSON.parse(localStorage.getItem('userToken')!)
   );
-  private user_id: string = '';
   constructor(private http: HttpClient) {}
   signup(user: User) {
     return this.http.post<{user:User}>(
@@ -28,9 +27,7 @@ export class AuthService {
     );
   }
   getCurrentUserId() {
-    this.getUserToken();
-    this.user_id = jwtDecode<{any: any,id:string}>(this.userToken.getValue()!).id;
-    return this.user_id;
+   return  jwtDecode<{any: any,id:string}>(this.$userToken.getValue()!).id;
   }
   getUser(id: string) {
     let queryParams = new HttpParams();
@@ -40,10 +37,8 @@ export class AuthService {
       { observe: 'response' , params: queryParams}
     );
   }
-  getUserToken() {
-    this.userToken.next(JSON.parse(localStorage.getItem('userToken')!));
-  }
+  
   isUserAuthorized() {
-    return !!this.userToken.getValue();
+    return !!this.$userToken.getValue();
   }
 }

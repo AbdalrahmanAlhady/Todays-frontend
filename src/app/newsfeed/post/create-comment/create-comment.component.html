@@ -18,12 +18,13 @@
   </mat-form-field>
 </div>
 
-  <div class="sub-media-wrapper" *ngIf="imgUrlToDisplay">
+  <div class="sub-media-wrapper" *ngIf="!!mediaUrlToDisplay.fileType&&!!mediaUrlToDisplay.displayUrl ">
     <i
-      (click)="cancelUploadingImg(imgToDisplay!)"
+      (click)="clear()"
       class="bi bi-x-circle cancel-img"
     ></i>
-    <img *ngIf="imgUrlToDisplay" [src]="imgUrlToDisplay" />
+    <img *ngIf="mediaUrlToDisplay.fileType === 'img'" [src]="mediaUrlToDisplay.displayUrl" />
+    <app-video-player *ngIf="mediaUrlToDisplay.fileType=== 'video'" [url]="mediaUrlToDisplay.displayUrl"></app-video-player>
     <progressbar
     *ngIf="percentage"
     [value]="percentage"

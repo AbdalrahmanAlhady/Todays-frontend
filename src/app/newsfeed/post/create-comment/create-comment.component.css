@@ -15,7 +15,8 @@
 .sub-media-wrapper {
     border-radius: 15px;
     position: relative;
-    width: max-content;
+    width: 250px;
+    margin-top: 10px;
 }
 img{
     border-radius: 15px;
@@ -26,7 +27,8 @@ img{
     color: red;
     position: absolute;
     margin: 5px;
-    cursor: pointer
+    cursor: pointer;
+    z-index: 2;
 }
 .btns-container {
     justify-content: center;

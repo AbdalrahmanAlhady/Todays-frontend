@@ -5,12 +5,14 @@ import { SignupComponent } from './auth/signup/signup.component';
 import { SigninComponent } from './auth/signin/signin.component';
 import { NewsfeedComponent } from './newsfeed/newsfeed.component';
 import { AuthGuard } from './auth/auth.guard.service';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   { path: 'newsfeed',canActivate: [AuthGuard], component: NewsfeedComponent },
   { path: '', redirectTo: 'newsfeed', pathMatch: 'full' },
   { path: 'signup', component: SignupComponent },
   { path: 'signin', component: SigninComponent },
+  { path: 'profile', component: ProfileComponent },
 ];
 
 @NgModule({

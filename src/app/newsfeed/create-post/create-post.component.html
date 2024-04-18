@@ -22,12 +22,12 @@
               class="bi bi-x-circle cancel-img"
             ></i>
             <img
-              *ngIf="mediaUrl.fileType === 'img'"
+              *ngIf="mediaUrl.mediaType === 'img'"
               [src]="mediaUrl.displayUrl"
               alt="img"
             />
             <app-video-player
-              *ngIf="mediaUrl.fileType === 'video'"
+              *ngIf="mediaUrl.mediaType === 'video'"
               [url]="mediaUrl.displayUrl!"
             ></app-video-player>
             <progressbar *ngIf="percentages[i]" [value]="percentages[i]">{{

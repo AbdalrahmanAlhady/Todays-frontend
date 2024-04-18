@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
+import { Media } from '../../models/media.model';
 
 @Component({
   selector: 'app-video-player',
@@ -8,4 +9,5 @@ import { SafeUrl } from '@angular/platform-browser';
 })
 export class VideoPlayerComponent {
 @Input() url!:string|SafeUrl
+@Input() avgDimensions!:Media['dimensions']
 }

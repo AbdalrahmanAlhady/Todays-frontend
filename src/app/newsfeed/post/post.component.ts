@@ -18,25 +18,35 @@ export class PostComponent implements OnInit {
   showComments: boolean = false;
   postLikedByCurrentUser: boolean = false;
   modalRef?: BsModalRef;
+  avgMediaDimensions: {
+    width: number;
+    height: number;
+  } = {
+    width: 0,
+    height: 0,
+  };
   @Input() post!: Post;
   constructor(
     private modalService: BsModalService,
     private postService: PostsService,
-    private commentsService:CommentsService,
+    private commentsService: CommentsService,
     private authService: AuthService
   ) {}
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.calculatePostDate();
     this.countCommentsAndLikes();
     this.postService.isLikedPost(this.post.id!).subscribe((res) => {
-     this.postLikedByCurrentUser = res.body!.postLiked;     
+      this.postLikedByCurrentUser = res.body!.postLiked;
     });
-    this.commentsService.$newComment.subscribe(comment=>{
-      if (comment.post_id === this.post.id) { 
+    this.commentsService.$newComment.subscribe((comment) => {
+      if (comment.post_id === this.post.id) {
         this.post.comments?.push(comment);
         this.countCommentsAndLikes();
       }
-    })
+    });
+    if (this.post.media) {
+      this.calcAvgMediaDimenisions();
+    }
   }
   calculatePostDate() {
     this.timeAgo = format(new Date(this.post.createdAt!));
@@ -46,14 +56,14 @@ export class PostComponent implements OnInit {
     this.likesCount = this.post.likes!.length;
   }
 
-  openComments(template: TemplateRef<void>) {    
+  openComments(template: TemplateRef<void>) {
     this.modalRef = this.modalService.show(template);
   }
   likePost() {
     this.postService.likePost(this.post.id!).subscribe({
       next: (res) => {
         if (res.status === 201) {
-          this.post.likes?.push( res.body!.newLike);
+          this.post.likes?.push(res.body!.newLike);
           this.countCommentsAndLikes();
           this.postLikedByCurrentUser = true;
         }
@@ -62,5 +72,17 @@ export class PostComponent implements OnInit {
         console.log(error.error.message);
       },
     });
+  }
+  calcAvgMediaDimenisions() {
+    let heightSum = 0;
+    let widthSum = 0;
+    this.post.media!.forEach((media) => {
+      heightSum += media.dimensions!.height;
+      widthSum += media.dimensions!.width;
+    });
+    this.avgMediaDimensions!.height = heightSum / this.post.media!.length!;
+    this.avgMediaDimensions!.width = widthSum / this.post.media!.length!;
+    console.log(this.avgMediaDimensions);
+    
   }
 }

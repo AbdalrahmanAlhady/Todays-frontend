@@ -17,8 +17,12 @@ export class CreatePostComponent {
   @ViewChild('post_body') postBody!: ElementRef;
   addMedia: boolean = false;
   mediaToDisplay: File[] = [];
-  mediaUrlsToDisplay: { displayUrl: SafeUrl; fileType: 'video' | 'img' }[] = [];
+  mediaUrlsToDisplay: { displayUrl: SafeUrl; mediaType: 'video' | 'img' }[] = [];
   mediaLength: number = 0;
+  mediaDimensions: {
+    width: number;
+    height: number;
+  } []=[];
   post!: Post;
   percentages: number[] = [];
   ngOnInit() {}
@@ -29,14 +33,18 @@ export class CreatePostComponent {
     private sanitizer: DomSanitizer
   ) {}
   onFileChanged(event: any) {
-    const file: File = event.target!.files[0];
-    const fileType = file.type.split('/')[0];
-    this.mediaToDisplay.push(file);
+    const mediaToDisplay: File = event.target!.files[0];
+    const mediaType = mediaToDisplay.type.split('/')[0];
+    this.mediaToDisplay.push(mediaToDisplay);
     this.mediaUrlsToDisplay.push({
       displayUrl: this.sanitizer.bypassSecurityTrustUrl(
-        window.URL.createObjectURL(file)
+        window.URL.createObjectURL(mediaToDisplay)
       ),
-      fileType: fileType === 'video' ? 'video' : 'img',
+      mediaType: mediaType === 'video' ? 'video' : 'img',
+    });
+    // get width and height of imgs and videos
+    this.getMediaDimensions(mediaToDisplay).then((dimensions) => {
+      this.mediaDimensions.push(dimensions!)
     });
     this.mediaLength++;
   }
@@ -52,6 +60,7 @@ export class CreatePostComponent {
       this.mediaUrlsToDisplay = [];
       this.addMedia = false;
       this.percentages = [];
+      this.mediaDimensions = []
     }, 2000);
   }
   createPost() {
@@ -74,7 +83,8 @@ export class CreatePostComponent {
                   media,
                   this.post.id!,
                   'post',
-                  this.mediaUrlsToDisplay[index].fileType,
+                  this.mediaUrlsToDisplay[index].mediaType,
+                  this.mediaDimensions[index],
                   index,
                   this.mediaLength
                 )
@@ -84,7 +94,6 @@ export class CreatePostComponent {
             });
           }
           this.mediaUploadService.$postMediaArr.subscribe((postMediaArr) => {
-            debugger;
             if (this.mediaLength === postMediaArr.length) {
               this.post.media = postMediaArr;
               this.initNewPost();
@@ -111,5 +120,36 @@ export class CreatePostComponent {
     if (uploadComplete === this.percentages.length) {
       this.clear();
     }
+  }
+  async getMediaDimensions(
+    file: File
+  ): Promise<{ width: number; height: number } | null> {
+    return new Promise((resolve, reject) => {
+      let media: HTMLImageElement | HTMLVideoElement;
+      const reader = new FileReader();
+      const fileType = file.type.split('/')[0] === 'video' ? 'video' : 'img';
+      reader.onload = (event) => {
+        if (fileType === 'img') {
+          media = new Image();
+          media.src = event.target!.result as string;
+          media.onload = () => {
+            resolve({
+              width: (media as HTMLImageElement).naturalWidth,
+              height: (media as HTMLImageElement).naturalHeight,
+            });
+          };
+        } else {
+          media = document.createElement('video');
+          media.src = event.target!.result as string;
+          media.onloadedmetadata = () => {
+            resolve({
+              width: (media as HTMLVideoElement).videoWidth,
+              height: (media as HTMLVideoElement).videoHeight,
+            });
+          };
+        }
+      };
+      reader.readAsDataURL(file);
+    });
   }
 }

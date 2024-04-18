@@ -3,8 +3,12 @@ export interface Media {
   url: string;
   type: 'img' | 'video';
   storageProvider: string;
-  post_id:string|null;
-  comment_id:string|null;
-  createdAt?:Date;
-  updatedAt?:Date;
+  post_id: string | null;
+  comment_id: string | null;
+  dimensions: {
+    width: number;
+    height: number;
+  } | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

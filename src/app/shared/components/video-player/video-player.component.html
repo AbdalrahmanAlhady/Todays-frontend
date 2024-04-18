@@ -1,5 +1,14 @@
-<vg-player>
-       <video #media [vgMedia]="$any(media)" id="singleVideo" preload="auto" crossorigin controls>
-        <source [src]="url" type="video/mp4">
-    </video>
- </vg-player>
+<vg-player style="place-content: center;">
+  <video
+    [attr.width]="[avgDimensions!.width]"
+    [attr.height]="[avgDimensions!.height]"
+    #media
+    [vgMedia]="$any(media)"
+    id="singleVideo"
+    preload="auto"
+    crossorigin
+    controls
+  >
+    <source [src]="url" type="video/mp4" />
+  </video>
+</vg-player>

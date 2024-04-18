@@ -56,7 +56,6 @@ export class CreateCommentComponent {
                   this.comment.id,
                   'comment',
                   this.mediaUrlToDisplay.fileType === 'img' ? 'img' : 'video',
-                  0
                 )
                 .subscribe((percent) => {
                   this.percentage = Math.trunc(percent!);

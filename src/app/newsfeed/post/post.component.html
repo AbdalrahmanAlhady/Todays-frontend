@@ -20,24 +20,38 @@
   </div>
   <div class="post-body">
     <p>{{ post.body }}</p>
-    <carousel [interval]="0" *ngIf="post.media&&post.media!.length > 0">
-      <slide *ngFor="let media of post.media">
+    <carousel [interval]="0" *ngIf="post.media && post.media!.length > 0">
+      <slide *ngFor="let media of post.media" style="text-align: center;">
         <img
           class="post-img"
           [src]="media.url"
+          [attr.width]="[avgMediaDimensions!.width]"
+          [attr.height]="[avgMediaDimensions!.height]"
           alt="post-img"
           *ngIf="media.type == 'img'"
         />
-        <app-video-player *ngIf="media.type === 'video'" [url]="media.url"></app-video-player>
+        <app-video-player
+        [avgDimensions]="avgMediaDimensions"       
+          *ngIf="media.type === 'video'"
+          [url]="media.url"
+        ></app-video-player>
       </slide>
     </carousel>
   </div>
 
   <div class="post-footer d-flex flex-column">
     <hr />
-    <div class="post-footer-btns d-flex flex-row" >
-      <button mat-stroked-button style="margin-right: 5px;" (click)=" likePost() ">
-        <i class="" [ngClass]="postLikedByCurrentUser? 'bi bi-heart-fill  text-danger':'bi bi-heart'" ></i> {{ " " + likesCount }}
+    <div class="post-footer-btns d-flex flex-row">
+      <button mat-stroked-button style="margin-right: 5px" (click)="likePost()">
+        <i
+          class=""
+          [ngClass]="
+            postLikedByCurrentUser
+              ? 'bi bi-heart-fill  text-danger'
+              : 'bi bi-heart'
+          "
+        ></i>
+        {{ " " + likesCount }}
       </button>
       <button mat-stroked-button (click)="openComments(commentsModel)">
         <i class="bi bi-chat-left-text"></i> {{ " " + commentsCount }}
@@ -48,12 +62,15 @@
     <app-modal [modalRef]="modalRef" [title]="'Comments'">
       <div class="comments">
         <app-comment
-        *ngFor="let comment of post.comments"
-        [comment]="comment"
+          *ngFor="let comment of post.comments"
+          [comment]="comment"
         ></app-comment>
-        
       </div>
-      <app-create-comment  footer style="width: 100%;"[post_id]="post.id!"></app-create-comment>
+      <app-create-comment
+        footer
+        style="width: 100%"
+        [post_id]="post.id!"
+      ></app-create-comment>
     </app-modal>
   </ng-template>
 </div>

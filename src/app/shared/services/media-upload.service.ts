@@ -18,6 +18,10 @@ export class MediaUploadService {
     postORcomment_id: string | null,
     containerType: 'post' | 'comment',
     mediaType: 'img' | 'video',
+    mediaDimensions?: {
+      width: number;
+      height: number;
+    } ,
     mediaIndex?: number,
     mediaLength?: number
   ) {
@@ -39,6 +43,7 @@ export class MediaUploadService {
                   comment_id:
                     containerType === 'comment' ? postORcomment_id : null,
                   type: mediaType,
+                  dimensions: mediaDimensions!,
                 };
                 this.storeMediaUrl(this.media, containerType, mediaLength);
               }

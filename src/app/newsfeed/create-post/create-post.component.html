@@ -7,12 +7,12 @@
   </button>
 </div>
 <div class="media-wrapper d-flex flex-row">
-  <mat-form-field>
+  <mat-form-field [style.width.%]="width">
     <textarea matInput [placeholder]="'wirte post..'" #post_body></textarea>
     <div class="media-wrapper grid">
       <mat-grid-list
         *ngIf="addMedia"
-        [cols]="(mediaUrlsToDisplay.length / 2) + 1"
+        [cols]="mediaUrlsToDisplay.length / 2 + 1"
         rowHeight="160px"
       >
         <mat-grid-tile *ngFor="let mediaUrl of mediaUrlsToDisplay; index as i">

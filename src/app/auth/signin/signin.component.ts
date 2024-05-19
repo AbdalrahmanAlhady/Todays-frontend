@@ -1,16 +1,18 @@
-import { Component } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CustomvalidationService } from '../customvalidation.service';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.css'],
 })
-export class SigninComponent {
-  backendError:string = '';
+export class SigninComponent implements OnInit, OnDestroy {
+  backendError: string = '';
+  subscriptions= new Subscription();
   signinForm = this.formBuilder.group({
     email: [
       '',
@@ -21,12 +23,7 @@ export class SigninComponent {
         Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
       ]),
     ],
-    password: [
-      '',
-      Validators.compose([
-        Validators.required
-      ]),
-    ],
+    password: ['', Validators.compose([Validators.required])],
   });
   constructor(
     private formBuilder: FormBuilder,
@@ -34,21 +31,30 @@ export class SigninComponent {
     private authService: AuthService,
     private router: Router,
   ) {}
+  ngOnInit(): void {
+  }
+
   switchToSignup() {
-    this.router.navigate(['/signup'])
+    this.router.navigate(['/signup']);
   }
   signin(formData: { email: string; password: string }) {
-    this.authService.signin(formData.email,formData.password).subscribe({
-      next: (res) => {
-        if (res.body?.token) {
-          localStorage.setItem('userToken',JSON.stringify(res.body.token!)!);
-          this.authService.$userToken.next(res.body?.token);
-          this.router.navigate(['/']);
-        }
-      },
-      error: (error) => {
-        this.backendError = error.error.message 
-      },
-    });
+    this.subscriptions.add(
+      this.authService.signin(formData.email, formData.password).subscribe({
+        next: (res) => {
+          if (res.body?.token) {
+            localStorage.setItem('userToken', JSON.stringify(res.body.token!)!);
+            this.authService.$userToken.next(res.body?.token);
+            this.router.navigate(['/']);
+          }
+        },
+        error: (error) => {
+          this.backendError = error.error.message;
+        },
+      }),
+    );
   }
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe()
+  }
+
 }

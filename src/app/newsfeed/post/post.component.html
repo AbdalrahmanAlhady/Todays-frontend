@@ -1,16 +1,22 @@
-<div class="d-flex flex-column post">
+<div class="d-flex flex-column post" *ngIf="post">
   <div class="d-flex flex-row post-header">
-    <img
-      class="user-img"
-      [src]="post.user?.profileImg"
-      alt="user-img"
-      *ngIf="post.user?.profileImg"
-    />
-    <i
-      class="bi bi-person-circle h2"
-      style="margin-right: 5px; margin-bottom: 0"
-      *ngIf="!post.user?.profileImg"
-    ></i>
+    <a
+
+      style="cursor: pointer; text-decoration: none"
+      [routerLink]="'/profile/' + post.owner_id"
+    >
+      <img
+        class="user-img"
+        [src]="post.user?.profileImg"
+        alt="user-img"
+        *ngIf="post.user?.profileImg"
+      />
+      <i
+        class="bi bi-person-circle h2"
+        style="margin-right: 5px; margin-bottom: 0"
+        *ngIf="!post.user?.profileImg"
+      ></i>
+    </a>
     <div class="d-flex flex-column post-sub-header">
       <p class="user-name">
         {{ post.user?.first_name + " " + post.user?.last_name }}
@@ -20,8 +26,8 @@
   </div>
   <div class="post-body">
     <p>{{ post.body }}</p>
-    <carousel [interval]="0" *ngIf="post.media && post.media!.length > 0">
-      <slide *ngFor="let media of post.media" style="text-align: center;">
+    <carousel [interval]="0" *ngIf="post.media && post.media!.length > 1">
+      <slide *ngFor="let media of post.media" style="text-align: center">
         <img
           class="post-img"
           [src]="media.url"
@@ -31,18 +37,37 @@
           *ngIf="media.type == 'img'"
         />
         <app-video-player
-        [avgDimensions]="avgMediaDimensions"       
+          [avgDimensions]="avgMediaDimensions"
           *ngIf="media.type === 'video'"
           [url]="media.url"
         ></app-video-player>
       </slide>
     </carousel>
+    <div *ngIf="post.media && post.media!.length === 1" >
+     <img
+      #img
+      class="post-img"
+      [src]="post.media[0].url"
+      alt="post-img"
+      *ngIf="
+         post.media[0].type == 'img'
+      "
+    />
+    <app-video-player
+      [avgDimensions]="avgMediaDimensions"
+      *ngIf="
+         post.media[0].type == 'video' 
+      "
+      [url]="post.media[0].url"
+    ></app-video-player>
+    </div>
+   
   </div>
 
   <div class="post-footer d-flex flex-column">
     <hr />
     <div class="post-footer-btns d-flex flex-row">
-      <button mat-stroked-button style="margin-right: 5px" (click)="likePost()">
+      <button mat-stroked-button style="margin-right: 5px" (click)="likeORUnlikePost()">
         <i
           class=""
           [ngClass]="
@@ -53,18 +78,19 @@
         ></i>
         {{ " " + likesCount }}
       </button>
-      <button mat-stroked-button (click)="openComments(commentsModel)">
+      <button mat-stroked-button (click)="openComments()">
         <i class="bi bi-chat-left-text"></i> {{ " " + commentsCount }}
       </button>
     </div>
   </div>
-  <ng-template #commentsModel>
-    <app-modal [modalRef]="modalRef" [title]="'Comments'">
-      <div class="comments">
-        <app-comment
-          *ngFor="let comment of post.comments"
-          [comment]="comment"
-        ></app-comment>
+  <ng-template #commentsModal>
+    <app-modal [modalRef]="modalRef" [title]="'Comments'" #wait>
+      <div
+        class="comments"
+        *ngFor="let comment of post.comments"
+        [attr.id]="'comment' + comment.id"
+      >
+        <app-comment [comment]="comment"></app-comment>
       </div>
       <app-create-comment
         footer

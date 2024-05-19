@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject, finalize } from 'rxjs';
+import { Subject, finalize } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Media } from '../models/media.model';
 

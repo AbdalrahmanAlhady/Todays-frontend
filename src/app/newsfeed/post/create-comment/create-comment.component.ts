@@ -1,18 +1,24 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { AuthService } from 'src/app/auth/auth.service';
 import { Comment } from 'src/app/shared/models/comment.model';
-import { Media } from 'src/app/shared/models/media.model';
 import { CommentsService } from 'src/app/shared/services/comments.service';
 import { MediaUploadService } from 'src/app/shared/services/media-upload.service';
-import { PostsService } from 'src/app/shared/services/posts.service';
+import { UserService } from '../../../shared/services/user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-create-comment',
   templateUrl: './create-comment.component.html',
   styleUrl: './create-comment.component.css',
 })
-export class CreateCommentComponent {
+export class CreateCommentComponent implements OnInit, OnDestroy {
   @ViewChild('comment_body') commentBody!: ElementRef;
   @Input() post_id: string = '';
   mediaToDisplay?: File;
@@ -22,65 +28,81 @@ export class CreateCommentComponent {
   } = { displayUrl: null, fileType: '' };
   comment!: Comment;
   percentage!: number;
+  subscriptions = new Subscription();
+
   ngOnInit() {}
+
   constructor(
     private mediaUploadService: MediaUploadService,
-    private authService: AuthService,
     private commentsService: CommentsService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private userService: UserService,
   ) {}
+
   onFileChanged(event: any) {
     this.mediaToDisplay = event.target!.files[0];
     const fileType = this.mediaToDisplay!.type.split('/')[0];
     this.mediaUrlToDisplay!.displayUrl = this.sanitizer.bypassSecurityTrustUrl(
-      window.URL.createObjectURL(this.mediaToDisplay!)
+      window.URL.createObjectURL(this.mediaToDisplay!),
     );
     this.mediaUrlToDisplay!.fileType = fileType === 'video' ? 'video' : 'img';
   }
 
   createComment() {
-    this.commentsService
-      .createComment({
-        body: this.commentBody.nativeElement.value,
-        owner_id: this.authService.getCurrentUserId(),
-        post_id: this.post_id,
-      })
-      .subscribe({
-        next: (res) => {
-          this.comment = res.body?.comment!;
-          if ((res.status === 200 || 201) && this.comment.id) {
-            if (this.mediaToDisplay) {
-              this.mediaUploadService
-                .uploadMedia(
-                  this.mediaToDisplay!,
-                  this.comment.id,
-                  'comment',
-                  this.mediaUrlToDisplay.fileType === 'img' ? 'img' : 'video',
-                )
-                .subscribe((percent) => {
-                  this.percentage = Math.trunc(percent!);
-                });
+    this.subscriptions.add(
+      this.commentsService
+        .createComment({
+          body: this.commentBody.nativeElement.value,
+          owner_id: this.userService.getCurrentUserId(),
+          post_id: this.post_id,
+        })
+        .subscribe({
+          next: (res) => {
+            this.comment = res.body?.comment!;
+            if (this.comment) {
+              if (this.mediaToDisplay) {
+                this.subscriptions.add(
+                  this.mediaUploadService
+                    .uploadMedia(
+                      this.mediaToDisplay!,
+                      this.comment.id!,
+                      'comment',
+                      this.mediaUrlToDisplay.fileType === 'img'
+                        ? 'img'
+                        : 'video',
+                    )
+                    .subscribe((percent) => {
+                      this.percentage = Math.trunc(percent!);
+                    }),
+                );
+                this.attachUploadedMediaToComment();
+              } else {
+                this.commentsService.$newComment.next(this.comment);
+                setTimeout(() => {
+                  this.clear();
+                }, 1000);
+              }
             }
-          }
-          if (!this.mediaToDisplay) {
-            this.commentsService.$newComment.next(this.comment);
-            setTimeout(() => {
-              this.clear();
-            }, 2000);
-          }
-          this.mediaUploadService.$commentMedia.subscribe((media) => {
-            this.comment.media = media;
-            this.commentsService.$newComment.next(this.comment);
-            if (this.percentage === 100) {
-              this.clear();
-            }
-          });
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        }),
+    );
   }
+
+  attachUploadedMediaToComment() {
+    this.subscriptions.add(
+      this.mediaUploadService.$commentMedia.subscribe((media) => {
+        this.comment.media = media;
+        this.commentsService.$newComment.next(this.comment);
+        if (this.percentage === 100) {
+          this.clear();
+        }
+      }),
+    );
+  }
+
   clear() {
     setTimeout(() => {
       this.commentBody.nativeElement.value = '';
@@ -88,5 +110,9 @@ export class CreateCommentComponent {
       this.mediaUrlToDisplay = { displayUrl: null, fileType: '' };
       this.percentage = NaN;
     }, 2000);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

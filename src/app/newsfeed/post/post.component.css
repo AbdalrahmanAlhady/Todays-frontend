@@ -1,9 +1,12 @@
 .post {
-  width: 50%;
   background: white;
   padding: 16px;
   border-radius: 10px;
-  margin-bottom: 20px;
+  min-width: none;
+}
+img{
+display: block;
+margin: auto;
 }
 
 .post-header {
@@ -26,10 +29,6 @@
   margin: 0;
 }
 
-/* .post-img {
-  height: 200px;
-  width: 100%;
-} */
 
 .sub-media-wrapper {
   border-radius: 15px;

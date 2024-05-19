@@ -1,7 +1,7 @@
 <vg-player style="place-content: center;">
   <video
-    [attr.width]="[avgDimensions!.width]"
-    [attr.height]="[avgDimensions!.height]"
+    [attr.width]="[avgDimensions ? avgDimensions!.width:'100%']"
+    [attr.height]="[avgDimensions ? avgDimensions!.height:'100%']"
     #media
     [vgMedia]="$any(media)"
     id="singleVideo"

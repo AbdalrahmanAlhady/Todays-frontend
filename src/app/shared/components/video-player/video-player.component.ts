@@ -8,6 +8,6 @@ import { Media } from '../../models/media.model';
   styleUrl: './video-player.component.css'
 })
 export class VideoPlayerComponent {
-@Input() url!:string|SafeUrl
-@Input() avgDimensions!:Media['dimensions']
+  @Input() url!:string|SafeUrl
+  @Input() avgDimensions!:Media['dimensions']
 }

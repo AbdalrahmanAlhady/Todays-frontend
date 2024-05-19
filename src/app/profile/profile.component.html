@@ -1,1 +1,87 @@
-<p>profile works!</p>
+<div id="profile-upper">
+  <div id="profile-banner-image">
+    <img
+      src="https://imagizer.imageshack.com/img921/9628/VIaL8H.jpg"
+      alt="Banner image"
+    />
+  </div>
+  <div class="d-flex flex-row" id="profile-d">
+    <div class="profile-info">
+      <div id="profile-pic" *ngIf="profileOwner">
+        <img
+          class=""
+          [src]="profileOwner.profileImg"
+          alt="user-img"
+          *ngIf="profileOwner.profileImg"
+        />
+        <i
+          class="bi bi-person-circle"
+          style="
+            margin-right: 5px;
+            margin-bottom: 0;
+            color: white;
+            font-size: 10rem;
+          "
+          *ngIf="!profileOwner.profileImg"
+        ></i>
+      </div>
+      <p id="u-name" *ngIf="profileOwner">
+        {{ profileOwner.first_name + " " + profileOwner.last_name }}
+      </p>
+    </div>
+
+    <div class="" id="m-btns">
+      <button mat-raised-button (click)="sendFriendRequest()" >
+        {{
+          viewerOwnerFriendshipStatus === "none"
+            ? "add friend"
+            : viewerOwnerFriendshipStatus === "accepted"
+              ? "friends"
+              : viewerOwnerFriendshipStatus
+        }}
+      </button>
+      <button mat-raised-button>message</button>
+    </div>
+  </div>
+  <div id="black-grd"></div>
+</div>
+<div id="main-content">
+  <div class="tb">
+    <div class="td" id="m-col">
+      <div class="m-mrg" id="p-tabs">
+        <div class="tb">
+          <div class="td">
+            <div class="tb" id="p-tabs-m">
+              <div class="td active">
+                <i class="material-icons">av_timer</i><span>TIMELINE</span>
+              </div>
+              <div class="td">
+                <i class="material-icons">people</i><span>FRIENDS</span>
+              </div>
+              <div class="td">
+                <i class="material-icons">photo</i><span>PHOTOS</span>
+              </div>
+              <div class="td">
+                <i class="material-icons">explore</i><span>ABOUT</span>
+              </div>
+              <div class="td">
+                <i class="material-icons">archive</i><span>ARCHIVE</span>
+              </div>
+            </div>
+          </div>
+          <div class="td" id="p-tab-m">
+            <i class="material-icons">keyboard_arrow_down</i>
+          </div>
+        </div>
+      </div>
+      <div class="col-6" style="margin: auto">
+        <div class="m-mrg">
+          <app-create-post [width]="100"></app-create-post>
+        </div>
+        <div *ngFor="let post of posts">
+          <app-post [post]="post"></app-post>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

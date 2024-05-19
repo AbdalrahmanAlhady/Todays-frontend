@@ -6,13 +6,17 @@ import { SigninComponent } from './auth/signin/signin.component';
 import { NewsfeedComponent } from './newsfeed/newsfeed.component';
 import { AuthGuard } from './auth/auth.guard.service';
 import { ProfileComponent } from './profile/profile.component';
+import { ChatComponent } from './chat/chat.component';
+import {PostComponent} from "./newsfeed/post/post.component";
 
 const routes: Routes = [
   { path: 'newsfeed',canActivate: [AuthGuard], component: NewsfeedComponent },
   { path: '', redirectTo: 'newsfeed', pathMatch: 'full' },
   { path: 'signup', component: SignupComponent },
   { path: 'signin', component: SigninComponent },
-  { path: 'profile', component: ProfileComponent },
+  { path: 'profile/:user_id', component: ProfileComponent },
+  { path: 'post/:post_id', component: PostComponent},
+  { path: 'chat', component: ChatComponent },
 ];
 
 @NgModule({

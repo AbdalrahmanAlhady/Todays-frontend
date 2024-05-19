@@ -7,6 +7,7 @@ export interface User {
   password?: string;
   cPassword?: string;
   profileImg?: string;
+  profileCoverImg?: string;
   birthdate: Date;
   gender: 'male' | 'female';
   createdAt?:Date;

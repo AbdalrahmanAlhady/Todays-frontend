@@ -46,4 +46,7 @@ export class ModalComponent implements OnInit {
       this.render.removeStyle(el, 'border');
     }, 5000);
   }
+  nextCommentsPage(){
+    this.shareDataService.$nextCommentsPage.next(true);
+  }
 }

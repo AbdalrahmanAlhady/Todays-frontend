@@ -1,9 +1,16 @@
 <div class="col-6" style="margin: auto">
   <app-create-post [width]="100"></app-create-post>
-  <app-post
-    [attr.id]="'post' + post.id"
-    *ngFor="let post of posts"
-    [post]="post"
-    [widthPercent]="50"
-  ></app-post>
+  <div
+    infiniteScroll
+    [infiniteScrollDistance]="1"
+    [infiniteScrollThrottle]="500"
+    (scrolled)="getNextPostPage()"
+  >
+    <app-post
+      [attr.id]="'post' + post.id"
+      *ngFor="let post of posts"
+      [post]="post"
+      [widthPercent]="50"
+    ></app-post>
+  </div>
 </div>

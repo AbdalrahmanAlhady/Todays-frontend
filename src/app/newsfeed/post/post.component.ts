@@ -1,11 +1,12 @@
 import {
   Component,
   ElementRef,
-  Input, OnDestroy,
+  Input,
+  OnDestroy,
   OnInit,
   Renderer2,
   TemplateRef,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -15,7 +16,7 @@ import { CommentsService } from 'src/app/shared/services/comments.service';
 import { PostsService } from 'src/app/shared/services/posts.service';
 import { format } from 'timeago.js';
 import { ShareDataService } from '../../shared/services/share-data.service';
-import {Subscription} from "rxjs";
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-post',
@@ -26,7 +27,6 @@ export class PostComponent implements OnInit, OnDestroy {
   @Input() widthPercent!: number;
   @Input() post!: Post;
   @ViewChild('commentsModal') commentsModal!: TemplateRef<void>;
-  @ViewChild('wait') wait!: ElementRef;
   timeAgo: string = '';
   commentsCount: number = 0;
   likesCount: number = 0;
@@ -41,6 +41,8 @@ export class PostComponent implements OnInit, OnDestroy {
     height: 0,
   };
   subscriptions = new Subscription();
+  currentCommentsPage: number = 1;
+  console: any;
 
   constructor(
     private modalService: BsModalService,
@@ -49,36 +51,50 @@ export class PostComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private render: Renderer2,
     private route: ActivatedRoute,
-    private shareDataService: ShareDataService,
+    private shareDataService: ShareDataService
   ) {}
 
   ngOnInit(): void {
     // if not navigated to Component
     if (this.post) {
       this.preparePost();
+    } else {
+      // if navigated to Component
+      this.handleNavigationFromNotification();
     }
-    // if navigated to Component
     this.subscriptions.add(
-      this.route.params.subscribe((params) => {
-        if (params['post_id']) {
-          this.subscriptions.add(
-            this.postService.getPostById(params['post_id']).subscribe((res) => {
-              this.post = res.body?.post!;
-              this.preparePost();
-              this.route.fragment.subscribe((comment_id) => {
-                if (this.post && this.post.comments?.length! > 0)
-                  this.scrollToCommentById(comment_id!);
-              });
-            }),
-          );
-        }
-      }),
+      this.commentsService
+        .getComments(this.post.id!, '1', '4')
+        .subscribe((res) => {
+          this.post.comments = res.body?.comments.rows;
+          this.commentsCount = res.body?.comments.count!;
+          this.currentCommentsPage++;
+        })
     );
+    this.listenToGetNextCommentsPage();
   }
-
+  listenToGetNextCommentsPage() {
+    this.shareDataService.$nextCommentsPage.subscribe((res) => {
+      if (res) {
+        this.subscriptions.add(
+          this.commentsService
+            .getComments(
+              this.post.id!,
+              this.currentCommentsPage.toString(),
+              '4'
+            )
+            .subscribe((res) => {
+              this.post.comments?.push(...res.body?.comments.rows!);
+              this.currentCommentsPage++;
+              this.shareDataService.$nextCommentsPage.next(false);
+            })
+        );
+      }
+    });
+  }
   preparePost() {
+    this.countLikes();
     this.calculatePostDate();
-    this.countCommentsAndLikes();
     this.checkIfPostLikedByCurrentUser();
     this.listenToNewComments();
     if (this.post.media) {
@@ -101,14 +117,13 @@ export class PostComponent implements OnInit, OnDestroy {
       this.commentsService.$newComment.subscribe((comment) => {
         if (comment.post_id === this.post.id) {
           this.post.comments?.push(comment);
-          this.countCommentsAndLikes();
+          this.commentsCount++;
         }
-      }),
+      })
     );
   }
 
-  countCommentsAndLikes() {
-    this.commentsCount = this.post.comments!.length;
+  countLikes() {
     this.likesCount = this.post.likes!.length;
   }
 
@@ -121,10 +136,10 @@ export class PostComponent implements OnInit, OnDestroy {
       this.subscriptions.add(
         this.postService.unlikePost(this.post.id!).subscribe((res) => {
           this.post.likes = res.body?.newPostLikes!;
-          this.countCommentsAndLikes();
+          this.countLikes();
           this.postLikedByCurrentUser = false;
           console.log(this.post.likes);
-        }),
+        })
       );
     } else {
       this.subscriptions.add(
@@ -132,7 +147,7 @@ export class PostComponent implements OnInit, OnDestroy {
           next: (res) => {
             if (res.status === 201) {
               this.post.likes?.push(res.body!.newLike);
-              this.countCommentsAndLikes();
+              this.countLikes();
               this.postLikedByCurrentUser = true;
               console.log(this.post.likes);
             }
@@ -140,7 +155,7 @@ export class PostComponent implements OnInit, OnDestroy {
           error: (error) => {
             console.log(error.error.message);
           },
-        }),
+        })
       );
     }
   }
@@ -155,7 +170,24 @@ export class PostComponent implements OnInit, OnDestroy {
     this.avgMediaDimensions!.height = heightSum / this.post.media!.length!;
     this.avgMediaDimensions!.width = widthSum / this.post.media!.length!;
   }
-
+  handleNavigationFromNotification() {
+    this.subscriptions.add(
+      this.route.params.subscribe((params) => {
+        if (params['post_id']) {
+          this.subscriptions.add(
+            this.postService.getPostById(params['post_id']).subscribe((res) => {
+              this.post = res.body?.post!;
+              this.preparePost();
+              this.route.fragment.subscribe((comment_id) => {
+                if (this.post && this.post.comments?.length! > 0)
+                  this.scrollToCommentById(comment_id!);
+              });
+            })
+          );
+        }
+      })
+    );
+  }
   scrollToCommentById(comment_id: string) {
     setTimeout(() => {
       this.openComments();
@@ -165,6 +197,6 @@ export class PostComponent implements OnInit, OnDestroy {
     }, 1000);
   }
   ngOnDestroy() {
-    this.subscriptions.unsubscribe()
+    this.subscriptions.unsubscribe();
   }
 }

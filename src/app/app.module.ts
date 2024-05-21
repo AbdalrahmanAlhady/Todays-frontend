@@ -46,6 +46,7 @@ import { LogoComponent } from './shared/components/icons/logo/logo.component';
 import {MatDivider} from "@angular/material/divider";
 import {NotificationIconComponent} from "./shared/components/icons/notification-icon/notification-icon.component";
 import {NotificationComponent} from "./shared/components/notification/notification.component";
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   declarations: [
@@ -107,6 +108,7 @@ import {NotificationComponent} from "./shared/components/notification/notificati
     MatMenuTrigger,
     MatMenuItem,
     MatDivider,
+    InfiniteScrollModule
   ],
   providers: [
     {

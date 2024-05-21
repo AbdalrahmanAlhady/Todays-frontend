@@ -78,7 +78,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.notifications.push(notification);
       this.notifications = [...this.notifications];
       this.unseenNotificationsCount++;
-      console.log(this.notifications);
     });
   }
 

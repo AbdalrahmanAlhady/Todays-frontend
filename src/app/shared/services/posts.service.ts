@@ -25,9 +25,11 @@ export class PostsService {
     );
   }
 
-  getPosts(user_id?: string) {
+  getPosts(user_id?: string, page?: string, postsNumber?: string) {
     let queryParams = new HttpParams();
     if (user_id) queryParams = queryParams.append('user_id', user_id);
+    if (page) queryParams = queryParams.append('page', page);
+    if (postsNumber) queryParams = queryParams.append('limit', postsNumber);
     return this.http.get<{ posts: { count: number; rows: Post[] } }>(
       'http://localhost:3000/api/v1/posts',
       { observe: 'response', params: queryParams },

@@ -6,5 +6,7 @@ import {Subject} from "rxjs";
 })
 export class ShareDataService {
   $scrollToComment = new Subject<string>();
+  $nextCommentsPage = new Subject<boolean>();
+  
   constructor() { }
 }

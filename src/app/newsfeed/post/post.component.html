@@ -1,7 +1,6 @@
 <div class="d-flex flex-column post" *ngIf="post">
   <div class="d-flex flex-row post-header">
     <a
-
       style="cursor: pointer; text-decoration: none"
       [routerLink]="'/profile/' + post.owner_id"
     >
@@ -43,31 +42,30 @@
         ></app-video-player>
       </slide>
     </carousel>
-    <div *ngIf="post.media && post.media!.length === 1" >
-     <img
-      #img
-      class="post-img"
-      [src]="post.media[0].url"
-      alt="post-img"
-      *ngIf="
-         post.media[0].type == 'img'
-      "
-    />
-    <app-video-player
-      [avgDimensions]="avgMediaDimensions"
-      *ngIf="
-         post.media[0].type == 'video' 
-      "
-      [url]="post.media[0].url"
-    ></app-video-player>
+    <div *ngIf="post.media && post.media!.length === 1">
+      <img
+        #img
+        class="post-img"
+        [src]="post.media[0].url"
+        alt="post-img"
+        *ngIf="post.media[0].type == 'img'"
+      />
+      <app-video-player
+        [avgDimensions]="avgMediaDimensions"
+        *ngIf="post.media[0].type == 'video'"
+        [url]="post.media[0].url"
+      ></app-video-player>
     </div>
-   
   </div>
 
   <div class="post-footer d-flex flex-column">
     <hr />
     <div class="post-footer-btns d-flex flex-row">
-      <button mat-stroked-button style="margin-right: 5px" (click)="likeORUnlikePost()">
+      <button
+        mat-stroked-button
+        style="margin-right: 5px"
+        (click)="likeORUnlikePost()"
+      >
         <i
           class=""
           [ngClass]="
@@ -78,13 +76,13 @@
         ></i>
         {{ " " + likesCount }}
       </button>
-      <button mat-stroked-button (click)="openComments()">
+      <button mat-stroked-button (click)="openComments()" >
         <i class="bi bi-chat-left-text"></i> {{ " " + commentsCount }}
       </button>
     </div>
   </div>
   <ng-template #commentsModal>
-    <app-modal [modalRef]="modalRef" [title]="'Comments'" #wait>
+    <app-modal [modalRef]="modalRef" [title]="'Comments'">
       <div
         class="comments"
         *ngFor="let comment of post.comments"

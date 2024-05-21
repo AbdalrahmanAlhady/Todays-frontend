@@ -8,12 +8,13 @@ import { AuthGuard } from './auth/auth.guard.service';
 import { ProfileComponent } from './profile/profile.component';
 import { ChatComponent } from './chat/chat.component';
 import {PostComponent} from "./newsfeed/post/post.component";
+import { AuthPageGuard } from './auth/authPage.guard.service';
 
 const routes: Routes = [
   { path: 'newsfeed',canActivate: [AuthGuard], component: NewsfeedComponent },
   { path: '', redirectTo: 'newsfeed', pathMatch: 'full' },
-  { path: 'signup', component: SignupComponent },
-  { path: 'signin', component: SigninComponent },
+  { path: 'signup', canActivate: [AuthPageGuard],component: SignupComponent },
+  { path: 'signin', canActivate: [AuthPageGuard],component: SigninComponent },
   { path: 'profile/:user_id', component: ProfileComponent },
   { path: 'post/:post_id', component: PostComponent},
   { path: 'chat', component: ChatComponent },

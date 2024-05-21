@@ -16,7 +16,7 @@ import { CommentsService } from 'src/app/shared/services/comments.service';
 import { PostsService } from 'src/app/shared/services/posts.service';
 import { format } from 'timeago.js';
 import { ShareDataService } from '../../shared/services/share-data.service';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-post',
@@ -42,7 +42,7 @@ export class PostComponent implements OnInit, OnDestroy {
   };
   subscriptions = new Subscription();
   currentCommentsPage: number = 1;
-  console: any;
+  $firstCommentsInit = new Subject<boolean>();
 
   constructor(
     private modalService: BsModalService,
@@ -62,15 +62,6 @@ export class PostComponent implements OnInit, OnDestroy {
       // if navigated to Component
       this.handleNavigationFromNotification();
     }
-    this.subscriptions.add(
-      this.commentsService
-        .getComments(this.post.id!, '1', '4')
-        .subscribe((res) => {
-          this.post.comments = res.body?.comments.rows;
-          this.commentsCount = res.body?.comments.count!;
-          this.currentCommentsPage++;
-        })
-    );
     this.listenToGetNextCommentsPage();
   }
   listenToGetNextCommentsPage() {
@@ -92,11 +83,25 @@ export class PostComponent implements OnInit, OnDestroy {
       }
     });
   }
+  getFirstCommentsPages() {
+    this.subscriptions.add(
+      this.commentsService
+        .getComments(this.post.id!, '1', '4')
+        .subscribe((res) => {
+          this.post.comments = res.body?.comments.rows;
+          this.commentsCount = res.body?.comments.count!;
+          this.currentCommentsPage++;
+          this.$firstCommentsInit.next(true);
+        })
+    );
+  }
+
   preparePost() {
+    this.getFirstCommentsPages();
     this.countLikes();
     this.calculatePostDate();
     this.checkIfPostLikedByCurrentUser();
-    this.listenToNewComments();
+    this.listenToNewComment();
     if (this.post.media) {
       this.calcAvgMediaDimenisions();
     }
@@ -112,7 +117,7 @@ export class PostComponent implements OnInit, OnDestroy {
     });
   }
 
-  listenToNewComments() {
+  listenToNewComment() {
     this.subscriptions.add(
       this.commentsService.$newComment.subscribe((comment) => {
         if (comment.post_id === this.post.id) {
@@ -178,10 +183,15 @@ export class PostComponent implements OnInit, OnDestroy {
             this.postService.getPostById(params['post_id']).subscribe((res) => {
               this.post = res.body?.post!;
               this.preparePost();
-              this.route.fragment.subscribe((comment_id) => {
-                if (this.post && this.post.comments?.length! > 0)
-                  this.scrollToCommentById(comment_id!);
-              });
+              this.subscriptions.add(
+                this.$firstCommentsInit.subscribe((res) => {
+                  if (this.post.comments) {
+                    this.route.fragment.subscribe((comment_id) => {
+                      this.scrollToCommentById(comment_id!);
+                    });
+                  }
+                })
+              );
             })
           );
         }

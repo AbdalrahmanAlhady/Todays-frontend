@@ -1,0 +1,115 @@
+<div
+  class=" flex flex-column chat-container"
+  (click)="seenMessages()"
+  [ngClass]="conversationStatusOfCurrentUser === 'minimzed' ? '' : 'bg-white'"
+>
+  <!-- chat header -->
+  <div
+    class="d-flex flex-row chat-header"
+    style="background-color: #016d81d4; justify-content: space-between"
+  >
+    <div class="d-flex flex-row recipient-info">
+      <a
+        class="recipient-img"
+        *ngIf="otherUser"
+        routerLink="/profile/{{ otherUser.id }}"
+      >
+        <img
+          class="user-img"
+          [src]="otherUser.profileImg"
+          alt="user-img"
+          *ngIf="otherUser.profileImg"
+        />
+        <i
+          class="bi bi-person-circle h1"
+          style="color: white; font-size: 5vh"
+          *ngIf="!otherUser.profileImg"
+        ></i>
+      </a>
+      <div class="d-flex flex-column align-self-center recipient-name-status">
+        <p class="font-semibold recipient-name" style="color: white; margin: 0">
+          {{ otherUser.first_name + " " + otherUser.last_name }}
+        </p>
+        <p class="text-xs recipient-status" style="color: #75ff75; margin: 0">
+          online
+        </p>
+      </div>
+    </div>
+    <div class="header-btns d-flex flex-row align-items-center">
+      <button
+        class="minimize-chat-btn"
+        mat-icon-button
+        style="color: white"
+        (click)="changeConversationStatus('minimzed')"
+        *ngIf="conversationStatusOfCurrentUser !== 'minimzed'"
+      >
+        <mat-icon>minimize</mat-icon>
+      </button>
+      <button
+        class="close-chat-btn"
+        mat-icon-button
+        style="color: white"
+        (click)="changeConversationStatus('closed')"
+        *ngIf="conversationStatusOfCurrentUser !== 'minimzed'"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+      <button
+      class="close-chat-btn"
+      mat-icon-button
+      style="color: white"
+      (click)="changeConversationStatus('active')"
+      *ngIf="conversationStatusOfCurrentUser === 'minimzed'"
+    >
+      <mat-icon>transit_enterexit</mat-icon>
+    </button>
+    </div>
+  </div>
+  <!-- chat body -->
+  <div
+    class="d-flex flex-column chat-body"
+    style="overflow-y: auto; padding: 15px"
+    *ngIf="conversationStatusOfCurrentUser !== 'minimzed'"
+  >
+    <app-message
+      *ngFor="let message of messages"
+      [message]="message"
+    ></app-message>
+    <div
+      *ngIf="messages.length === 0"
+      class="d-flex flex-column align-items-center"
+      style="margin: auto"
+    >
+      <img
+        height="64"
+        width="64"
+        src="../../../../assets/empty-inbox.png"
+        alt="empty-chat"
+      />
+      <p style="font-weight: 700; margin-top: 10px">No messages yet</p>
+    </div>
+  </div>
+  <!-- chat footer -->
+  <div
+    class="p-2 flex items-center border-t d-flex flex-row chat-footer align-items-center"
+    style="justify-content: space-between; border-top: #eef0f3 1px solid"
+    *ngIf="conversationStatusOfCurrentUser !== 'minimzed'"
+  >
+    <input
+      class="flex-1 p-2 border rounded-lg"
+      type="text"
+      placeholder="Type a message"
+      style="width: 90%"
+      [(ngModel)]="newMessage.body"
+    />
+    <button
+      class="close-chat-btn"
+      mat-icon-button
+      color="blue"
+      aria-label="Example icon button with a menu icon"
+      (click)="sendMessage()"
+    >
+      <mat-icon style="color: #336eae">send</mat-icon>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+p {
+    display: inline-block;
+    width: max-content;
+    margin: 0;
+}
+
+.online-user-list {
+    padding: 15px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.online-user {
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.chat-title {
+    font-size: large;
+    margin-bottom: 20px;
+    display: block;
+    color: #016d81;
+    font-weight: 600;
+}
+
+.user-img-container {
+    display: block;
+    cursor: pointer;
+    text-decoration: none;
+    margin-right: 10px;
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+.chat-container{
+   margin-bottom: 20px;
+   height: 30vh;
+
+}
+.active-chats > span{
+    font-size: large;
+    margin-bottom: 20px;
+    display: block;
+    color: #016d81;
+    font-weight: 600;
+}
+

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../auth/services/auth.service';
 import { User } from '../shared/models/user.model';
 import { PostsService } from '../shared/services/posts.service';
 import { Post } from '../shared/models/post.model';
@@ -64,7 +64,7 @@ export class ProfileComponent implements OnInit {
           this.profileOwner.id!
         )
         .subscribe((res) => {
-          if (res.message === 'sent') {
+          if (res.body?.message === 'sent') {
             this.viewerOwnerFriendshipStatus = 'requested';
           }
         }));

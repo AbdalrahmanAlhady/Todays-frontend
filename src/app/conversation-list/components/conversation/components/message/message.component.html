@@ -1,0 +1,39 @@
+<div
+  class="message-container d-flex d-xl-flex flex-row"
+  [ngStyle]="{
+    'justify-content':
+      message.sender_id === currentUser_id ? 'flex-end' : 'flex-start'
+  }"
+>
+  <div
+    class="message"
+    [ngClass]="message.sender_id === currentUser_id ? 'sent' : 'received'"
+  >
+    <p
+      class="message-text"
+      [ngClass]="
+        message.sender_id === currentUser_id
+          ? 'message-text-sent'
+          : 'message-text-received'
+      "
+    >
+      {{ message.body }}
+    </p>
+    <div class="d-flex flex-row message-meta" [ngClass]="
+    message.sender_id === currentUser_id
+      ? 'meta-sent'
+      : 'meta-received'
+  ">
+      <span class="time">
+        {{ message.createdAt | date : "shortTime" }}
+      </span>
+      <app-seen-icon
+        style="width: fit-content"
+        [height]="20"
+        [width]="20"
+        *ngIf="message.sender_id === currentUser_id"
+        [color]="message.seen? 'green' : '#e3e3e3'"
+      ></app-seen-icon>
+    </div>
+  </div>
+</div>

@@ -24,29 +24,33 @@ import { VgCoreModule } from '@videogular/ngx-videogular/core';
 import { VgControlsModule } from '@videogular/ngx-videogular/controls';
 import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
-import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 
 import { AppComponent } from './app.component';
 import { AuthComponent } from './auth/auth.component';
-import { SignupComponent } from './auth/signup/signup.component';
-import { SigninComponent } from './auth/signin/signin.component';
+import { SignupComponent } from './auth/components/signup/signup.component';
+import { SigninComponent } from './auth/components/signin/signin.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { NewsfeedComponent } from './newsfeed/newsfeed.component';
-import { CreatePostComponent } from './newsfeed/create-post/create-post.component';
-import { AuthInterceptor } from './auth/auth_interceptor.service';
-import { PostComponent } from './newsfeed/post/post.component';
-import { CommentComponent } from './newsfeed/post/comment/comment.component';
+import { CreatePostComponent } from './newsfeed/components/create-post/create-post.component';
+import { AuthInterceptor } from './auth/services/auth_interceptor.service';
 import { ModalComponent } from './shared/components/modal/modal.component';
-import { CreateCommentComponent } from './newsfeed/post/create-comment/create-comment.component';
 import { VideoPlayerComponent } from './shared/components/video-player/video-player.component';
-import { ChatComponent } from './chat/chat.component';
+import { ConversationComponent } from './conversation-list/components/conversation/conversation.component';
 import { IconsBaseComponent } from './shared/components/icons/icons-base/icons-base.component';
 import { LogoComponent } from './shared/components/icons/logo/logo.component';
-import {MatDivider} from "@angular/material/divider";
-import {NotificationIconComponent} from "./shared/components/icons/notification-icon/notification-icon.component";
-import {NotificationComponent} from "./shared/components/notification/notification.component";
+import { MatDivider } from '@angular/material/divider';
+import { NotificationIconComponent } from './shared/components/icons/notification-icon/notification-icon.component';
+import { NotificationComponent } from './shared/components/notification/notification.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+
+import { CreateCommentComponent } from './newsfeed/components/post/components/create-comment/create-comment.component';
+import { CommentComponent } from './newsfeed/components/post/components/comment/comment.component';
+import { PostComponent } from './newsfeed/components/post/post.component';
+import { MessageComponent } from './conversation-list/components/conversation/components/message/message.component';
+import { ConversationListComponent } from './conversation-list/conversation-list.component';
+import { SeenIconComponent } from './shared/components/icons/seen-icon/seen-icon.component';
 
 @NgModule({
   declarations: [
@@ -63,11 +67,14 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     ModalComponent,
     CreateCommentComponent,
     VideoPlayerComponent,
-    ChatComponent,
+    ConversationComponent,
     IconsBaseComponent,
     LogoComponent,
     NotificationIconComponent,
-    NotificationComponent
+    NotificationComponent,
+    MessageComponent,
+    ConversationListComponent,
+    SeenIconComponent
   ],
   imports: [
     BrowserModule,
@@ -108,7 +115,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     MatMenuTrigger,
     MatMenuItem,
     MatDivider,
-    InfiniteScrollModule
+    InfiniteScrollModule,
   ],
   providers: [
     {

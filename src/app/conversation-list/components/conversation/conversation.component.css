@@ -1,0 +1,33 @@
+.chat-container{
+    height: 40vh;
+}
+.chat-body{
+    height: 70%;
+    overflow-y: auto;
+}
+.chat-footer{
+    height: max-content;
+    background-color: white;
+}
+.chat-header{
+    height: max-content;
+    padding: 5px ;
+}
+.recipient-img{
+    display: block;
+    cursor: pointer;
+    text-decoration: none;
+    margin-right: 10px;
+    height: fit-content;
+    align-self: center;
+}
+.recipient-name{
+    width: max-content;
+}
+mat-icon{
+    transform: scale(1);
+}
+button{
+    padding: 0;
+    width: fit-content;
+}

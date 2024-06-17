@@ -24,9 +24,6 @@ export class NotificationComponent implements OnInit, OnDestroy {
     this.sender = this.notification.sender!;
   }
 
-  toProfile() {
-    this.router.navigate(['/profile', this.sender.id]);
-  }
   goToComment() {
     this.router.navigate(['/post', this.notification.post_id], {
       fragment: this.notification.comment_id,

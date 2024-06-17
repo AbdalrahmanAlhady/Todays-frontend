@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../auth/services/auth.service';
 import { User } from '../shared/models/user.model';
 import { Notification } from '../shared/models/notification.model';
 import { Router } from '@angular/router';
@@ -8,7 +8,8 @@ import { io, Socket } from 'socket.io-client';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { NotificationService } from '../shared/services/notification.service';
 import { Subscription } from 'rxjs';
-import {user} from "@angular/fire/auth";
+import { user } from '@angular/fire/auth';
+import { SocketService } from '../shared/services/socket.service';
 
 @Component({
   selector: 'app-navbar',
@@ -29,14 +30,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private router: Router,
     private userService: UserService,
     private notificationService: NotificationService,
+    private socketService: SocketService
   ) {}
 
   ngOnInit(): void {
     this.isAuthorized();
     this.getUserNotification();
-    this.connectToSockets();
+    this.socketService.connectToSockets();
     this.listenToNotification();
-    console.log(this.userService.getCurrentUserId())
   }
 
   ngDoCheck(): void {
@@ -51,32 +52,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
         .getUser(this.userService.getCurrentUserId())
         .subscribe((res) => {
           this.user = res.body!.user;
-          console.log(this.user)
         })
     );
     this.isAuth = this.authService.isUserAuthorized();
   }
 
-  toProfile(user: User) {
-    this.router.navigate(['/profile', user.id]);
-  }
-
-  connectToSockets() {
-    if (!this.socket || !this.socket.connected) {
-      this.socket = io('ws://localhost:3000');
-      console.log('socket connected');
-      this.socketConnectionData = this.socket.emit(
-        'set-userID',
-        this.userService.getCurrentUserId(),
-      );
-      this.socket.on('online-user-list', (onlineUserList: User[]) => {});
-    }
-  }
 
   listenToNotification() {
-    this.socket.on('notify', (notification: Notification) => {
+    this.socketService.socket.on('notify', (notification: Notification) => {
       this.notifications.push(notification);
-      this.notifications = [...this.notifications];
       this.unseenNotificationsCount++;
     });
   }
@@ -92,7 +76,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         .subscribe((res) => {
           this.notifications = res.body!.notifications!.rows!;
           this.countUnseenNotifications();
-        }),
+        })
     );
   }
 

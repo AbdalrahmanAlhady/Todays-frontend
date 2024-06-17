@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Subject, finalize } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Media } from '../models/media.model';
+import { EndPoint } from '../endpoints/EndPoint';
 
 @Injectable({
   providedIn: 'root',
@@ -63,7 +64,7 @@ export class MediaUploadService {
   ) {
     return this.http
       .post<{ media: Media }>(
-        'http://localhost:3000/api/v1/media/storeMediaUrls',
+        `${EndPoint.API_ROOT}/${EndPoint.MEDIA_API}`,
         media,
         { observe: 'response' }
       )

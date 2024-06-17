@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { CustomvalidationService } from '../customvalidation.service';
-import { AuthService } from '../auth.service';
+import { CustomvalidationService } from '../../services/customvalidation.service';
+import { AuthService } from '../../services/auth.service';
 import { User } from 'src/app/shared/models/user.model';
 import { Router } from '@angular/router';
 import {Subscription} from "rxjs";

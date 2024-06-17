@@ -32,9 +32,7 @@ export class NewsfeedComponent implements OnInit, OnDestroy {
       this.postsService
       .getPosts(undefined, this.currentPage.toString(), '3')
       .subscribe((res) => {
-        this.posts.push(...res.body?.posts.rows!);
-        console.log(this.posts);
-        
+        this.posts.push(...res.body?.posts.rows!);        
         this.currentPage++;
       })
     );

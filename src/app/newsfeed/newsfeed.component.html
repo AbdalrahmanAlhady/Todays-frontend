@@ -1,16 +1,21 @@
-<div class="col-6" style="margin: auto">
-  <app-create-post [width]="100"></app-create-post>
-  <div
-    infiniteScroll
-    [infiniteScrollDistance]="1"
-    [infiniteScrollThrottle]="500"
-    (scrolled)="getNextPostPage()"
-  >
-    <app-post
-      [attr.id]="'post' + post.id"
-      *ngFor="let post of posts"
-      [post]="post"
-      [widthPercent]="50"
-    ></app-post>
+<div class="row">
+  <div class="col-6" style="margin: auto">
+    <app-create-post [width]="100"></app-create-post>
+    <div
+      infiniteScroll
+      [infiniteScrollDistance]="1"
+      [infiniteScrollThrottle]="500"
+      (scrolled)="getNextPostPage()"
+    >
+      <app-post
+        [attr.id]="'post' + post.id"
+        *ngFor="let post of posts"
+        [post]="post"
+        [widthPercent]="50"
+      ></app-post>
+    </div>
+  </div>
+  <div class="col-4" style="margin-top: 36px">
+    <app-conversation-list></app-conversation-list>
   </div>
 </div>

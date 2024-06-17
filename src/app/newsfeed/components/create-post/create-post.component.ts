@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 import { MediaUploadService } from 'src/app/shared/services/media-upload.service';
 import { PostsService } from 'src/app/shared/services/posts.service';
 import { Post } from 'src/app/shared/models/post.model';
-import { UserService } from '../../shared/services/user.service';
+import { UserService } from '../../../shared/services/user.service';
 
 @Component({
   selector: 'app-create-post',

@@ -10,12 +10,12 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { AuthService } from 'src/app/auth/auth.service';
+import { AuthService } from 'src/app/auth/services/auth.service';
 import { Post } from 'src/app/shared/models/post.model';
 import { CommentsService } from 'src/app/shared/services/comments.service';
 import { PostsService } from 'src/app/shared/services/posts.service';
 import { format } from 'timeago.js';
-import { ShareDataService } from '../../shared/services/share-data.service';
+import { ShareDataService } from '../../../shared/services/share-data.service';
 import { Subject, Subscription } from 'rxjs';
 
 @Component({
@@ -154,7 +154,6 @@ export class PostComponent implements OnInit, OnDestroy {
               this.post.likes?.push(res.body!.newLike);
               this.countLikes();
               this.postLikedByCurrentUser = true;
-              console.log(this.post.likes);
             }
           },
           error: (error) => {
@@ -180,14 +179,15 @@ export class PostComponent implements OnInit, OnDestroy {
       this.route.params.subscribe((params) => {
         if (params['post_id']) {
           this.subscriptions.add(
-            this.postService.getPostById(params['post_id']).subscribe((res) => {
-              this.post = res.body?.post!;
+            this.postService.getPosts(undefined, undefined, undefined, params['post_id']).subscribe((res) => {
+              this.post = res.body?.posts.rows[0]!;
               this.preparePost();
               this.subscriptions.add(
                 this.$firstCommentsInit.subscribe((res) => {
-                  if (this.post.comments) {
+                  if (res && this.post.comments) {
                     this.route.fragment.subscribe((comment_id) => {
                       this.scrollToCommentById(comment_id!);
+                      this.$firstCommentsInit.next(false);
                     });
                   }
                 })

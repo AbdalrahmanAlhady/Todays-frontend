@@ -10,8 +10,9 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Comment } from 'src/app/shared/models/comment.model';
 import { CommentsService } from 'src/app/shared/services/comments.service';
 import { MediaUploadService } from 'src/app/shared/services/media-upload.service';
-import { UserService } from '../../../shared/services/user.service';
+
 import { Subscription } from 'rxjs';
+import { UserService } from 'src/app/shared/services/user.service';
 
 @Component({
   selector: 'app-create-comment',

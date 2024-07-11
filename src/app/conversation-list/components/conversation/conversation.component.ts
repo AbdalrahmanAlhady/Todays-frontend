@@ -60,7 +60,9 @@ export class ConversationComponent implements OnInit, OnDestroy {
       this.userService
         .getUser(this.userService.getCurrentUserId())
         .subscribe((res) => {
-          this.currentUser = res.body!.user;
+          this.currentUser = this.userService.spreadUserMedia(
+            res.body!.user
+          );
         })
     );
     this.isAuth = this.authService.isUserAuthorized();

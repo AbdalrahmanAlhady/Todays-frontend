@@ -98,8 +98,8 @@ export class CreatePostComponent implements OnInit, OnDestroy {
                       .uploadMedia(
                         media,
                         this.post.id!,
-                        'post',
                         this.mediaUrlsToDisplay[index].mediaType,
+                        'post',
                         this.mediaDimensions[index],
                         index,
                         this.mediaLength,

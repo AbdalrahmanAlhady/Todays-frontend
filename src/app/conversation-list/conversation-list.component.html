@@ -1,17 +1,12 @@
 <div class="chat-container">
   <div class="bg-white online-user-list">
-    <span class="chat-title">Friends</span>
+    <span class="chat-title">Online Friends</span>
     <div
       *ngIf="!onlineFriendsList || onlineFriendsList.length === 0"
       class="d-flex flex-column align-items-center"
     >
-      <img
-        height="64"
-        width="64"
-        src="../../assets/no-online-friends.png"
-        alt="empty-chat"
-      />
-      <p style="font-weight: 700; margin-top: 10px">No friends online</p>
+      <app-empty-online-friends [width]="200" [height]="150"></app-empty-online-friends>
+      <p style="font-weight: 700; margin-top: 25px">Either No friends are online or you have no friends yet</p>
     </div>
     <div class="online-user" *ngFor="let onlineFriend of onlineFriendsList">
       <a class="d-flex flex-row" (click)="openChat(onlineFriend.id!)">
@@ -55,7 +50,7 @@
   class="active-chats"
   *ngIf="openedConversations && openedConversations.size > 0"
 >
-  <span>Active Chats</span>
+  <span class="chat-title">Active Chats</span>
   <app-conversation
     *ngFor="let openedConversation of openedConversations|keyvalue"
     [conversation]="openedConversation.value"

@@ -40,3 +40,9 @@
 .comment-body {
     width: 100%;
 }
+.user-img{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }

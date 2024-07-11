@@ -31,7 +31,7 @@
               [url]="mediaUrl.displayUrl!"
             ></app-video-player>
             <progressbar *ngIf="percentages[i]" [value]="percentages[i]">{{
-              percentages[i]
+              percentages[i]+' %'
             }}</progressbar>
           </div>
         </mat-grid-tile>

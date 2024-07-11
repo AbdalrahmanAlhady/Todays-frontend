@@ -1,19 +1,23 @@
-<mat-toolbar style="background-color: #016d81d4">
+<mat-toolbar style="background-color: #027e95;position: fixed;top: 0;z-index: 50;">
   <app-logo
     [height]="100"
     [width]="150"
     style="cursor: pointer"
-    routerLink="/"
+    routerLink="/newsfeed"
   ></app-logo>
-  <div class="d-flex flex-row align-items-center" style="margin-left: auto">
+  <div
+    class="d-flex flex-row align-items-center"
+    style="margin-left: auto"
+    *ngIf="isAuth"
+  >
     <button mat-button [matMenuTriggerFor]="menu">
       <span
         class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger"
       >
-       {{unseenNotificationsCount}}
+        {{ unseenNotificationsCount }}
       </span>
-      <app-notification-icon [width]="45" [height]="35">
-      </app-notification-icon>
+      <app-notification-icon-svg [width]="45" [height]="35">
+      </app-notification-icon-svg>
       <mat-menu
         #menu="matMenu"
         #aboveMenu="matMenu"
@@ -21,7 +25,7 @@
         xPosition="before"
       >
         <app-notification
-          *ngFor="let notification of notifications,trackBy: trackByFn"
+          *ngFor="let notification of notifications; trackBy: trackByFn"
           [notification]="notification"
         ></app-notification>
       </mat-menu>
@@ -33,10 +37,10 @@
     <a
       *ngIf="isAuth && user"
       style="display: block; cursor: pointer; text-decoration: none"
-      routerLink="/profile/{{user.id}}"
+      routerLink="/profile/{{ user.id }}"
     >
       <img
-        class="user-img"
+        class="user-profile-img"
         [src]="user.profileImg"
         alt="user-img"
         *ngIf="user.profileImg"

@@ -37,9 +37,13 @@ export class ConversationListComponent implements OnInit, OnDestroy {
   }
   getOnlineFriends(): Promise<void> {
     return new Promise((resolve, reject) => {
+      this.socketService.getOnlineFriends();
       this.socketService.ListenToOnlineFriends();
-      this.socketService.$onlineFriendsList.subscribe((userList) => {
+      this.socketService.$onlineFriendsList.subscribe((userList) => {           
         this.onlineFriendsList = userList;
+        this.onlineFriendsList.forEach(friend=>{
+          friend = this.userService.spreadUserMedia(friend)
+        })
         resolve();
       }, reject);
     });
@@ -109,7 +113,6 @@ export class ConversationListComponent implements OnInit, OnDestroy {
   calcUnseenMessages() {
     this.onlineFriendsList.forEach((user) => {
       this.conversations.forEach((conversation) => {
-        console.log('conv', conversation);
         if (
           conversation.first_user_id === user.id ||
           conversation.second_user_id === user.id
@@ -128,7 +131,6 @@ export class ConversationListComponent implements OnInit, OnDestroy {
         }
       });
     });
-    console.log(this.unseenMessagesPerUserConversation);
   }
   listenToMessages() {
     this.socketService.socket.on('message', (message: Message) => {
@@ -141,5 +143,7 @@ export class ConversationListComponent implements OnInit, OnDestroy {
       this.openedConversations.delete(conversation_id);
     });
   }
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    
+  }
 }

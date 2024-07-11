@@ -41,7 +41,7 @@ import { ConversationComponent } from './conversation-list/components/conversati
 import { IconsBaseComponent } from './shared/components/icons/icons-base/icons-base.component';
 import { LogoComponent } from './shared/components/icons/logo/logo.component';
 import { MatDivider } from '@angular/material/divider';
-import { NotificationIconComponent } from './shared/components/icons/notification-icon/notification-icon.component';
+import { NotificationIconSvgComponent } from './shared/components/icons/notification-icon-svg/notification-icon-svg.component';
 import { NotificationComponent } from './shared/components/notification/notification.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
@@ -50,7 +50,19 @@ import { CommentComponent } from './newsfeed/components/post/components/comment/
 import { PostComponent } from './newsfeed/components/post/post.component';
 import { MessageComponent } from './conversation-list/components/conversation/components/message/message.component';
 import { ConversationListComponent } from './conversation-list/conversation-list.component';
-import { SeenIconComponent } from './shared/components/icons/seen-icon/seen-icon.component';
+import { SeenIconSvgComponent } from './shared/components/icons/seen-icon-svg/seen-icon-svg.component';
+import { EmptyCoverComponent } from './shared/components/icons/empty-cover/empty-cover.component';
+import { EmptyOnlineFriendsComponent } from './shared/components/icons/empty-online-friends/empty-online-friends.component';
+import { EmptyProfileMediaComponent } from './shared/components/icons/empty-profile-media/empty-profile-media.component';
+import { EmptyProfileFriendsComponent } from './shared/components/icons/empty-profile-friends/empty-profile-friends.component';
+import { SideSectionComponent } from './profile/components/side-section/side-section.component';
+import { PersonalInformationSvgComponent } from './shared/components/icons/personal-information-svg/personal-information-svg.component';
+import { EditPersonalInformationComponent } from './profile/components/edit-personal-information/edit-personal-information.component';
+import { VerifyOtpComponent } from './shared/components/verify-otp/verify-otp.component';
+import { OptEmailSvgComponent } from './shared/components/icons/opt-email-svg/opt-email-svg.component';
+import { EmailVerifiedSvgComponent } from './shared/components/icons/email-verified-svg/email-verified-svg.component';
+import { UpdateDoneSvgComponent } from './shared/components/icons/update-done-svg/update-done-svg.component';
+import { EmptyPostsComponent } from './shared/components/icons/empty-posts/empty-posts.component';
 
 @NgModule({
   declarations: [
@@ -70,11 +82,23 @@ import { SeenIconComponent } from './shared/components/icons/seen-icon/seen-icon
     ConversationComponent,
     IconsBaseComponent,
     LogoComponent,
-    NotificationIconComponent,
+    NotificationIconSvgComponent,
     NotificationComponent,
     MessageComponent,
     ConversationListComponent,
-    SeenIconComponent
+    SeenIconSvgComponent,
+    EmptyCoverComponent,
+    EmptyOnlineFriendsComponent,
+    EmptyProfileMediaComponent,
+    EmptyProfileFriendsComponent,
+    SideSectionComponent,
+    PersonalInformationSvgComponent,
+    EditPersonalInformationComponent,
+    VerifyOtpComponent,
+    OptEmailSvgComponent,
+    EmailVerifiedSvgComponent,
+    UpdateDoneSvgComponent,
+    EmptyPostsComponent
   ],
   imports: [
     BrowserModule,

@@ -9,15 +9,17 @@ import { ProfileComponent } from './profile/profile.component';
 import { ConversationComponent } from './conversation-list/components/conversation/conversation.component';
 import { PostComponent } from './newsfeed/components/post/post.component';
 import { AuthPageGuard } from './auth/services/authPage.guard.service';
+import { VerifyOtpComponent } from './shared/components/verify-otp/verify-otp.component';
 
 const routes: Routes = [
   { path: 'newsfeed',canActivate: [AuthGuard], component: NewsfeedComponent },
   { path: '', redirectTo: 'newsfeed', pathMatch: 'full' },
   { path: 'signup', canActivate: [AuthPageGuard],component: SignupComponent },
   { path: 'signin', canActivate: [AuthPageGuard],component: SigninComponent },
-  { path: 'profile/:user_id', component: ProfileComponent },
-  { path: 'post/:post_id', component: PostComponent},
+  { path: 'profile/:user_id',canActivate: [AuthGuard], component: ProfileComponent },
+  { path: 'post/:post_id',canActivate: [AuthGuard], component: PostComponent},
   { path: 'chat', component: ConversationComponent },
+  {path:'verifyOTP',component:VerifyOtpComponent}
 ];
 
 @NgModule({

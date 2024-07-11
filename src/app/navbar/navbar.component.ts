@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../auth/services/auth.service';
 import { User } from '../shared/models/user.model';
 import { Notification } from '../shared/models/notification.model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../shared/services/user.service';
 import { io, Socket } from 'socket.io-client';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
@@ -28,20 +28,35 @@ export class NavbarComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private router: Router,
+    private route: ActivatedRoute,
     private userService: UserService,
     private notificationService: NotificationService,
-    private socketService: SocketService
+    private socketService: SocketService,
   ) {}
 
   ngOnInit(): void {
-    this.isAuthorized();
-    this.getUserNotification();
-    this.socketService.connectToSockets();
-    this.listenToNotification();
+    if (
+      this.router.url !== '/signin' &&
+      this.router.url !== '/signup' &&
+      this.router.url === '/' &&
+      !this.isAuth
+    ) {
+      this.isAuthorized();
+    }
+    if (this.isAuth) {
+        this.getUserNotification();
+        this.socketService.connectToSockets();
+        this.listenToNotification();
+    }
   }
 
   ngDoCheck(): void {
-    if (!this.isAuth) {
+    if (
+      !this.isAuth &&
+      this.router.url !== '/signin' &&
+      this.router.url !== '/signup' &&
+      this.router.url !== '/'
+    ) {
       this.isAuthorized();
     }
   }
@@ -51,12 +66,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.userService
         .getUser(this.userService.getCurrentUserId())
         .subscribe((res) => {
-          this.user = res.body!.user;
+          this.user = this.userService.spreadUserMedia(
+            res.body!.user
+          );
         })
     );
     this.isAuth = this.authService.isUserAuthorized();
   }
-
 
   listenToNotification() {
     this.socketService.socket.on('notify', (notification: Notification) => {

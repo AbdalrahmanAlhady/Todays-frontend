@@ -17,6 +17,7 @@ import { PostsService } from 'src/app/shared/services/posts.service';
 import { format } from 'timeago.js';
 import { ShareDataService } from '../../../shared/services/share-data.service';
 import { Subject, Subscription } from 'rxjs';
+import { UserService } from 'src/app/shared/services/user.service';
 
 @Component({
   selector: 'app-post',
@@ -51,7 +52,8 @@ export class PostComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private render: Renderer2,
     private route: ActivatedRoute,
-    private shareDataService: ShareDataService
+    private shareDataService: ShareDataService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -102,6 +104,8 @@ export class PostComponent implements OnInit, OnDestroy {
     this.calculatePostDate();
     this.checkIfPostLikedByCurrentUser();
     this.listenToNewComment();
+    // handle user profile image
+    this.post.user = this.userService.spreadUserMedia(this.post.user!);
     if (this.post.media) {
       this.calcAvgMediaDimenisions();
     }

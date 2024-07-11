@@ -37,14 +37,14 @@ export class CreateCommentComponent implements OnInit, OnDestroy {
     private mediaUploadService: MediaUploadService,
     private commentsService: CommentsService,
     private sanitizer: DomSanitizer,
-    private userService: UserService,
+    private userService: UserService
   ) {}
 
   onFileChanged(event: any) {
     this.mediaToDisplay = event.target!.files[0];
     const fileType = this.mediaToDisplay!.type.split('/')[0];
     this.mediaUrlToDisplay!.displayUrl = this.sanitizer.bypassSecurityTrustUrl(
-      window.URL.createObjectURL(this.mediaToDisplay!),
+      window.URL.createObjectURL(this.mediaToDisplay!)
     );
     this.mediaUrlToDisplay!.fileType = fileType === 'video' ? 'video' : 'img';
   }
@@ -67,14 +67,14 @@ export class CreateCommentComponent implements OnInit, OnDestroy {
                     .uploadMedia(
                       this.mediaToDisplay!,
                       this.comment.id!,
-                      'comment',
                       this.mediaUrlToDisplay.fileType === 'img'
                         ? 'img'
                         : 'video',
+                      'comment'
                     )
                     .subscribe((percent) => {
                       this.percentage = Math.trunc(percent!);
-                    }),
+                    })
                 );
                 this.attachUploadedMediaToComment();
               } else {
@@ -88,7 +88,7 @@ export class CreateCommentComponent implements OnInit, OnDestroy {
           error: (err) => {
             console.log(err);
           },
-        }),
+        })
     );
   }
 
@@ -100,7 +100,7 @@ export class CreateCommentComponent implements OnInit, OnDestroy {
         if (this.percentage === 100) {
           this.clear();
         }
-      }),
+      })
     );
   }
 

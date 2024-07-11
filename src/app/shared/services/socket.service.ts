@@ -6,23 +6,22 @@ import { User } from '../models/user.model';
 import { Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SocketService {
   socket!: Socket;
   socketConnectionData!: Socket<DefaultEventsMap, DefaultEventsMap>;
-  $onlineFriendsList= new Subject<User[]>();
-  
-  constructor(private userService: UserService) { }
+  $onlineFriendsList = new Subject<User[]>();
+
+  constructor(private userService: UserService) {}
   connectToSockets() {
     if (!this.socket || !this.socket.connected) {
       this.socket = io('ws://localhost:3000');
       console.log('socket connected');
       this.socketConnectionData = this.socket.emit(
         'set-userID',
-        this.userService.getCurrentUserId(),
+        this.userService.getCurrentUserId()
       );
-
     }
   }
   ListenToOnlineFriends() {
@@ -30,9 +29,13 @@ export class SocketService {
       'online-friends-list',
       (onlineFriendsList: User[]) => {
         this.$onlineFriendsList.next(onlineFriendsList);
-        console.log('online friends', onlineFriendsList);
-        
       }
+    );
+  }
+  getOnlineFriends() {
+    this.socketConnectionData.emit(
+      'get-online-friends',
+      this.userService.getCurrentUserId()
     );
   }
 }

@@ -1,3 +1,5 @@
+import { Media } from "./media.model";
+
 export interface User {
   id?: string;
   first_name: string;
@@ -8,6 +10,7 @@ export interface User {
   cPassword?: string;
   profileImg?: string;
   profileCoverImg?: string;
+  media?: Media[];
   birthdate: Date;
   gender: 'male' | 'female';
   createdAt?:Date;

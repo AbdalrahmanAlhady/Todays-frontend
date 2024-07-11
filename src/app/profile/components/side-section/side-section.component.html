@@ -1,0 +1,185 @@
+<div class="col-5 media">
+  <div class="d-flex flex-row justify-content-between">
+    <span class="title">{{ title }}</span>
+    <button
+      mat-button
+      (click)="showAllOf()"
+      style="color: blue"
+      *ngIf="
+        title === 'Media'
+          ? media && media.length > 0
+          : title === 'Friends'
+          ? friends && friends.size > 0
+          : false
+      "
+    >
+      {{ "Show All " + title }}
+    </button>
+  </div>
+  <mat-grid-list
+    cols="3"
+    rowHeight="1:1"
+    *ngIf="
+      title === 'Media'
+        ? media && media.length > 0
+        : title === 'Friends'
+        ? friends && friends.size > 0
+        : false
+    "
+  >
+    <div *ngIf="title === 'Media'">
+      <mat-grid-tile *ngFor="let aMedia of media.slice(0, 6)">
+        <mat-menu
+          #mediaOptionsMenu="matMenu"
+          yPosition="above"
+          xPosition="before"
+        >
+          <!-- option to upload cover image or view -->
+          <button mat-menu-item (click)="viewMedia(aMedia.type, aMedia.url)">
+            <mat-icon>image</mat-icon>View Image
+          </button>
+          <button
+            mat-menu-item
+            (click)="deleteMedia(aMedia.type, aMedia.id!, aMedia.url)"
+          >
+            <mat-icon>delete</mat-icon>Delete Image
+          </button>
+        </mat-menu>
+        <img
+          [src]="aMedia.url"
+          [matMenuTriggerFor]="mediaOptionsMenu"
+          *ngIf="aMedia.type == 'img'"
+        />
+        <app-video-player
+          [matMenuTriggerFor]="mediaOptionsMenu"
+          *ngIf="aMedia.type == 'video'"
+          style="pointer-events: none"
+          [url]="aMedia.url"
+        ></app-video-player>
+      </mat-grid-tile>
+    </div>
+    <div *ngIf="title === 'Friends'">
+      <mat-grid-tile
+        *ngFor="let friend of getArrayOfFriends().slice(0, 6)"
+        class="friend"
+      >
+        <a
+          *ngIf="friend"
+          routerLink="/profile/{{ friend.id }}"
+          class="user-container"
+        >
+          <img
+            class="user-img"
+            [src]="friend.profileImg"
+            alt="user-img"
+            *ngIf="friend.profileImg"
+          />
+          <i class="bi bi-person-circle h5" *ngIf="!friend.profileImg"></i>
+          <p class="font-semibold user-name">
+            {{ friend.first_name! }} {{ friend.last_name }}
+          </p>
+        </a>
+      </mat-grid-tile>
+    </div>
+  </mat-grid-list>
+  <div class="d-flex flex-column align-items-center">
+    <app-empty-profile-media
+      [width]="250"
+      [height]="250"
+      *ngIf="title === 'Media' && (!media || media.length == 0)"
+    ></app-empty-profile-media>
+    <app-empty-profile-friends
+      [width]="250"
+      [height]="250"
+      *ngIf="title === 'Friends' && (!friends || friends.size === 0)"
+    ></app-empty-profile-friends>
+    <p
+      style="font-weight: 700; margin-top: 25px"
+      *ngIf="
+        (title === 'Friends' && (!friends || friends.size == 0)) ||
+        (title === 'Media' && (!media || media.length == 0))
+      "
+    >
+      {{ "You have no " + title.toLowerCase() + " yet." }}
+    </p>
+  </div>
+</div>
+<!-- show all modal content -->
+<ng-template #showAllModal>
+  <app-modal [modalRef]="modalRef" [title]="title">
+    <div
+      class="col-5 media"
+      style="margin-top: 0; padding: 0; height: max-content"
+    >
+      <mat-grid-list
+        cols="3"
+        rowHeight="1:1"
+        *ngIf="
+          title === 'Media'
+            ? media.length > 0
+            : title === 'Friends'
+            ? friends && friends.size > 0
+            : false
+        "
+      >
+        <div *ngIf="title === 'Media'">
+          <mat-grid-tile *ngFor="let aMedia of media">
+            <mat-menu
+              #mediaOptionsMenu2="matMenu"
+              yPosition="above"
+              xPosition="before"
+            >
+              <!-- option to upload cover image or view -->
+              <button
+                mat-menu-item
+                (click)="viewMedia(aMedia.type, aMedia.url)"
+              >
+                <mat-icon>image</mat-icon>View Image
+              </button>
+              <button
+                mat-menu-item
+                (click)="deleteMedia(aMedia.type, aMedia.id!, aMedia.url)"
+              >
+                <mat-icon>delete</mat-icon>Delete Image
+              </button>
+            </mat-menu>
+            <img
+              [src]="aMedia.url"
+              [matMenuTriggerFor]="mediaOptionsMenu2"
+              *ngIf="aMedia.type == 'img'"
+            />
+            <app-video-player
+              [matMenuTriggerFor]="mediaOptionsMenu2"
+              *ngIf="aMedia.type == 'video'"
+              style="pointer-events: none"
+              [url]="aMedia.url"
+            ></app-video-player>
+          </mat-grid-tile>
+        </div>
+        <div *ngIf="title === 'Friends'">
+          <mat-grid-tile
+            *ngFor="let friend of getArrayOfFriends()"
+            class="friend"
+          >
+            <a
+              *ngIf="friend"
+              routerLink="/profile/{{ friend.id }}"
+              class="user-container"
+            >
+              <img
+                class="user-img"
+                [src]="friend.profileImg"
+                alt="user-img"
+                *ngIf="friend.profileImg"
+              />
+              <i class="bi bi-person-circle h5" *ngIf="!friend.profileImg"></i>
+              <p class="font-semibold user-name">
+                {{ friend.first_name! }} {{ friend.last_name }}
+              </p>
+            </a>
+          </mat-grid-tile>
+        </div>
+      </mat-grid-list>
+    </div>
+  </app-modal>
+</ng-template>

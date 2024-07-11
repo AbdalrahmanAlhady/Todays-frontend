@@ -1,4 +1,4 @@
-<div class="modal-header">
+<div class="modal-header"   *ngIf="title !== 'Done'">
   <h4 class="modal-title pull-left">{{ title }}</h4>
   <button
     type="button"
@@ -9,14 +9,38 @@
     <span aria-hidden="true" class="visually-hidden">&times;</span>
   </button>
 </div>
-<div class="modal-body" [ngClass]="title === 'Comments'?'scrollable':''" 
-infiniteScroll
-[infiniteScrollDistance]="1"
-[infiniteScrollThrottle]="500"
-[scrollWindow]="false"
-(scrolled)="nextCommentsPage()">
+<div
+  class="modal-body"
+  *ngIf="title === 'Comments' || 'Media'"
+  [ngClass]="title === 'Comments' ? 'scrollable' : ''"
+  infiniteScroll
+  [infiniteScrollDistance]="3"
+  [infiniteScrollThrottle]="500"
+  [scrollWindow]="false"
+  (scrolled)="nextCommentsPage()"
+>
   <ng-content></ng-content>
+  <button
+    *ngIf="title === 'Media' && !noMoreMedia"
+    mat-button
+    class="load-more"
+    (click)="nextProfileMediaPage()"
+  >
+    load more...
+  </button>
+  <button
+    *ngIf="title === 'Friends' && !noMoreFriends"
+    mat-button
+    class="load-more"
+    (click)="nextProfileFriendsPage()"
+  >
+    load more...
+  </button>
 </div>
-<div class="modal-footer" style="justify-content: normal">
+<div
+  class="modal-footer"
+  style="justify-content: normal"
+  *ngIf="title !== 'Done'"
+>
   <ng-content select="[footer]"></ng-content>
 </div>

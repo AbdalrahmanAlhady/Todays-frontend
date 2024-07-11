@@ -1,86 +1,219 @@
-<div id="profile-upper">
-  <div id="profile-banner-image">
-    <img
-      src="https://imagizer.imageshack.com/img921/9628/VIaL8H.jpg"
-      alt="Banner image"
-    />
-  </div>
-  <div class="d-flex flex-row" id="profile-d">
-    <div class="profile-info">
-      <div id="profile-pic" *ngIf="profileOwner">
-        <img
-          class=""
-          [src]="profileOwner.profileImg"
-          alt="user-img"
-          *ngIf="profileOwner.profileImg"
+<div class="viewMedia" *ngIf="viewedImgUrl || viewedVideoUrl">
+  <i class="bi bi-x-circle cancel-img" (click)="cancelView()"></i>
+  <img
+    [src]="viewedImgUrl"
+    *ngIf="viewedImgUrl"
+    style="position: relative"
+    style="max-width: 500px; max-height: 500px"
+  />
+  <app-video-player
+    [url]="viewedVideoUrl"
+    *ngIf="viewedVideoUrl"
+  ></app-video-player>
+</div>
+<div class="loading" *ngIf="loading">
+  <mat-spinner
+    [mode]="'determinate'"
+    [value]="percentage"
+    [color]="'red'"
+    style="height: 250px; width: 250px; margin-bottom: 10px"
+  ></mat-spinner>
+</div>
+<div class="profile d-flex flex-column">
+  <div id="profile-header">
+    <mat-menu #coverMenu="matMenu" yPosition="above" xPosition="before">
+      <!-- option to upload cover image or view -->
+      <button
+        mat-menu-item
+        *ngIf="profileOwner?.profileCoverImg"
+        (click)="viewMedia('img', profileOwner.profileCoverImg!)"
+      >
+        <mat-icon>image</mat-icon>View Image
+      </button>
+      <button mat-menu-item (click)="coverInput.click()">
+        <input
+          style="display: none"
+          type="file"
+          (change)="onFileChanged($event, 'cover')"
+          #coverInput
         />
-        <i
-          class="bi bi-person-circle"
-          style="
-            margin-right: 5px;
-            margin-bottom: 0;
-            color: white;
-            font-size: 10rem;
+        <mat-icon>upload</mat-icon> Upload new Image
+      </button>
+    </mat-menu>
+    <div id="cover-image" [matMenuTriggerFor]="coverMenu">
+      <img
+        *ngIf="
+          profileOwner?.profileCoverImg ||
+          (mediaUrlToDisplay.displayUrl && forObj === 'cover')
+        "
+        [src]="
+          mediaUrlToDisplay.displayUrl && forObj === 'cover'
+            ? mediaUrlToDisplay.displayUrl
+            : profileOwner.profileCoverImg
+        "
+        alt="Banner image"
+        style="height: 100%; margin: auto"
+      />
+      <app-empty-cover
+        *ngIf="
+          !profileOwner?.profileCoverImg &&
+          !(mediaUrlToDisplay.displayUrl && forObj === 'cover')
+        "
+        style="display: block; height: 100%"
+        [height]="100"
+        [width]="100"
+      ></app-empty-cover>
+    </div>
+    <div class="profile-info align-items-center d-flex flex-row">
+      <mat-menu #imageMenu="matMenu">
+        <!-- option to upload profile image or view -->
+        <button
+          mat-menu-item
+          (click)="viewMedia('img', profileOwner!.profileImg!)"
+          *ngIf="profileOwner && profileOwner.profileImg!"
+        >
+          <mat-icon>image</mat-icon>View Image
+        </button>
+        <button mat-button (click)="imageInput.click()">
+          <input
+            style="display: none"
+            type="file"
+            (change)="onFileChanged($event, 'profile')"
+            #imageInput
+          />
+          <mat-icon>upload</mat-icon>Upload new Image
+        </button>
+      </mat-menu>
+      <!-- profile picture -->
+      <div
+        id="profile-pic"
+        *ngIf="profileOwner"
+        [matMenuTriggerFor]="imageMenu"
+      >
+        <img
+          class="user-img"
+          [src]="
+            mediaUrlToDisplay.displayUrl && forObj === 'profile'
+              ? mediaUrlToDisplay.displayUrl
+              : profileOwner.profileImg
           "
-          *ngIf="!profileOwner.profileImg"
-        ></i>
+          alt="user-img"
+          *ngIf="
+            profileOwner.profileImg ||
+            (mediaUrlToDisplay.displayUrl && forObj === 'profile')
+          "
+        />
+        <div class="empty-profile-img">
+          <i
+            class="bi bi-person-circle h1"
+            *ngIf="
+              !profileOwner.profileImg &&
+              !(mediaUrlToDisplay.displayUrl && forObj === 'profile')
+            "
+          >
+          </i>
+        </div>
       </div>
+      <!-- user name -->
       <p id="u-name" *ngIf="profileOwner">
         {{ profileOwner.first_name + " " + profileOwner.last_name }}
       </p>
-    </div>
-
-    <div class="" id="m-btns">
-      <button mat-raised-button (click)="sendFriendRequest()" >
-        {{
-          viewerOwnerFriendshipStatus === "none"
-            ? "add friend"
-            : viewerOwnerFriendshipStatus === "accepted"
+      <!-- buttons -->
+      <div class="btns">
+        <button
+          mat-raised-button
+          (click)="sendFriendRequest()"
+          *ngIf="!sameUser"
+        >
+          <mat-icon *ngIf="viewerOwnerFriendshipStatus === 'none'"
+            >person_add
+          </mat-icon>
+          <mat-icon *ngIf="viewerOwnerFriendshipStatus === 'accepted'"
+            >person
+          </mat-icon>
+          {{
+            viewerOwnerFriendshipStatus === "none"
+              ? "add friend"
+              : viewerOwnerFriendshipStatus === "accepted"
               ? "friends"
               : viewerOwnerFriendshipStatus
-        }}
-      </button>
-      <button mat-raised-button>message</button>
+          }}
+        </button>
+        <button mat-raised-button *ngIf="!sameUser">
+          <mat-icon>chat</mat-icon>message
+        </button>
+        <button
+          mat-raised-button
+          *ngIf="sameUser && !uploadMode"
+          (click)="
+            editingPersonalInfo
+              ? (editingPersonalInfo = false)
+              : (editingPersonalInfo = true)
+          "
+        >
+          <mat-icon *ngIf="editingPersonalInfo"> chevron_left </mat-icon>
+          <mat-icon *ngIf="!editingPersonalInfo">edit</mat-icon
+          >{{ editingPersonalInfo ? "back to profile" : "edit profile" }}
+        </button>
+        <button
+          style="background-color: #28a745; color: white"
+          mat-raised-button
+          (click)="uploadMedia()"
+          *ngIf="uploadMode"
+        >
+          <mat-icon>upload</mat-icon>Finish Uploading
+        </button>
+        <button
+          style="background-color: red; color: white"
+          mat-raised-button
+          (click)="cancelUpload()"
+          *ngIf="uploadMode"
+        >
+          <mat-icon>cancel</mat-icon>Cancel Uploading
+        </button>
+      </div>
     </div>
   </div>
-  <div id="black-grd"></div>
-</div>
-<div id="main-content">
-  <div class="tb">
-    <div class="td" id="m-col">
-      <div class="m-mrg" id="p-tabs">
-        <div class="tb">
-          <div class="td">
-            <div class="tb" id="p-tabs-m">
-              <div class="td active">
-                <i class="material-icons">av_timer</i><span>TIMELINE</span>
-              </div>
-              <div class="td">
-                <i class="material-icons">people</i><span>FRIENDS</span>
-              </div>
-              <div class="td">
-                <i class="material-icons">photo</i><span>PHOTOS</span>
-              </div>
-              <div class="td">
-                <i class="material-icons">explore</i><span>ABOUT</span>
-              </div>
-              <div class="td">
-                <i class="material-icons">archive</i><span>ARCHIVE</span>
-              </div>
-            </div>
-          </div>
-          <div class="td" id="p-tab-m">
-            <i class="material-icons">keyboard_arrow_down</i>
-          </div>
-        </div>
+  <!-- profile body -->
+  <div class="profile-body d-flex flex-row">
+    <!-- edit personal info -->
+    <app-edit-personal-information
+      style="width: 100%"
+      *ngIf="editingPersonalInfo"
+      [currentUser]="profileOwner"
+    ></app-edit-personal-information>
+    <!-- side section -->
+    <div class="side d-flex flex-column" *ngIf="!editingPersonalInfo">
+      <app-side-section
+        [title]="'Media'"
+        [profileOwner]="profileOwner"
+      ></app-side-section>
+      <app-side-section
+        [title]="'Friends'"
+        [profileOwner]="profileOwner"
+      ></app-side-section>
+    </div>
+    <!-- posts -->
+    <div
+      class="col-6 posts d-flex flex-column"
+      infiniteScroll
+      [infiniteScrollDistance]="1"
+      [infiniteScrollThrottle]="500"
+      *ngIf="!editingPersonalInfo"
+    >
+      <app-create-post [width]="100"></app-create-post>
+      <!-- empty posts -->
+      <div class="d-flex flex-column">
+        <app-empty-posts
+          *ngIf="posts.length === 0"
+          [width]="100"
+          [height]="100"
+        ></app-empty-posts>
+        <p class="title" *ngIf="posts.length === 0" >No Posts yet, Create One</p>
       </div>
-      <div class="col-6" style="margin: auto">
-        <div class="m-mrg">
-          <app-create-post [width]="100"></app-create-post>
-        </div>
-        <div *ngFor="let post of posts">
-          <app-post [post]="post"></app-post>
-        </div>
+
+      <div *ngFor="let post of posts">
+        <app-post [post]="post"></app-post>
       </div>
     </div>
   </div>

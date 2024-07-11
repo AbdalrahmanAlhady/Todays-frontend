@@ -1,5 +1,28 @@
-.scrollable{
+.scrollable {
     overflow-y: scroll;
     padding-bottom: 0;
     height: 500px;
+}
+
+.modal-title {
+    font-size: large;
+    display: block;
+    color: #016d81;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.modal-body-grid {
+    display: grid;
+    grid-template-columns: 30% 30% 30%;
+    grid-gap: 10px;
+    place-items: center;
+}
+.load-more{
+    font-size: large;
+    display: block;
+    color: #016d81;
+    font-weight: 600;
+    margin: auto;
+    margin-top: 25px;
 }

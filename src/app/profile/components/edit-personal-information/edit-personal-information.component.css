@@ -1,0 +1,50 @@
+mat-form-field,
+.mat-form-field {
+    margin: auto;
+}
+
+form {
+    padding: 20px;
+}
+
+.submit-btn {
+    width: 40%;
+
+}
+
+.validation-container {
+    color: red;
+    padding-left: 16px;
+}
+
+.validation-container div {
+    padding-bottom: 5px;
+}
+
+.backendError {
+    color: red;
+    margin: auto;
+    width: fit-content;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+mat-form-field {
+    margin: 0;
+}
+
+h2 {
+    margin-bottom: 10px;
+    margin-left: 20px;
+}
+
+.done-text {
+    display: block;
+    color: #016d81;
+    font-weight: 600;
+    align-self: center;
+    margin: 20px;
+    font-size: x-large;
+    text-align: center;
+}

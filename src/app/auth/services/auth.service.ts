@@ -12,11 +12,15 @@ export class AuthService {
     JSON.parse(localStorage.getItem('userToken')!)
   );
   constructor(private http: HttpClient) {}
+
+  isUserAuthorized() {
+    return !!this.$userToken.getValue();
+  }
   signup(user: User) {
-    return this.http.post<{user:User}>(
+    return this.http.post<{ user: User }>(
       `${EndPoint.API_ROOT}/${EndPoint.AUTH_API.Signup}`,
       user,
-      { observe: 'response' }
+      { observe: 'response' ,headers: { 'skip': 'true'} }
     );
   }
   signin(email: string, password: string) {
@@ -27,8 +31,32 @@ export class AuthService {
     );
   }
 
+  changeOrForgetPassword(
+    email: string,
+    newPassword: string,
+    cNewPassword: string,
+    currentPassword?: string,
+    OTP?: string //only in forget password
+  ) {
+    return this.http.post<{ message: string }>(
+      `${EndPoint.API_ROOT}/${EndPoint.AUTH_API.changePassword}`,
+      { newPassword, cNewPassword, currentPassword, OTP,email },
+      { observe: 'response' }
+    );
+  }
+  verifyEmailViaOTP(OTP: string, email: string) {
+    return this.http.post<{ message: string }>(
+      `${EndPoint.API_ROOT}/${EndPoint.AUTH_API.verifyEmail}`,
+      { OTP, email },
+      { observe: 'response' }
+    );
+  }
 
-  isUserAuthorized() {
-    return !!this.$userToken.getValue();
+  sendOTP(email: string) {
+    return this.http.post<{ message: string }>(
+      `${EndPoint.API_ROOT}/${EndPoint.AUTH_API.SendOTP}`,
+      { email },
+      { observe: 'response' }
+    );
   }
 }

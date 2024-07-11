@@ -1,0 +1,16 @@
+.backendError{
+    color: red;
+    margin: auto;
+    width: fit-content;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 500;
+}
+p{
+    font-size:  110%;
+    display: block;
+    color: #016d81;
+    font-weight: 600;
+    align-self: center;
+    margin: 20px;
+}

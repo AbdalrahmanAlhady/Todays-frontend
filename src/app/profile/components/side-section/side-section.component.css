@@ -1,0 +1,77 @@
+.media,
+.friends {
+    margin-top: 35px;
+    height: 500px;
+    background-color: #ffff;
+    width: 100%;
+    padding: 20px;
+}
+
+.title {
+    font-size: large;
+    margin-bottom: 20px;
+    display: block;
+    color: #016d81;
+    font-weight: 600;
+}
+
+.media img,
+.media app-video-player {
+    width: 150px;
+    height: 150px;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+    color: #070000;
+}
+
+.user-container>.bi-person-circle {
+    color: #016d81d4;
+    display: block;
+    position: static;
+    font-size: 100px;
+}
+
+.user-name {
+    text-align: center
+}.title {
+    font-size: large;
+    margin-bottom: 20px;
+    display: block;
+    color: #016d81;
+    font-weight: 600;
+}
+
+.media img,
+.media app-video-player {
+    width: 150px;
+    height: 150px;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+    color: #070000;
+}
+
+.user-container>.bi-person-circle {
+    color: #016d81d4;
+    display: block;
+    position: static;
+    font-size: 100px;
+}
+
+.user-name {
+    text-align: center
+}
+.cancel-img {
+    color: red;
+    position: absolute;
+    margin: 5px;
+    cursor: pointer;
+    z-index: 2;
+    right: 0;
+    font-size: xx-large;
+}

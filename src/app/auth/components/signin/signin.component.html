@@ -1,6 +1,6 @@
 <div class="d-flex flex-row container">
   <img src="../../../assets/Todays.png" />
-  <form *ngIf="signinForm" [formGroup]="signinForm" #form2="ngForm">
+  <form [formGroup]="signinForm" #form="ngForm" *ngIf="!forgetPasswordMode">
     <h2>Sign in</h2>
     <div class="d-flex flex-column">
       <mat-form-field appearance="fill">
@@ -54,7 +54,6 @@
         <div *ngIf="signinForm.controls['password'].errors?.['required']">
           *password is required
         </div>
-       
       </div>
     </div>
     <div class="backendError" *ngIf="backendError">
@@ -66,11 +65,81 @@
         type="submit"
         mat-raised-button
         color="primary"
-        (click)="signin(form2.value)"
+        (click)="signin(form.value)"
       >
         Signin
       </button>
-      <p class="account" style=" width: max-content;">
+      <p class="account" style="width: max-content">
+        Don't have account?
+        <a
+          routerLink="/signup"
+          (click)="switchToSignup()"
+          style="color: blue; text-decoration: none; cursor: pointer"
+          >Signup</a
+        >
+      </p>
+      <p class="account" style="width: max-content">
+        Forget Password?
+        <a
+          style="color: blue; text-decoration: none; cursor: pointer"
+          (click)="forgetPasswordMode = true"
+          >Reset Password</a
+        >
+      </p>
+    </div>
+  </form>
+  <form
+    [formGroup]="forgetPasswordForm"
+    #form2="ngForm"
+    *ngIf="forgetPasswordMode"
+  >
+    <h2>Enter your E-mail to reset password</h2>
+    <div class="d-flex flex-column">
+      <mat-form-field appearance="fill">
+        <mat-label>E-mail</mat-label>
+        <input
+          formControlName="email"
+          id="email"
+          matInput
+          placeholder="example@gmail.com"
+          type="email"
+        />
+        <mat-icon matSuffix> email</mat-icon>
+      </mat-form-field>
+      <div
+        class="validation-container"
+        *ngIf="
+          forgetPasswordForm.controls['email']?.invalid &&
+          forgetPasswordForm.controls['email']?.touched
+        "
+      >
+        <div
+          *ngIf="forgetPasswordForm.controls['email'].errors?.['pattern']"
+          style="font-size: 12px"
+        >
+          Enter in the format:name&#64;example.com
+        </div>
+        <div
+          *ngIf="forgetPasswordForm.controls['email']?.touched &&  forgetPasswordForm.controls['email'].errors?.['required']"
+        >
+          *Email is required!
+        </div>
+      </div>
+    </div>
+    <div class="backendError" *ngIf="backendError">
+      {{ backendError }}
+    </div>
+    <div class="submit-btn d-flex flex-column justify-content-center mx-auto">
+      <button
+        [disabled]="!forgetPasswordForm.valid"
+        type="submit"
+        mat-raised-button
+        color="primary"
+        (click)="sendForgetPasswordEmail()"
+      >
+        Send OTP Mail
+      </button>
+      <p class="account" style="width: max-content">
         Don't have account?
         <a
           routerLink="/signup"
@@ -81,4 +150,18 @@
       </p>
     </div>
   </form>
+  <ng-template #otpModal>
+    <app-modal [modalRef]="modalRef" [title]="'Verify OTP'">
+      <app-verify-otp
+        [email]="forgetPasswordForm.value.email!"
+        [forgetPasswordMode]="forgetPasswordMode"
+      ></app-verify-otp>
+    </app-modal>
+  </ng-template>
+  <ng-template #doneModal>
+    <app-modal [modalRef]="modalRef" [title]="'Done'">
+      <app-update-done-svg [width]="100" [height]="70"></app-update-done-svg>
+      <p class="done-text">Information Updated</p>
+    </app-modal>
+  </ng-template>
 </div>

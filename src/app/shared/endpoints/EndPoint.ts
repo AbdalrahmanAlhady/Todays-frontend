@@ -4,7 +4,8 @@ export class EndPoint {
     Signup: 'api/v1/auth/signup',
     Signin: 'api/v1/auth/signin',
     SendOTP: 'api/v1/auth/sendOTP',
-    ForgotPassword: 'api/v1/auth/forgotPassword',
+    changePassword: 'api/v1/auth/changePassword',
+    verifyEmail: 'api/v1/auth/verify-email',
   };
 
   public static USERS_API = 'api/v1/users';

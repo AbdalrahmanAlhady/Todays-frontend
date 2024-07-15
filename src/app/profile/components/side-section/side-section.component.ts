@@ -24,6 +24,7 @@ export class SideSectionComponent implements OnInit, OnDestroy {
   @ViewChild('showAllModal') showAllModal!: TemplateRef<void>;
   @Input() profileOwner!: User;
   @Input() title: string = '';
+  @Input() sameUserProfile: boolean = false;
   media: Media[] = [];
   friends: Map<string, User> = new Map();
   friendships: Friendship[] = [];
@@ -40,12 +41,12 @@ export class SideSectionComponent implements OnInit, OnDestroy {
     private userService: UserService
   ) {}
   ngOnInit(): void {
-    if (this.title === 'Media') {
+    if (this.title === 'Media' && this.profileOwner) {
       this.getFirstPageOfMediaOfUser();
       this.listenToGetNextMediaPage();
       this.listenToNewProfileMedia();
     }
-    if (this.title === 'Friends') {
+    if (this.title === 'Friends' && this.profileOwner) {
       this.getFirstPageOfFriendsOfUser();
       this.listenToGetNextFriendsPage();
     }
@@ -53,7 +54,7 @@ export class SideSectionComponent implements OnInit, OnDestroy {
   getFirstPageOfMediaOfUser() {
     this.subscriptions.add(
       this.mediaUploadService
-        .getMediaOfUser(this.userService.getCurrentUserId(), '1', '6')
+        .getMediaOfUser(this.profileOwner.id!, '1', '6')
         .subscribe((res) => {
           this.media = res.body!.media.rows;
           console.log(this.media);
@@ -65,15 +66,19 @@ export class SideSectionComponent implements OnInit, OnDestroy {
   getFirstPageOfFriendsOfUser() {
     this.subscriptions.add(
       this.userService
-        .getUserFriends(this.userService.getCurrentUserId(), '1', '6')
+        .getUserFriends(this.profileOwner.id!, '1', '6')
         .subscribe((res) => {
           this.friendships = res.body!.friendships.rows;
           this.friendships.forEach((friendship) => {
             if (friendship.receiver !== this.profileOwner.id) {
-              friendship.receiver = this.userService.spreadUserMedia(friendship.receiver!)
+              friendship.receiver = this.userService.spreadUserMedia(
+                friendship.receiver!
+              );
               this.friends.set(friendship.receiver?.id!, friendship.receiver!);
             } else {
-              friendship.sender = this.userService.spreadUserMedia(friendship.sender!)
+              friendship.sender = this.userService.spreadUserMedia(
+                friendship.sender!
+              );
               this.friends.set(friendship.sender?.id!, friendship.sender!);
             }
           });

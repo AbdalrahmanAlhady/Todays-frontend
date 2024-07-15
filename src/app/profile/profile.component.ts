@@ -56,11 +56,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.subscriptions.add(
         this.userService.getUser(params['user_id']).subscribe((res) => {
           this.profileOwner = this.userService.spreadUserMedia(res.body!.user);
-          console.log(this.profileOwner);
           this.sameUser =
             this.profileOwner.id === this.userService.getCurrentUserId();
-          // this.getFirstPageOfPostsOfProfileOwner();
-          this.checkFriendshipStatus();
+          this.getFirstPageOfPostsOfProfileOwner();
+          this.checkFriendshipStatus(); 
           this.listenToNewUserPosts();
           this.listenToViewMedia();
         })

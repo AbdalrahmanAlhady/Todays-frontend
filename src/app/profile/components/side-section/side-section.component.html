@@ -96,11 +96,17 @@
     <p
       style="font-weight: 700; margin-top: 25px"
       *ngIf="
-        (title === 'Friends' && (!friends || friends.size == 0)) ||
-        (title === 'Media' && (!media || media.length == 0))
+        profileOwner &&
+        ((title === 'Friends' && (!friends || friends.size == 0)) ||
+          (title === 'Media' && (!media || media.length == 0)))
       "
     >
-      {{ "You have no " + title.toLowerCase() + " yet." }}
+      <span *ngIf="profileOwner">{{
+        sameUserProfile
+          ? "You"
+          : profileOwner.first_name + " " + profileOwner.last_name
+      }}</span>
+      {{ " have no " + title.toLowerCase() + " yet." }}
     </p>
   </div>
 </div>

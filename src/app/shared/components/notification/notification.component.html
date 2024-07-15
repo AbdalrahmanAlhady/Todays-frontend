@@ -1,16 +1,9 @@
 <div
   class="notification"
-  style="
-    background-color: #016d81d4;
-    margin: 5px;
-    padding: 10px;
-    border-radius: 5px;
-  "
   *ngIf="sender"
 >
   <div class="d-flex flex-row align-items-center">
     <a
-      style="display: block; cursor: pointer; text-decoration: none"
       routerLink="/profile/{{ sender.id }}"
     >
       <img
@@ -21,11 +14,10 @@
       />
       <i
         class="bi bi-person-circle h1"
-        style="color: white"
         *ngIf="!sender.profileImg"
       ></i>
     </a>
-    <p style="margin-bottom: 0; color: white; margin-left: 10px">
+    <p class="message">
       {{ notification.message }}
     </p>
   </div>

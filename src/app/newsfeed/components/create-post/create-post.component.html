@@ -38,14 +38,13 @@
         <mat-grid-tile>
           <div class="add-img-wrapper d-flex flex-column" *ngIf="addMedia">
             <input
-              style="display: none"
+            class="file-input"
               type="file"
               (change)="onFileChanged($event)"
               #fileInput
             />
             <i
               class="bi bi-upload h3"
-              style="cursor: pointer"
               (click)="fileInput.click()"
             ></i>
             <button mat-button (click)="fileInput.click()">

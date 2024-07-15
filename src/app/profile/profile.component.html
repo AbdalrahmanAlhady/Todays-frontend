@@ -3,8 +3,6 @@
   <img
     [src]="viewedImgUrl"
     *ngIf="viewedImgUrl"
-    style="position: relative"
-    style="max-width: 500px; max-height: 500px"
   />
   <app-video-player
     [url]="viewedVideoUrl"
@@ -16,7 +14,6 @@
     [mode]="'determinate'"
     [value]="percentage"
     [color]="'red'"
-    style="height: 250px; width: 250px; margin-bottom: 10px"
   ></mat-spinner>
 </div>
 <div class="profile d-flex flex-column">
@@ -32,7 +29,7 @@
       </button>
       <button mat-menu-item (click)="coverInput.click()">
         <input
-          style="display: none"
+          class="file-input"
           type="file"
           (change)="onFileChanged($event, 'cover')"
           #coverInput
@@ -52,14 +49,12 @@
             : profileOwner.profileCoverImg
         "
         alt="Banner image"
-        style="height: 100%; margin: auto"
       />
       <app-empty-cover
         *ngIf="
           !profileOwner?.profileCoverImg &&
           !(mediaUrlToDisplay.displayUrl && forObj === 'cover')
         "
-        style="display: block; height: 100%"
         [height]="100"
         [width]="100"
       ></app-empty-cover>
@@ -76,7 +71,7 @@
         </button>
         <button mat-button (click)="imageInput.click()">
           <input
-            style="display: none"
+            class="file-input"
             type="file"
             (change)="onFileChanged($event, 'profile')"
             #imageInput
@@ -156,7 +151,7 @@
           >{{ editingPersonalInfo ? "back to profile" : "edit profile" }}
         </button>
         <button
-          style="background-color: #28a745; color: white"
+        class="finish-upload-btn"
           mat-raised-button
           (click)="uploadMedia()"
           *ngIf="uploadMode"
@@ -164,7 +159,7 @@
           <mat-icon>upload</mat-icon>Finish Uploading
         </button>
         <button
-          style="background-color: red; color: white"
+          class="cancel-upload-btn"
           mat-raised-button
           (click)="cancelUpload()"
           *ngIf="uploadMode"
@@ -178,7 +173,6 @@
   <div class="profile-body d-flex flex-row">
     <!-- edit personal info -->
     <app-edit-personal-information
-      style="width: 100%"
       *ngIf="editingPersonalInfo"
       [currentUser]="profileOwner"
     ></app-edit-personal-information>

@@ -1,8 +1,9 @@
-.container{
+.container {
     background-color: white;
     padding: 0;
 }
-.spinner-container{
+
+.spinner-container {
     height: 400px;
     align-items: center;
     opacity: 0.75;
@@ -16,35 +17,43 @@
     padding: 20px;
 }
 
-img{
+img {
     width: 60%;
 }
-.account{
+
+.account {
     color: black;
     font-weight: bold;
     margin-top: 10px;
 }
-mat-form-field , .mat-form-field{
+
+mat-form-field,
+.mat-form-field {
     margin: 5px;
 }
-form{
+
+form {
     margin: auto;
     width: 50%;
     padding: 20px;
     margin-left: 0;
 }
-.submit-btn{
-width: 40%;
+
+.submit-btn {
+    width: 40%;
 
 }
-.validation-container{
-    color:red;
+
+.validation-container {
+    color: red;
     padding-left: 16px;
 }
-.validation-container div{
+
+.validation-container div {
     padding-bottom: 5px;
 }
-.backendError{
+
+.backendError {
     color: red;
     margin: auto;
     width: fit-content;
@@ -52,6 +61,29 @@ width: 40%;
     font-size: 16px;
     font-weight: 500;
 }
-mat-form-field{
-margin: 0;
+
+mat-form-field {
+    margin: 0;
+}
+
+.account {
+    color: black;
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: center;
+}
+
+mat-spinner {
+    height: 250px;
+    width: 250px;
+    margin-bottom: 10px;
+}
+
+.redirecting {
+    width: fit-content;
+    font-weight: 600;
+    font-size: 18px;
+}
+a{
+    color: blue; text-decoration: none; cursor: pointer
 }

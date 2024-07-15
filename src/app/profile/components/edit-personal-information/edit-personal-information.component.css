@@ -48,3 +48,12 @@ h2 {
     font-size: x-large;
     text-align: center;
 }
+
+.password-btns {
+    justify-content: space-around
+}
+
+.forget-password {
+    color: #016d81d4;
+    cursor: pointer
+}

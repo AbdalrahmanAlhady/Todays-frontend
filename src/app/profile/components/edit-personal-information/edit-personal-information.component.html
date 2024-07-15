@@ -187,10 +187,7 @@
             emailForm.controls['email']?.touched
           "
         >
-          <div
-            *ngIf="emailForm.controls['email'].errors?.['pattern']"
-            style="font-size: 12px"
-          >
+          <div *ngIf="emailForm.controls['email'].errors?.['pattern']">
             Enter in the format:name&#64;example.com
           </div>
           <div
@@ -322,10 +319,7 @@
         <div class="backendError" *ngIf="backendError">
           {{ backendError }}
         </div>
-        <div
-          class="d-flex flex-row align-items-center"
-          style="justify-content: space-around"
-        >
+        <div class="d-flex flex-row align-items-center password-btns">
           <button
             [disabled]="!changePasswordForm.valid"
             color="primary"
@@ -335,9 +329,7 @@
           >
             Update
           </button>
-          <a
-            style="color: #016d81d4; cursor: pointer"
-            (click)="sendForgetPasswordEmail()"
+          <a class="forget-password" (click)="sendForgetPasswordEmail()"
             >Forget Password?</a
           >
         </div>

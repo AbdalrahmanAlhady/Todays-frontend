@@ -26,3 +26,6 @@
     margin: auto;
     margin-top: 25px;
 }
+.modal-footer {
+    justify-content: normal
+}

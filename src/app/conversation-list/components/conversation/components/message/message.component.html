@@ -28,7 +28,6 @@
         {{ message.createdAt | date : "shortTime" }}
       </span>
       <app-seen-icon-svg
-        style="width: fit-content"
         [height]="20"
         [width]="20"
         *ngIf="message.sender_id === currentUser_id"

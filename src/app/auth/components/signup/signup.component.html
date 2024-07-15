@@ -1,6 +1,6 @@
-<div *ngIf="signedup" class="d-flex flex-column spinner-container" >
-  <mat-spinner style="height: 250px; width: 250px; margin-bottom: 10px;"></mat-spinner>
-  <P style="width:fit-content ;font-weight: 600;font-size: 18px;">redirecting you to Signin page ...</P>
+<div *ngIf="signedup" class="d-flex flex-column spinner-container">
+  <mat-spinner></mat-spinner>
+  <P class="redirecting">redirecting you to Signin page ...</P>
 </div>
 <div *ngIf="!signedup" class="d-flex flex-row container">
   <img src="../../../assets/Todays.png" />
@@ -30,10 +30,7 @@
           signupForm.controls['email']?.touched
         "
       >
-        <div
-          *ngIf="signupForm.controls['email'].errors?.['pattern']"
-          style="font-size: 12px"
-        >
+        <div *ngIf="signupForm.controls['email'].errors?.['pattern']">
           Enter in the format:name&#64;example.com
         </div>
         <div
@@ -255,14 +252,9 @@
       >
         Signup
       </button>
-      <p class="account" style=" width: max-content;">
+      <p class="account">
         Already have account?
-        <a
-          (click)="switchToSignin()"
-          routerLink="/signin"
-          style="color: blue; text-decoration: none"
-          >Signin</a
-        >
+        <a (click)="switchToSignin()" routerLink="/signin">Signin</a>
       </p>
     </div>
   </form>

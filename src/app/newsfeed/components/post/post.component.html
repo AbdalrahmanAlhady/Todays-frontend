@@ -1,20 +1,13 @@
 <div class="d-flex flex-column post" *ngIf="post">
   <div class="d-flex flex-row post-header">
-    <a
-      style="cursor: pointer; text-decoration: none"
-      [routerLink]="'/profile/' + post.owner_id"
-    >
+    <a [routerLink]="'/profile/' + post.owner_id">
       <img
         class="user-img"
         [src]="post.user?.profileImg"
         alt="user-img"
         *ngIf="post.user?.profileImg"
       />
-      <i
-        class="bi bi-person-circle h2"
-        style="margin-right: 5px; margin-bottom: 0;color: #016d81d4"
-        *ngIf="!post.user?.profileImg"
-      ></i>
+      <i class="bi bi-person-circle h2" *ngIf="!post.user?.profileImg"></i>
     </a>
     <div class="d-flex flex-column post-sub-header">
       <p class="user-name">
@@ -26,7 +19,7 @@
   <div class="post-body">
     <p>{{ post.body }}</p>
     <carousel [interval]="0" *ngIf="post.media && post.media!.length > 1">
-      <slide *ngFor="let media of post.media" style="text-align: center">
+      <slide *ngFor="let media of post.media">
         <img
           class="post-img"
           [src]="media.url"
@@ -61,11 +54,7 @@
   <div class="post-footer d-flex flex-column">
     <hr />
     <div class="post-footer-btns d-flex flex-row">
-      <button
-        mat-stroked-button
-        style="margin-right: 5px"
-        (click)="likeORUnlikePost()"
-      >
+      <button class="like-btn" mat-stroked-button (click)="likeORUnlikePost()">
         <i
           class=""
           [ngClass]="
@@ -76,7 +65,7 @@
         ></i>
         {{ " " + likesCount }}
       </button>
-      <button mat-stroked-button (click)="openComments()" >
+      <button mat-stroked-button (click)="openComments()">
         <i class="bi bi-chat-left-text"></i> {{ " " + commentsCount }}
       </button>
     </div>
@@ -90,11 +79,7 @@
       >
         <app-comment [comment]="comment"></app-comment>
       </div>
-      <app-create-comment
-        footer
-        style="width: 100%"
-        [post_id]="post.id!"
-      ></app-create-comment>
+      <app-create-comment footer [post_id]="post.id!"></app-create-comment>
     </app-modal>
   </ng-template>
 </div>

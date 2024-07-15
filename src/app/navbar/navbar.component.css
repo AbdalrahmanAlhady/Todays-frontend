@@ -1,9 +1,43 @@
 mat-toolbar {
     margin-bottom: 50px;
+    background-color: #027e95;
+    position: fixed;
+    top: 0;
+    z-index: 50
+}
+
+app-logo {
+    cursor: pointer
+}
+
+.left-part {
+    margin-left: auto
 }
 
 .user-profile-img {
     height: 50px;
     width: 50px;
     border-radius: 50%;
+}
+
+a {
+    display: block;
+    cursor: pointer;
+    text-decoration: none
+}
+
+.bi-person-circle {
+    color: white
+}
+
+mat-divider {
+    border: 1px white solid;
+    margin-right: 15px;
+    min-height: 40px
+}
+.divider-left {
+    margin-left: 15px;
+}
+.divider-right {
+    margin-right: 15px;
 }

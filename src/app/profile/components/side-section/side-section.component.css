@@ -36,7 +36,9 @@ a {
 
 .user-name {
     text-align: center
-}.title {
+}
+
+.title {
     font-size: large;
     margin-bottom: 20px;
     display: block;
@@ -66,6 +68,7 @@ a {
 .user-name {
     text-align: center
 }
+
 .cancel-img {
     color: red;
     position: absolute;
@@ -74,4 +77,23 @@ a {
     z-index: 2;
     right: 0;
     font-size: xx-large;
+}
+
+.show-all-btn {
+    color: blue
+}
+
+app-video-player {
+    pointer-events: none
+}
+
+.empty-text {
+    font-weight: 700;
+    margin-top: 25px
+}
+
+ng-template>.media {
+    margin-top: 0;
+    padding: 0;
+    height: max-content;
 }

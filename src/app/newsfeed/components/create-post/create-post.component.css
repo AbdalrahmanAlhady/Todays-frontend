@@ -77,3 +77,9 @@ progressbar{
     width: 140px;
     opacity: 0.8;
 }
+.file-input {
+    display: none;
+}
+.bi-upload{
+    cursor: pointer
+}

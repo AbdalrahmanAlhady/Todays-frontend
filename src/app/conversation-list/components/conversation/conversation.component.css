@@ -1,19 +1,28 @@
-.chat-container{
+.chat-container {
     height: 40vh;
 }
-.chat-body{
+
+.chat-body {
     height: 70%;
     overflow-y: auto;
+    padding: 15px
 }
-.chat-footer{
+
+.chat-footer {
     height: max-content;
     background-color: white;
+    justify-content: space-between;
+    border-top: #eef0f3 1px solid
 }
-.chat-header{
+
+.chat-header {
     height: max-content;
-    padding: 5px ;
+    padding: 5px;
+    background-color: #016d81d4;
+    justify-content: space-between
 }
-.recipient-img{
+
+.recipient-img {
     display: block;
     cursor: pointer;
     text-decoration: none;
@@ -21,19 +30,60 @@
     height: fit-content;
     align-self: center;
 }
-.recipient-name{
+
+.recipient-name {
     width: max-content;
 }
-mat-icon{
+
+mat-icon {
     transform: scale(1);
 }
-button{
+
+button {
     padding: 0;
     width: fit-content;
 }
-.user-img{
+
+.user-img {
     height: 50px;
     width: 50px;
     border-radius: 50%;
     margin-right: 10px;
-  }
+}
+
+.bi-person-circle {
+    color: white;
+    font-size: 5vh
+}
+
+.recipient-name {
+    color: white;
+    margin: 0
+}
+
+.recipient-status {
+    color: #75ff75;
+    margin: 0
+}
+
+.minimize-chat-btn,
+.close-chat-btn,
+.close-chat-btn {
+    color: white
+}
+
+.no-messages {
+    font-weight: 700;
+    margin-top: 10px
+}
+
+.chat-input {
+    width: 90%
+}
+
+.send-icon {
+    color: #336eae
+}
+.empty-chat-container{
+    margin: auto
+}

@@ -1,6 +1,7 @@
 .mat-form-field-underline {
     display: none;
 }
+
 .add-img-wrapper {
     background-color: #80808038;
     border-radius: 15px;
@@ -12,17 +13,20 @@
     margin: 10px auto;
 
 }
+
 .sub-media-wrapper {
     border-radius: 15px;
     position: relative;
     width: 250px;
     margin-top: 10px;
 }
-img{
+
+img {
     border-radius: 15px;
     max-height: 150px;
     max-width: 150px;
 }
+
 .cancel-img {
     color: red;
     position: absolute;
@@ -30,6 +34,7 @@ img{
     cursor: pointer;
     z-index: 2;
 }
+
 .btns-container {
     justify-content: center;
     padding: 5px;
@@ -41,4 +46,13 @@ progressbar {
     position: absolute;
     top: 50%;
     opacity: 0.8;
+}
+
+mat-form-field {
+    height: 100%;
+    width: 100%
+}
+
+.file-iunput {
+    display: none
 }

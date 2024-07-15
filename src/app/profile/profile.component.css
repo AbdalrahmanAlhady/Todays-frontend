@@ -125,3 +125,42 @@
     width: fit-content;
     margin: auto;
 }
+
+.viewMedia>img {
+    position: relative;
+    max-width: 500px;
+    max-height: 500px
+}
+
+mat-spinner {
+    height: 250px;
+    width: 250px;
+    margin-bottom: 10px
+}
+
+.file-input {
+    display: none
+}
+
+#cover-image>img {
+    height: 100%;
+    margin: auto
+}
+
+app-empty-cover {
+    display: block;
+    height: 100%
+}
+
+.finish-upload-btn {
+    background-color: #28a745;
+    color: white
+}
+
+.cancel-upload-btn {
+    background-color: red;
+    color: white
+}
+app-edit-personal-information{
+    width: 100%;
+}

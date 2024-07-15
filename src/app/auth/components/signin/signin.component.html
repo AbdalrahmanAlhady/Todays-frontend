@@ -1,5 +1,5 @@
 <div class="d-flex flex-row container">
-  <img src="../../../assets/Todays.png" />
+  <img  src="../../../assets/Todays.png" />
   <form [formGroup]="signinForm" #form="ngForm" *ngIf="!forgetPasswordMode">
     <h2>Sign in</h2>
     <div class="d-flex flex-column">
@@ -21,10 +21,7 @@
           signinForm.controls['email']?.touched
         "
       >
-        <div
-          *ngIf="signinForm.controls['email'].errors?.['pattern']"
-          style="font-size: 12px"
-        >
+        <div *ngIf="signinForm.controls['email'].errors?.['pattern']">
           Enter in the format:name&#64;example.com
         </div>
         <div
@@ -69,24 +66,22 @@
       >
         Signin
       </button>
-      <p class="account" style="width: max-content">
-        Don't have account?
-        <a
-          routerLink="/signup"
-          (click)="switchToSignup()"
-          style="color: blue; text-decoration: none; cursor: pointer"
-          >Signup</a
-        >
-      </p>
-      <p class="account" style="width: max-content">
-        Forget Password?
-        <a
-          style="color: blue; text-decoration: none; cursor: pointer"
-          (click)="forgetPasswordMode = true"
-          >Reset Password</a
-        >
-      </p>
     </div>
+    <p class="account">
+      Don't have account?
+      <a
+        routerLink="/signup"
+        (click)="switchToSignup()"
+        >Signup</a
+      >
+    </p>
+    <p class="account">
+      Forget Password?
+      <a
+        (click)="forgetPasswordMode = true"
+        >Reset Password</a
+      >
+    </p>
   </form>
   <form
     [formGroup]="forgetPasswordForm"
@@ -113,10 +108,7 @@
           forgetPasswordForm.controls['email']?.touched
         "
       >
-        <div
-          *ngIf="forgetPasswordForm.controls['email'].errors?.['pattern']"
-          style="font-size: 12px"
-        >
+        <div *ngIf="forgetPasswordForm.controls['email'].errors?.['pattern']">
           Enter in the format:name&#64;example.com
         </div>
         <div
@@ -139,12 +131,11 @@
       >
         Send OTP Mail
       </button>
-      <p class="account" style="width: max-content">
+      <p class="account">
         Don't have account?
         <a
           routerLink="/signup"
           (click)="switchToSignup()"
-          style="color: blue; text-decoration: none"
           >Signup</a
         >
       </p>

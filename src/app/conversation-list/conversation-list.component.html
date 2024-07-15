@@ -5,15 +5,19 @@
       *ngIf="!onlineFriendsList || onlineFriendsList.length === 0"
       class="d-flex flex-column align-items-center"
     >
-      <app-empty-online-friends [width]="200" [height]="150"></app-empty-online-friends>
-      <p style="font-weight: 700; margin-top: 25px">Either No friends are online or you have no friends yet</p>
+      <app-empty-online-friends
+        [width]="200"
+        [height]="150"
+      ></app-empty-online-friends>
+      <p class="no-friends">
+        Either No friends are online or you have no friends yet
+      </p>
     </div>
     <div class="online-user" *ngFor="let onlineFriend of onlineFriendsList">
       <a class="d-flex flex-row" (click)="openChat(onlineFriend.id!)">
         <span
-          *ngIf="unseenMessagesPerUserConversation.get(onlineFriend.id!)! >0"
-          style="height: fit-content"
-          class="position-absolute translate-middle badge rounded-pill bg-danger"
+          *ngIf="unseenMessagesPerUserConversation.get(onlineFriend.id!)! > 0"
+          class="unseen-count position-absolute translate-middle badge rounded-pill bg-danger"
         >
           {{ unseenMessagesPerUserConversation.get(onlineFriend.id!) }}
         </span>
@@ -30,7 +34,6 @@
           />
           <i
             class="bi bi-person-circle h1"
-            style="color: #016d81d4"
             *ngIf="!onlineFriend.profileImg"
           ></i>
         </a>
@@ -38,9 +41,7 @@
           <p class="font-semibold user-name">
             {{ onlineFriend.first_name! }} {{ onlineFriend.last_name }}
           </p>
-          <p style="color: #05e705; font-weight: 500" class="user-status">
-            Online
-          </p>
+          <p class="user-status">Online</p>
         </div>
       </a>
     </div>
@@ -52,7 +53,7 @@
 >
   <span class="chat-title">Active Chats</span>
   <app-conversation
-    *ngFor="let openedConversation of openedConversations|keyvalue"
+    *ngFor="let openedConversation of openedConversations | keyvalue"
     [conversation]="openedConversation.value"
   ></app-conversation>
 </div>

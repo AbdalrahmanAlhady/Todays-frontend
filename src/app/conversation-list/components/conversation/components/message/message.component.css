@@ -24,10 +24,12 @@
     max-width: 100%;
     overflow-wrap: break-word;
 }
-.message-text-sent{
+
+.message-text-sent {
     align-self: flex-start;
 }
-.message-text-received{
+
+.message-text-received {
     align-self: flex-end;
 }
 
@@ -36,9 +38,15 @@
     font-weight: 800;
     font-size: 80%;
 }
-.meta-sent{
+
+.meta-sent {
     margin-left: 5px;
 }
-.meta-received{
+
+.meta-received {
     margin-right: 5px;
+}
+
+app-seen-icon-svg {
+    width: fit-content
 }

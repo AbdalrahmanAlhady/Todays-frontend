@@ -4,13 +4,14 @@
 }
 
 img {
-    width: 60%;
+    width: 50%;
 }
 
 .account {
     color: black;
     font-weight: bold;
     margin-top: 10px;
+    text-align: center;
 }
 
 mat-form-field,
@@ -34,14 +35,19 @@ form {
     color: red;
     padding-left: 16px;
 }
-.validation-container div{
+
+.validation-container div {
     padding-bottom: 5px;
 }
-.backendError{
+
+.backendError {
     color: red;
     margin: auto;
     width: fit-content;
     margin-bottom: 10px;
     font-size: 16px;
     font-weight: 500;
+}
+a{
+    color: blue; text-decoration: none; cursor: pointer
 }

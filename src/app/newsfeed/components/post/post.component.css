@@ -5,9 +5,10 @@
   min-width: none;
   margin-bottom: 10px;
 }
-img{
-display: block;
-margin: auto;
+
+img {
+  display: block;
+  margin: auto;
 }
 
 .post-header {
@@ -53,16 +54,46 @@ slide {
 carousel {
   width: 100%;
 }
-.count{
+
+.count {
   margin-bottom: 0;
   height: fit-content;
 }
-hr{
+
+hr {
   border-top: 1px solid #999;
 }
-.user-img{
+
+.user-img {
   height: 50px;
   width: 50px;
   border-radius: 50%;
   margin-right: 10px;
+}
+
+.post-img {
+  width: 100%;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none
+}
+
+.bi-person-circle {
+  margin-right: 5px;
+  margin-bottom: 0;
+  color: #016d81d4
+}
+
+slide {
+  text-align: center
+}
+
+.like-btn {
+  margin-right: 5px
+}
+
+app-create-comment {
+  width: 100%
 }

@@ -29,25 +29,46 @@ p {
     text-decoration: none;
     margin-right: 10px;
 }
-a{
+
+a {
     text-decoration: none;
     color: black;
 }
-.chat-container{
-   margin-bottom: 20px;
-   height: 30vh;
+
+.chat-container {
+    margin-bottom: 20px;
+    height: 30vh;
 
 }
-.active-chats > span{
+
+.active-chats>span {
     font-size: large;
     margin-bottom: 20px;
     display: block;
     color: #016d81;
     font-weight: 600;
 }
-.user-img{
+
+.user-img {
     height: 50px;
     width: 50px;
     border-radius: 50%;
     margin-right: 10px;
-  }
+}
+
+.no-friends {
+    font-weight: 700;
+    margin-top: 25px;
+    width: 100%
+}
+
+.unseen-count {
+    height: fit-content
+}
+
+.bi-person-circle {
+    color: #016d81d4
+}
+.user-status{
+    color: #05e705; font-weight: 500
+}

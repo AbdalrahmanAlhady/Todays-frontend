@@ -1,9 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { User } from '../../shared/models/user.model';
 import { BehaviorSubject } from 'rxjs';
 import { EndPoint } from 'src/app/shared/endpoints/EndPoint';
 import { jwtDecode } from 'jwt-decode';
+import { UserService } from 'src/app/shared/services/user.service';
+
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +18,7 @@ export class AuthService {
   public $userRefreshToken = new BehaviorSubject<string | null>(
     JSON.parse(localStorage.getItem('refreshToken')!)
   );
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private injector: Injector) {}
 
   isUserAuthorized() {
     return !!this.$userAccessToken.getValue();
@@ -80,5 +82,20 @@ export class AuthService {
       { email },
       { observe: 'response' }
     );
+  }
+  signout() {
+    const userService = this.injector.get<UserService>(UserService);
+    userService
+      .updateUser(userService.getCurrentUserId(), { online: false })
+      .subscribe({
+        next: (res) => {
+          localStorage.clear();
+          window.location.reload();
+        },
+        error: (err) => {
+          console.log(err.error.message);
+          
+        },
+      });
   }
 }

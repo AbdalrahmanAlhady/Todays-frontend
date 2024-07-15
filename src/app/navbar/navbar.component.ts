@@ -31,22 +31,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private userService: UserService,
     private notificationService: NotificationService,
-    private socketService: SocketService,
+    private socketService: SocketService
   ) {}
 
   ngOnInit(): void {
     if (
       this.router.url !== '/signin' &&
       this.router.url !== '/signup' &&
-      this.router.url === '/' &&
+      this.router.url !== '/' &&
       !this.isAuth
     ) {
-      this.isAuthorized();
-    }
-    if (this.isAuth) {
-        this.getUserNotification();
-        this.socketService.connectToSockets();
-        this.listenToNotification();
+      this.getCurrentUser();
     }
   }
 
@@ -57,21 +52,26 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.router.url !== '/signup' &&
       this.router.url !== '/'
     ) {
-      this.isAuthorized();
+      this.getCurrentUser();
     }
   }
 
-  isAuthorized() {
+  getCurrentUser() {
     this.subscriptions.add(
       this.userService
         .getUser(this.userService.getCurrentUserId())
         .subscribe((res) => {
-          this.user = this.userService.spreadUserMedia(
-            res.body!.user
-          );
+          this.user = this.userService.spreadUserMedia(res.body!.user);
+          this.isAuth = this.authService.isUserAuthorized();
+          if (this.isAuth) {
+            if (!this.socketService.$socketConnected.getValue()) {
+              this.socketService.connectToSockets();
+            }
+            this.getUserNotification();
+            this.listenToNotification();
+          }
         })
     );
-    this.isAuth = this.authService.isUserAuthorized();
   }
 
   listenToNotification() {
@@ -103,7 +103,26 @@ export class NavbarComponent implements OnInit, OnDestroy {
         : this.unseenNotificationsCount;
     });
   }
-
+  seenNotification() {
+    if (this.unseenNotificationsCount > 0) {
+      this.notifications.forEach((notification) => {
+        this.notificationService.seenNotification(notification.id!).subscribe({
+          next: (res) => {
+            if (res.body?.message === 'notification updated') {
+              notification.seen = true;
+              this.unseenNotificationsCount--;
+            }
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
+      });
+    }
+  }
+  signout() {
+    this.authService.signout();
+  }
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
   }

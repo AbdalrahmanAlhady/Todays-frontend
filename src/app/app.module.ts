@@ -63,6 +63,7 @@ import { OptEmailSvgComponent } from './shared/components/icons/opt-email-svg/op
 import { EmailVerifiedSvgComponent } from './shared/components/icons/email-verified-svg/email-verified-svg.component';
 import { UpdateDoneSvgComponent } from './shared/components/icons/update-done-svg/update-done-svg.component';
 import { EmptyPostsComponent } from './shared/components/icons/empty-posts/empty-posts.component';
+import { SignoutSvgComponent } from './shared/components/icons/signout-svg/signout-svg.component';
 
 @NgModule({
   declarations: [
@@ -98,7 +99,8 @@ import { EmptyPostsComponent } from './shared/components/icons/empty-posts/empty
     OptEmailSvgComponent,
     EmailVerifiedSvgComponent,
     UpdateDoneSvgComponent,
-    EmptyPostsComponent
+    EmptyPostsComponent,
+    SignoutSvgComponent
   ],
   imports: [
     BrowserModule,

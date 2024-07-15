@@ -13,5 +13,6 @@ export class ShareDataService {
   $noMoreProfileFriendsPages = new Subject<boolean>();
   $informationUpdated = new Subject<boolean>();
   $viewMedia = new Subject<{type:'img' | 'video', url:string}>();
+  $userSeenMessage = new Subject<{sender_id:string,count:number}>();
   constructor() { }
 }

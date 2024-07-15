@@ -32,10 +32,10 @@ export class MessageService {
       { observe: 'response', params: queryParams }
     );
   }
-  seenMessages(id: string) {
+  seenMessages(id: string,sender_id:string) {
     return this.http.patch<{ message: string }>(
       `${EndPoint.API_ROOT}/${EndPoint.MESSAGES_API}/${id}`,
-      { seen: true },
+      { seen: true ,sender_id},
       { observe: 'response' }
     );
   }

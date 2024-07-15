@@ -7,6 +7,7 @@ import { Conversation } from '../shared/models/conversation.model';
 import { ConversationService } from '../shared/services/conversation.service';
 import { Message } from '../shared/models/message.model';
 import { MessageService } from '../shared/services/message.service';
+import { ShareDataService } from '../shared/services/share-data.service';
 
 @Component({
   selector: 'app-conversation-list',
@@ -22,28 +23,39 @@ export class ConversationListComponent implements OnInit, OnDestroy {
     private socketService: SocketService,
     private conversationService: ConversationService,
     private userService: UserService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private shareDataService: ShareDataService
   ) {}
   ngOnInit(): void {
-    Promise.all([this.getOnlineFriends(), this.getConversationsOfCurrentUser()])
-      .then(() => {
-        this.calcUnseenMessages();
-        this.listenToMessages();
-        this.listenToCloseConversation();
-      })
-      .catch((error) => {
-        console.error('An error occurred:', error);
-      });
+    this.socketService.$socketConnected.subscribe((socketConnected) => {
+      if (socketConnected) {
+        Promise.all([
+          this.getOnlineFriends(),
+          this.getConversationsOfCurrentUser(),
+        ])
+          .then(() => {
+            this.listenToMessages();
+            this.listenToCloseConversation();
+            this.listenToUpdateUnseenCount();
+            console.log(this.conversations);
+          })
+          .catch((error) => {
+            console.error('An error occurred:', error);
+          });
+      }
+    });
   }
   getOnlineFriends(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.socketService.getOnlineFriends();
       this.socketService.ListenToOnlineFriends();
-      this.socketService.$onlineFriendsList.subscribe((userList) => {           
+      this.socketService.getOnlineFriends();
+      this.socketService.$onlineFriendsList.subscribe((userList) => {
         this.onlineFriendsList = userList;
-        this.onlineFriendsList.forEach(friend=>{
-          friend = this.userService.spreadUserMedia(friend)
-        })
+        console.log(this.onlineFriendsList);
+        this.onlineFriendsList.forEach((friend) => {
+          friend = this.userService.spreadUserMedia(friend);
+          this.calcUnseenMessages(friend);
+        });
         resolve();
       }, reject);
     });
@@ -60,44 +72,21 @@ export class ConversationListComponent implements OnInit, OnDestroy {
     });
   }
 
-  openChat(sender_id: string) {
+  openChat(other_user_id: string) {
     let currentUser_id = this.userService.getCurrentUserId();
     let foundConversation = this.conversations.find(
-      ({ first_user, second_user }) =>
-        (first_user?.id === currentUser_id && second_user?.id === sender_id) ||
-        (first_user?.id === sender_id && second_user?.id === currentUser_id)
+      ({ first_user_id, second_user_id }) =>
+        (first_user_id === currentUser_id &&
+          second_user_id === other_user_id) ||
+        (first_user_id === other_user_id && second_user_id === currentUser_id)
     );
     if (foundConversation) {
-      if (
-        foundConversation.first_user_id ===
-          this.userService.getCurrentUserId() &&
-        foundConversation.first_user_status !== 'active'
-      ) {
-        foundConversation.first_user_status = 'active';
-      } else if (
-        foundConversation.second_user_id ===
-          this.userService.getCurrentUserId() &&
-        foundConversation.second_user_status !== 'active'
-      ) {
-        foundConversation.second_user_status = 'active';
-      }
-      this.conversationService
-        .updateConversation(
-          foundConversation.id!,
-          foundConversation.first_user_status,
-          foundConversation.second_user_status
-        )
-        .subscribe((res) => {
-          this.openedConversations.set(
-            foundConversation?.id!,
-            foundConversation!
-          );
-        });
+      this.changeConversationStatus(foundConversation, 'active');
     } else if (!foundConversation) {
       this.conversationService
         .createConversation(
           this.userService.getCurrentUserId(),
-          sender_id,
+          other_user_id,
           'active',
           'closed'
         )
@@ -110,26 +99,53 @@ export class ConversationListComponent implements OnInit, OnDestroy {
         });
     }
   }
-  calcUnseenMessages() {
-    this.onlineFriendsList.forEach((user) => {
-      this.conversations.forEach((conversation) => {
-        if (
-          conversation.first_user_id === user.id ||
-          conversation.second_user_id === user.id
-        ) {
-          this.conversationService
-            .getUnseenMessages(
-              conversation.id!,
-              this.userService.getCurrentUserId()!
-            )
-            .subscribe((res) => {
-              this.unseenMessagesPerUserConversation.set(
-                user.id!,
-                res.body!.messages.count
-              );
-            });
+  changeConversationStatus(
+    conversation: Conversation,
+    action: 'minimzed' | 'closed' | 'active'
+  ) {
+    let first_user_status = conversation.first_user_status;
+    let second_user_status = conversation.second_user_status;
+    if (conversation.first_user_id === this.userService.getCurrentUserId()) {
+      first_user_status = action;
+    } else {
+      second_user_status = action;
+    }
+    this.conversationService
+      .updateConversation(
+        conversation.id!,
+        first_user_status,
+        second_user_status
+      )
+      .subscribe((res) => {
+        if (res.body?.message === 'updated') {
+          conversation.first_user_status = first_user_status;
+          conversation.second_user_status = second_user_status;
+          if (action === 'closed') {
+            this.conversationService.$closeConversation.next(conversation.id!);
+          } else if (action === 'active') {
+            this.openedConversations.set(conversation.id!, conversation);
+          }
         }
       });
+  }
+  calcUnseenMessages(onlineFriend: User) {
+    this.conversations.forEach((conversation) => {
+      if (
+        conversation.first_user_id === onlineFriend.id ||
+        conversation.second_user_id === onlineFriend.id
+      ) {
+        this.conversationService
+          .getUnseenMessages(
+            conversation.id!,
+            this.userService.getCurrentUserId()!
+          )
+          .subscribe((res) => {
+            this.unseenMessagesPerUserConversation.set(
+              onlineFriend.id!,
+              res.body!.messages.count
+            );
+          });
+      }
     });
   }
   listenToMessages() {
@@ -143,7 +159,10 @@ export class ConversationListComponent implements OnInit, OnDestroy {
       this.openedConversations.delete(conversation_id);
     });
   }
-  ngOnDestroy(): void {
-    
+  listenToUpdateUnseenCount() {
+    this.shareDataService.$userSeenMessage.subscribe((res) => {
+      this.unseenMessagesPerUserConversation.set(res.sender_id, res.count);
+    });
   }
+  ngOnDestroy(): void {}
 }

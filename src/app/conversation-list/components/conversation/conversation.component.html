@@ -27,7 +27,7 @@
         ></i>
       </a>
       <div class="d-flex flex-column align-self-center recipient-name-status">
-        <p class="font-semibold recipient-name" style="color: white; margin: 0">
+        <p *ngIf="otherUser" class="font-semibold recipient-name" style="color: white; margin: 0">
           {{ otherUser.first_name + " " + otherUser.last_name }}
         </p>
         <p class="text-xs recipient-status" style="color: #75ff75; margin: 0">

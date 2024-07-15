@@ -3,31 +3,53 @@ import { Injectable } from '@angular/core';
 import { User } from '../../shared/models/user.model';
 import { BehaviorSubject } from 'rxjs';
 import { EndPoint } from 'src/app/shared/endpoints/EndPoint';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  public $userToken = new BehaviorSubject<string | null>(
-    JSON.parse(localStorage.getItem('userToken')!)
+  public $userAccessToken = new BehaviorSubject<string | null>(
+    JSON.parse(localStorage.getItem('accessToken')!)
+  );
+
+  public $userRefreshToken = new BehaviorSubject<string | null>(
+    JSON.parse(localStorage.getItem('refreshToken')!)
   );
   constructor(private http: HttpClient) {}
 
   isUserAuthorized() {
-    return !!this.$userToken.getValue();
+    return !!this.$userAccessToken.getValue();
+  }
+  accessTokenExpiry() {
+    let accessToken = jwtDecode(this.$userAccessToken.getValue()!);
+    return Math.floor((accessToken.exp! - Math.floor(Date.now() / 1000)) / 60);
   }
   signup(user: User) {
     return this.http.post<{ user: User }>(
       `${EndPoint.API_ROOT}/${EndPoint.AUTH_API.Signup}`,
       user,
-      { observe: 'response' ,headers: { 'skip': 'true'} }
+      { observe: 'response', headers: { skip: 'true' } }
     );
   }
   signin(email: string, password: string) {
-    return this.http.post<{ user: User; token: string }>(
+    return this.http.post<{
+      user: User;
+      accessToken: string;
+      refreshToken: string;
+    }>(
       `${EndPoint.API_ROOT}/${EndPoint.AUTH_API.Signin}`,
       { email, password },
-      { observe: 'response' }
+      { observe: 'response', headers: { skip: 'true' } }
+    );
+  }
+  refreshAccessToken() {
+    return this.http.post<{
+      newAccessToken: string;
+    }>(
+      `${EndPoint.API_ROOT}/${EndPoint.AUTH_API.refreshToken}`,
+      { refreshToken: JSON.parse(localStorage.getItem('refreshToken')!) },
+      { observe: 'response', headers: { skip: 'true' } }
     );
   }
 
@@ -40,15 +62,15 @@ export class AuthService {
   ) {
     return this.http.post<{ message: string }>(
       `${EndPoint.API_ROOT}/${EndPoint.AUTH_API.changePassword}`,
-      { newPassword, cNewPassword, currentPassword, OTP,email },
-      { observe: 'response' }
+      { newPassword, cNewPassword, currentPassword, OTP, email },
+      { observe: 'response', headers: { skip: 'true' } }
     );
   }
   verifyEmailViaOTP(OTP: string, email: string) {
     return this.http.post<{ message: string }>(
       `${EndPoint.API_ROOT}/${EndPoint.AUTH_API.verifyEmail}`,
       { OTP, email },
-      { observe: 'response' }
+      { observe: 'response', headers: { skip: 'true' } }
     );
   }
 

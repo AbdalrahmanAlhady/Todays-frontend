@@ -12,13 +12,22 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
-    if (!this.authService.$userToken.getValue() || req.headers.get('skip')) {
+    if (req.headers.get('skip')) {
       return next.handle(req);
-    } else if (this.authService.$userToken.getValue()) {
+    } else if (this.authService.$userAccessToken.getValue()) {    
+      if (this.authService.accessTokenExpiry() <= 5) {
+        this.authService.refreshAccessToken().subscribe((res) => {
+          localStorage.setItem(
+            'accessToken',
+            JSON.stringify(res.body?.newAccessToken!)
+          );
+          this.authService.$userAccessToken.next(res.body?.newAccessToken!);
+        });
+      }
       const modifiedReq = req.clone({
         headers: new HttpHeaders().set(
           'Authorization',
-          'Bearer ' + this.authService.$userToken.getValue()!
+          'Bearer ' + this.authService.$userAccessToken.getValue()!
         ),
       });
       return next.handle(modifiedReq);

@@ -68,9 +68,16 @@ export class SigninComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.authService.signin(formData.email, formData.password).subscribe({
         next: (res) => {
-          if (res.body?.token) {
-            localStorage.setItem('userToken', JSON.stringify(res.body.token!)!);
-            this.authService.$userToken.next(res.body?.token);
+          if (res.body?.accessToken && res.body?.refreshToken) {
+            localStorage.setItem(
+              'accessToken',
+              JSON.stringify(res.body.accessToken!)!
+            );
+            localStorage.setItem(
+              'refreshToken',
+              JSON.stringify(res.body.refreshToken!)!
+            );
+            this.authService.$userAccessToken.next(res.body?.accessToken);
             this.router.navigate(['/']);
           }
         },

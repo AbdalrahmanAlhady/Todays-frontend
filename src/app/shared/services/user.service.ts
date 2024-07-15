@@ -18,9 +18,9 @@ export class UserService {
   ) {}
 
   getCurrentUserId() {
-    if (this.authService.$userToken.getValue()) {
+    if (this.authService.$userAccessToken.getValue()) {
       return jwtDecode<{ any: any; id: string }>(
-        this.authService.$userToken.getValue()!
+        this.authService.$userAccessToken.getValue()!
       ).id;
     } else {
       return '';
@@ -88,7 +88,7 @@ export class UserService {
   
     const profileMedia = userContainsMedia.media?.find(media => media.for === 'profile');
     userContainsMedia.profileImg = profileMedia ? profileMedia.url : undefined;
-  
-    return userContainsMedia;
+  let {media,...user} = userContainsMedia
+    return user;
   }
 }

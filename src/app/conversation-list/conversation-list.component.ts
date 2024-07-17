@@ -37,7 +37,6 @@ export class ConversationListComponent implements OnInit, OnDestroy {
             this.listenToMessages();
             this.listenToCloseConversation();
             this.listenToUpdateUnseenCount();
-            console.log(this.conversations);
           })
           .catch((error) => {
             console.error('An error occurred:', error);
@@ -51,7 +50,6 @@ export class ConversationListComponent implements OnInit, OnDestroy {
       this.socketService.getOnlineFriends();
       this.socketService.$onlineFriendsList.subscribe((userList) => {
         this.onlineFriendsList = userList;
-        console.log(this.onlineFriendsList);
         this.onlineFriendsList.forEach((friend) => {
           friend = this.userService.spreadUserMedia(friend);
           this.calcUnseenMessages(friend);

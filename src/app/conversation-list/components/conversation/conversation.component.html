@@ -57,10 +57,18 @@
   <div
     class="d-flex flex-column chat-body"
     *ngIf="conversationStatusOfCurrentUser !== 'minimzed'"
+    infiniteScroll
+    appScrollDirective
+    [infiniteScrollUpDistance]="3"
+    [infiniteScrollThrottle]="1000"
+    [scrollWindow]="false"
+    (scrolledUp)="getMessagesOfConversation()"
+    #chatBody
   >
     <app-message
       *ngFor="let message of messages"
       [message]="message"
+      [attr.id]="'message' + message.id"
     ></app-message>
     <div
       *ngIf="messages.length === 0"

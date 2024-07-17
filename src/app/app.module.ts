@@ -64,6 +64,7 @@ import { EmailVerifiedSvgComponent } from './shared/components/icons/email-verif
 import { UpdateDoneSvgComponent } from './shared/components/icons/update-done-svg/update-done-svg.component';
 import { EmptyPostsComponent } from './shared/components/icons/empty-posts/empty-posts.component';
 import { SignoutSvgComponent } from './shared/components/icons/signout-svg/signout-svg.component';
+import { ScrollDirective } from './shared/directives/scroll.directive';
 
 @NgModule({
   declarations: [
@@ -100,7 +101,8 @@ import { SignoutSvgComponent } from './shared/components/icons/signout-svg/signo
     EmailVerifiedSvgComponent,
     UpdateDoneSvgComponent,
     EmptyPostsComponent,
-    SignoutSvgComponent
+    SignoutSvgComponent,
+    ScrollDirective
   ],
   imports: [
     BrowserModule,

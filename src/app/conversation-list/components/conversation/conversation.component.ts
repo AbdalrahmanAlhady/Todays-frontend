@@ -1,10 +1,13 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
   OnInit,
   Output,
+  Renderer2,
+  ViewChild,
 } from '@angular/core';
 import { Socket } from 'socket.io-client';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
@@ -18,6 +21,7 @@ import { User } from '../../../shared/models/user.model';
 import { Conversation } from 'src/app/shared/models/conversation.model';
 import { ConversationService } from 'src/app/shared/services/conversation.service';
 import { ShareDataService } from 'src/app/shared/services/share-data.service';
+import { ScrollDirective } from 'src/app/shared/directives/scroll.directive';
 
 @Component({
   selector: 'app-conversation',
@@ -26,6 +30,8 @@ import { ShareDataService } from 'src/app/shared/services/share-data.service';
 })
 export class ConversationComponent implements OnInit, OnDestroy {
   @Input() conversation!: Conversation;
+  @ViewChild('chatBody') private chatBody!: ElementRef;
+  @ViewChild(ScrollDirective) scrollDirective!: ScrollDirective;
   socket!: Socket;
   socketConnectionData!: Socket<DefaultEventsMap, DefaultEventsMap>;
   currentUser!: User;
@@ -40,6 +46,8 @@ export class ConversationComponent implements OnInit, OnDestroy {
     sender_id: this.userService.getCurrentUserId(),
     receiver_id: '',
   };
+  totalMessageCount: number = 0;
+  currentMessagesPage = 0;
   conversationStatusOfCurrentUser: 'minimzed' | 'closed' | 'active' = 'active';
   constructor(
     private authService: AuthService,
@@ -47,33 +55,67 @@ export class ConversationComponent implements OnInit, OnDestroy {
     private socketService: SocketService,
     private messageService: MessageService,
     private conversationService: ConversationService,
-    private shareDataService: ShareDataService
+    private shareDataService: ShareDataService,
+    private render: Renderer2
   ) {}
-  ngOnInit(): void {
-    this.getCurrentUser();
-    this.getMessagesOfConversation();
-    this.determineOtherUser();
-    this.messageService.$newMessageToConversation.subscribe((message) => {
-      this.receiveNewMessage(message);
-    });
-    this.listenToSeenMessage();
-  }
-  getCurrentUser() {
-    this.subscriptions.add(
-      this.userService
-        .getUser(this.userService.getCurrentUserId())
-        .subscribe((res) => {
-          this.currentUser = this.userService.spreadUserMedia(res.body!.user);
-        })
-    );
-    this.isAuth = this.authService.isUserAuthorized();
-  }
 
+  ngOnInit(): void {
+    Promise.all([this.getCurrentUser(), this.getMessagesCountOfConversation()])
+      .then(() => {
+        this.getMessagesOfConversation();
+        this.determineOtherUser();
+        this.listenToNewMessage();
+        this.listenToSeenMessage();
+      })
+      .catch((error) => {
+        console.error('An error occurred:', error);
+      });
+  }
+  getCurrentUser(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.subscriptions.add(
+        this.userService
+          .getUser(this.userService.getCurrentUserId())
+          .subscribe((res) => {
+            this.currentUser = this.userService.spreadUserMedia(res.body!.user);
+            resolve();
+          }, reject)
+      );
+      this.isAuth = this.authService.isUserAuthorized();
+    });
+  }
+  getMessagesCountOfConversation(): Promise<void> {
+    let messagesPerPage = 5;
+    return new Promise((resolve, reject) => {
+      this.messageService
+        .countConversationMessages(this.conversation.id!)
+        .subscribe((res) => {
+          this.totalMessageCount = res.body!.messagesCount;
+          this.currentMessagesPage = Math.ceil(
+            this.totalMessageCount / messagesPerPage
+          );
+          resolve(); // Resolve the Promise when the asynchronous operation completes
+        }, reject);
+    });
+  }
   getMessagesOfConversation() {
     this.messageService
-      .getMessagesOfConversation(this.conversation.id!)
+      .getMessagesOfConversation(
+        this.conversation.id!,
+        this.currentMessagesPage + '',
+        5 + ''
+      )
       .subscribe((res) => {
-        this.messages = res.body!.messages.rows;
+        this.scrollDirective.prepareFor('up');
+        let oldFirstMessage: Message =
+          this.messages[0] || res.body!.messages.rows[0];
+        if (this.messages.length === 0) {
+          this.messages = res.body!.messages.rows;
+        } else {
+          this.messages.unshift(...res.body!.messages.rows);
+          setTimeout(() => this.scrollDirective.restore());
+        }
+        this.currentMessagesPage--;
       });
   }
   sendMessage() {
@@ -90,8 +132,10 @@ export class ConversationComponent implements OnInit, OnDestroy {
         : this.conversation.first_user!;
     if (this.otherUser) this.newMessage.receiver_id = this.otherUser.id!;
   }
-  receiveNewMessage(message: Message) {
-    this.messages.push(message);
+  listenToNewMessage() {
+    this.messageService.$newMessageToConversation.subscribe((message) => {
+      this.messages.push(message);
+    });
   }
   seenMessages() {
     let seenCount = 0;
@@ -154,5 +198,8 @@ export class ConversationComponent implements OnInit, OnDestroy {
         }
       });
     });
+  }
+  onScroll() {
+    console.log('s');
   }
 }

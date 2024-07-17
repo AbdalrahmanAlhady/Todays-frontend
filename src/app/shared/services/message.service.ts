@@ -20,22 +20,28 @@ export class MessageService {
   getMessagesOfConversation(
     conversation_id: string,
     page?: string,
-    postsNumber?: string
+    messagesNumber?: string
   ) {
     let queryParams = new HttpParams();
     if (page) queryParams = queryParams.append('page', page);
-    if (postsNumber) queryParams = queryParams.append('limit', postsNumber);
-    console.log('conversation_id', conversation_id);
-    
+    if (messagesNumber)
+      queryParams = queryParams.append('limit', messagesNumber);
+
     return this.http.get<{ messages: { count: number; rows: Message[] } }>(
       `${EndPoint.API_ROOT}/${EndPoint.MESSAGES_API}/conversation/${conversation_id}`,
       { observe: 'response', params: queryParams }
     );
   }
-  seenMessages(id: string,sender_id:string) {
+  seenMessages(id: string, sender_id: string) {
     return this.http.patch<{ message: string }>(
       `${EndPoint.API_ROOT}/${EndPoint.MESSAGES_API}/${id}`,
-      { seen: true ,sender_id},
+      { seen: true, sender_id },
+      { observe: 'response' }
+    );
+  }
+  countConversationMessages(conversation_id: string) {
+    return this.http.get<{ messagesCount: number }>(
+      `${EndPoint.API_ROOT}/${EndPoint.MESSAGES_API}/count/conversation/${conversation_id}`,
       { observe: 'response' }
     );
   }

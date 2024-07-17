@@ -11,11 +11,13 @@ import { AuthService } from './auth.service';
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 
-  intercept(req: HttpRequest<any>, next: HttpHandler) {
+  intercept(req: HttpRequest<any>, next: HttpHandler) {    
     if (req.headers.get('skip')) {
       return next.handle(req);
-    } else if (this.authService.$userAccessToken.getValue()) {    
-      if (this.authService.accessTokenExpiry() <= 5) {
+    } else if (this.authService.$userAccessToken.getValue()) {
+      if (this.authService.refreshTokenExpiry()<=10) {
+        this.authService.signout();
+      } else if (this.authService.accessTokenExpiry() <= 5) {
         this.authService.refreshAccessToken().subscribe((res) => {
           localStorage.setItem(
             'accessToken',
@@ -34,5 +36,6 @@ export class AuthInterceptor implements HttpInterceptor {
     } else {
       return next.handle(req);
     }
+  
   }
 }

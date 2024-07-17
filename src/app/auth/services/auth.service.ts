@@ -27,6 +27,10 @@ export class AuthService {
     let accessToken = jwtDecode(this.$userAccessToken.getValue()!);
     return Math.floor((accessToken.exp! - Math.floor(Date.now() / 1000)) / 60);
   }
+  refreshTokenExpiry() {
+    let refreshToken = jwtDecode(this.$userRefreshToken.getValue()!);
+    return Math.floor((refreshToken.exp! - Math.floor(Date.now() / 1000)) / 60);
+  }
   signup(user: User) {
     return this.http.post<{ user: User }>(
       `${EndPoint.API_ROOT}/${EndPoint.AUTH_API.Signup}`,
@@ -54,7 +58,6 @@ export class AuthService {
       { observe: 'response', headers: { skip: 'true' } }
     );
   }
-
   changeOrForgetPassword(
     email: string,
     newPassword: string,
@@ -75,7 +78,6 @@ export class AuthService {
       { observe: 'response', headers: { skip: 'true' } }
     );
   }
-
   sendOTP(email: string) {
     return this.http.post<{ message: string }>(
       `${EndPoint.API_ROOT}/${EndPoint.AUTH_API.SendOTP}`,

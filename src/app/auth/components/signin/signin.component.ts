@@ -81,8 +81,8 @@ export class SigninComponent implements OnInit, OnDestroy {
             this.router.navigate(['/']);
           }
         },
-        error: (error) => {
-          this.backendError = error.error.message;
+        error: (error) => {          
+          this.backendError = error.message;
         },
       })
     );

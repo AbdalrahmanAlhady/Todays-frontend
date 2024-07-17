@@ -2,6 +2,7 @@ import {
   Component,
   ElementRef,
   Input,
+  OnDestroy,
   OnInit,
   Renderer2,
   ViewChild,
@@ -16,7 +17,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './modal.component.html',
   styleUrl: './modal.component.css',
 })
-export class ModalComponent implements OnInit {
+export class ModalComponent implements OnInit, OnDestroy {
   @Input() modalRef?: BsModalRef;
   @Input() title: string = '';
   @Input() displayMedia: boolean = false;
@@ -35,15 +36,18 @@ export class ModalComponent implements OnInit {
         if (comment_id) this.scrollTo(comment_id);
       })
     );
+    this.subscriptions.add(
     this.shareDataService.$noMoreProfileMediaPages.subscribe((res) => {
       this.noMoreMedia = res;
-    });
+    }));
+    this.subscriptions.add(
     this.shareDataService.$noMoreProfileFriendsPages.subscribe((res) => {
       this.noMoreFriends = res;
-    });
+    }));
   }
   closeModal() {
     this.modalRef?.hide();
+    this.ngOnDestroy();
   }
 
   scrollTo(comment_id: string) {
@@ -66,5 +70,9 @@ export class ModalComponent implements OnInit {
   }
   nextProfileFriendsPage() {
     this.shareDataService.$nextProfileFriendsPage.next(true);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }

@@ -1,6 +1,6 @@
 <mat-toolbar>
   <app-logo [height]="100" [width]="150" routerLink="/newsfeed"></app-logo>
-  <div class="d-flex flex-row align-items-center left-part" *ngIf="isAuth">
+  <div class="d-flex flex-row align-items-center left-part" *ngIf="user">
     <button mat-button [matMenuTriggerFor]="menu" (click)="seenNotification()">
       <span
         class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger"
@@ -22,7 +22,7 @@
       </mat-menu>
     </button>
     <mat-divider class="divider-right" [vertical]="true"></mat-divider>
-    <a *ngIf="isAuth && user" routerLink="/profile/{{ user.id }}">
+    <a *ngIf="user" routerLink="/profile/{{ user.id }}">
       <img
         class="user-profile-img"
         [src]="user.profileImg"

@@ -65,6 +65,8 @@ import { UpdateDoneSvgComponent } from './shared/components/icons/update-done-sv
 import { EmptyPostsComponent } from './shared/components/icons/empty-posts/empty-posts.component';
 import { SignoutSvgComponent } from './shared/components/icons/signout-svg/signout-svg.component';
 import { ScrollDirective } from './shared/directives/scroll.directive';
+import { MatBadgeModule } from '@angular/material/badge';
+import {MatChipsModule} from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -144,6 +146,8 @@ import { ScrollDirective } from './shared/directives/scroll.directive';
     MatMenuItem,
     MatDivider,
     InfiniteScrollModule,
+    MatBadgeModule,
+    MatChipsModule
   ],
   providers: [
     {

@@ -177,10 +177,10 @@
       [currentUser]="profileOwner"
     ></app-edit-personal-information>
     <!-- side section -->
-    <div class="side d-flex flex-column" *ngIf="!editingPersonalInfo">
+    <div class="side d-flex flex-column" *ngIf="!editingPersonalInfo && profileOwner">
       <app-side-section
         [title]="'Media'"
-        [profileOwner]="profileOwner"
+        [profileOwner]="profileOwner!"
         [sameUserProfile]="sameUser"
       ></app-side-section>
       <app-side-section

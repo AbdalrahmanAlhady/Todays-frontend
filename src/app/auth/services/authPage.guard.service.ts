@@ -19,7 +19,7 @@ export class AuthPageGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean | UrlTree {
-    if (this.authService.isUserAuthorized()) {
+    if (this.authService.$userAccessToken.getValue()) {
       this.router.navigate(['/']);
       return false;
     } else {

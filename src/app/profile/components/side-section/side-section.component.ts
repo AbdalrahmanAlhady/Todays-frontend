@@ -57,7 +57,6 @@ export class SideSectionComponent implements OnInit, OnDestroy {
         .getMediaOfUser(this.profileOwner.id!, '1', '6')
         .subscribe((res) => {
           this.media = res.body!.media.rows;
-          console.log(this.media);
           this.currentMediaPage++;
           this.shareDataService.$noMoreProfileMediaPages.next(false);
         })
@@ -97,63 +96,69 @@ export class SideSectionComponent implements OnInit, OnDestroy {
   }
 
   listenToGetNextMediaPage() {
-    this.shareDataService.$nextProfileMediaPage.subscribe((res) => {
-      if (res) {
-        this.subscriptions.add(
-          this.mediaUploadService
-            .getMediaOfUser(
-              this.profileOwner.id!,
-              this.currentMediaPage.toString(),
-              '6'
-            )
-            .subscribe((res) => {
-              this.media.push(...res.body?.media.rows!);
-              if (res.body!.media.rows.length > 0) {
-                this.currentMediaPage++;
-              }
-              this.shareDataService.$nextProfileMediaPage.next(false);
-              if (this.media.length === res.body?.media.count) {
-                this.shareDataService.$noMoreProfileMediaPages.next(true);
-              }
-            })
-        );
-      }
-    });
+    this.subscriptions.add(
+      this.shareDataService.$nextProfileMediaPage.subscribe((res) => {
+        if (res) {
+          this.subscriptions.add(
+            this.mediaUploadService
+              .getMediaOfUser(
+                this.profileOwner.id!,
+                this.currentMediaPage.toString(),
+                '6'
+              )
+              .subscribe((res) => {
+                this.media.push(...res.body?.media.rows!);
+                if (res.body!.media.rows.length > 0) {
+                  this.currentMediaPage++;
+                }
+                this.shareDataService.$nextProfileMediaPage.next(false);
+                if (this.media.length === res.body?.media.count) {
+                  this.shareDataService.$noMoreProfileMediaPages.next(true);
+                }
+              })
+          );
+        }
+      })
+    );
   }
   listenToGetNextFriendsPage() {
-    this.shareDataService.$nextProfileFriendsPage.subscribe((res) => {
-      if (res) {
-        this.subscriptions.add(
-          this.userService
-            .getUserFriends(
-              this.profileOwner.id!,
-              this.currentFriendsPage.toString(),
-              '6'
-            )
-            .subscribe((res) => {
-              this.friendships.push(...res.body!.friendships.rows);
-              this.friendships.forEach((friendship) => {
-                if (friendship.receiver!.id !== this.profileOwner.id) {
-                  this.friends.set(
-                    friendship.receiver?.id!,
-                    this.userService.spreadUserMedia(friendship.receiver!)
-                  );
-                } else {
-                  this.friends.set(friendship.sender?.id!, friendship.sender!);
+    this.subscriptions.add(
+      this.shareDataService.$nextProfileFriendsPage.subscribe((res) => {
+        if (res) {
+          this.subscriptions.add(
+            this.userService
+              .getUserFriends(
+                this.profileOwner.id!,
+                this.currentFriendsPage.toString(),
+                '6'
+              )
+              .subscribe((res) => {
+                this.friendships.push(...res.body!.friendships.rows);
+                this.friendships.forEach((friendship) => {
+                  if (friendship.receiver!.id !== this.profileOwner.id) {
+                    this.friends.set(
+                      friendship.receiver?.id!,
+                      this.userService.spreadUserMedia(friendship.receiver!)
+                    );
+                  } else {
+                    this.friends.set(
+                      friendship.sender?.id!,
+                      friendship.sender!
+                    );
+                  }
+                });
+                if (res.body!.friendships.rows.length > 0) {
+                  this.currentFriendsPage++;
                 }
-              });
-              if (res.body!.friendships.rows.length > 0) {
-                this.currentFriendsPage++;
-              }
-              this.shareDataService.$nextProfileFriendsPage.next(false);
-              if (this.friendships.length === res.body?.friendships.count) {
-                this.shareDataService.$noMoreProfileFriendsPages.next(true);
-              }
-              console.log(this.friendships);
-            })
-        );
-      }
-    });
+                this.shareDataService.$nextProfileFriendsPage.next(false);
+                if (this.friendships.length === res.body?.friendships.count) {
+                  this.shareDataService.$noMoreProfileFriendsPages.next(true);
+                }
+              })
+          );
+        }
+      })
+    );
   }
   getArrayOfFriends() {
     return Array.from(this.friends.values());
@@ -162,31 +167,40 @@ export class SideSectionComponent implements OnInit, OnDestroy {
     this.shareDataService.$viewMedia.next({ type, url });
   }
   deleteMedia(type: 'img' | 'video', id: string, url: string) {
-    this.mediaUploadService.deleteMedia(id).subscribe({
-      next: (res) => {
-        if (res.message === 'deleted') {
-          this.mediaUploadService.deleteMediafromFirebase(url).subscribe({
-            next: (res) => {
-              console.log(res);
-              this.media = this.media.filter((media) => media.id !== id);
-            },
-            error: (err) => {
-              console.log(err);
-            },
-          });
-        }
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+    this.subscriptions.add(
+      this.mediaUploadService.deleteMedia(id).subscribe({
+        next: (res) => {
+          if (res.message === 'deleted') {
+            this.subscriptions.add(
+              this.mediaUploadService.deleteMediafromFirebase(url).subscribe({
+                next: (res) => {
+                  console.log(res);
+                  this.media = this.media.filter((media) => media.id !== id);
+                },
+                error: (err) => {
+                  console.log(err);
+                },
+              })
+            );
+          }
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      })
+    );
   }
   listenToNewProfileMedia() {
-    this.mediaUploadService.$profileMedia.subscribe((aMedia) => {
-      if ((this.media && aMedia.current === false) || aMedia.current === null) {
-        this.media.push(aMedia);
-      }
-    });
+    this.subscriptions.add(
+      this.mediaUploadService.$profileMedia.subscribe((aMedia) => {
+        if (
+          (this.media && aMedia.current === false) ||
+          aMedia.current === null
+        ) {
+          this.media.push(aMedia);
+        }
+      })
+    );
   }
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();

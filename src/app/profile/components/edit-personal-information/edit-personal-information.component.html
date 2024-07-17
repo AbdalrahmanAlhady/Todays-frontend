@@ -3,202 +3,201 @@
   [height]="250"
 ></app-personal-information-svg>
 
-<mat-grid-list cols="3" rowHeight="1:1" *ngIf="currentUser">
-  <mat-grid-tile>
-    <div class="d-flex flex-column">
-      <h2>Update General Information</h2>
-      <form
-        #form1="ngForm"
-        class="d-flex flex-column"
-        *ngIf="basicInformationForm"
-        [formGroup]="basicInformationForm"
+<div class="d-flex flex-row justify-content-evenly">
+  <div class="d-flex flex-column">
+    <h2>Update General Information</h2>
+    <form
+      #form1="ngForm"
+      class="d-flex flex-column"
+      *ngIf="basicInformationForm"
+      [formGroup]="basicInformationForm"
+    >
+      <mat-form-field appearance="fill">
+        <mat-label>Phone</mat-label>
+        <input
+          formControlName="phone"
+          id="phone"
+          matInput
+          placeholder="Enter Phone Number"
+          type="tel"
+        />
+        <mat-icon matSuffix> phone</mat-icon>
+      </mat-form-field>
+      <div
+        class="validation-container"
+        *ngIf="
+          basicInformationForm.controls['phone']?.invalid &&
+          basicInformationForm.controls['phone']?.touched
+        "
       >
-        <mat-form-field appearance="fill">
-          <mat-label>Phone</mat-label>
-          <input
-            formControlName="phone"
-            id="phone"
-            matInput
-            placeholder="Enter Phone Number"
-            type="tel"
-          />
-          <mat-icon matSuffix> phone</mat-icon>
-        </mat-form-field>
         <div
-          class="validation-container"
-          *ngIf="
-            basicInformationForm.controls['phone']?.invalid &&
-            basicInformationForm.controls['phone']?.touched
-          "
-        >
-          <div
-            *ngIf="basicInformationForm.controls['phone']?.touched 
+          *ngIf="basicInformationForm.controls['phone']?.touched 
           &&basicInformationForm.controls['phone'].errors?.['required']"
-          >
-            *Phone number is required
-          </div>
-          <div
-            class="valText1"
-            *ngIf="basicInformationForm.controls['phone'].errors?.['pattern']"
-          >
-            Phone number is not in a form:
-            <div>01X XXXX XXXX with 11 digits</div>
-          </div>
-          <div
-            class="valText1"
-            *ngIf="basicInformationForm.controls['phone'].errors?.['invalidNumber']"
-          >
-            Please enter digits only!
-          </div>
+        >
+          *Phone number is required
         </div>
-        <mat-form-field appearance="fill" [hideRequiredMarker]="true">
-          <mat-label>First Name</mat-label>
-          <input
-            formControlName="first_name"
-            id="fn"
-            matInput
-            placeholder="Enter First Name"
-          />
-          <mat-icon matSuffix> name</mat-icon>
-        </mat-form-field>
         <div
-          class="validation-container"
-          *ngIf="
-            basicInformationForm.controls['first_name']?.invalid &&
-            basicInformationForm.controls['first_name']?.touched
-          "
+          class="valText1"
+          *ngIf="basicInformationForm.controls['phone'].errors?.['pattern']"
         >
-          <div
-            *ngIf="basicInformationForm.controls['first_name']?.touched 
-                &&basicInformationForm.controls['first_name'].errors?.['required']"
-          >
-            *first name is required
-          </div>
-          <div
-            *ngIf="basicInformationForm.controls['first_name'].errors?.['minlength']"
-          >
-            *Name should be minimum 5 characters
-          </div>
-          <div
-            *ngIf="basicInformationForm.controls['first_name'].errors?.['maxlength']"
-          >
-            *Name should be maximum 20 characters
-          </div>
+          Phone number is not in a form:
+          <div>01X XXXX XXXX with 11 digits</div>
         </div>
-        <mat-form-field appearance="fill" [hideRequiredMarker]="true">
-          <mat-label>Last Name</mat-label>
-          <input
-            formControlName="last_name"
-            id="ln"
-            matInput
-            placeholder="Enter Last Name"
-            type="text"
-          />
-          <mat-icon matSuffix> name</mat-icon>
-        </mat-form-field>
         <div
-          class="validation-container"
-          *ngIf="
-            basicInformationForm.controls['last_name']?.invalid &&
-            basicInformationForm.controls['last_name']?.touched
-          "
+          class="valText1"
+          *ngIf="basicInformationForm.controls['phone'].errors?.['invalidNumber']"
         >
-          <div
-            *ngIf="basicInformationForm.controls['last_name']?.touched 
-              &&basicInformationForm.controls['last_name'].errors?.['required']"
-          >
-            *last name is required
-          </div>
-          <div
-            *ngIf="basicInformationForm.controls['last_name'].errors?.['minlength']"
-          >
-            *Name should be minimum 5 characters
-          </div>
-          <div
-            *ngIf="basicInformationForm.controls['last_name'].errors?.['maxlength']"
-          >
-            *Name should be maximum 20 characters
-          </div>
+          Please enter digits only!
         </div>
-        <mat-form-field>
-          <mat-label>MM/DD/YYYY</mat-label>
-          <input
-            [matDatepicker]="picker"
-            formControlName="birthdate"
-            matInput
-          />
-          <mat-datepicker-toggle
-            [for]="picker"
-            matIconSuffix
-          ></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-        <div
-          class="validation-container"
-          *ngIf="
-            basicInformationForm.controls['birthdate']?.invalid &&
-            basicInformationForm.controls['birthdate']?.touched
-          "
-        >
-          <div>*birthdate is required</div>
-          <div>*example: 1/1/2001</div>
-        </div>
-        <div class="backendError" *ngIf="backendError">
-          {{ backendError }}
-        </div>
-        <button
-          [disabled]="
-            !basicInformationForm.valid || checkBasicInformationChanges()
-          "
-          color="primary"
-          mat-raised-button
-          type="submit"
-          (click)="updateBasicInformation()"
-        >
-          Update
-        </button>
-      </form>
-    </div>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <div class="d-flex flex-column">
-      <h2>Update E-mail</h2>
-      <form
-        #form1="ngForm"
-        class="d-flex flex-column"
-        *ngIf="emailForm"
-        [formGroup]="emailForm"
+      </div>
+      <mat-form-field appearance="fill" [hideRequiredMarker]="true">
+        <mat-label>First Name</mat-label>
+        <input
+          formControlName="first_name"
+          id="fn"
+          matInput
+          placeholder="Enter First Name"
+        />
+        <mat-icon matSuffix> name</mat-icon>
+      </mat-form-field>
+      <div
+        class="validation-container"
+        *ngIf="
+          basicInformationForm.controls['first_name']?.invalid &&
+          basicInformationForm.controls['first_name']?.touched
+        "
       >
-        <mat-form-field appearance="fill">
-          <mat-label>E-mail</mat-label>
-          <input
-            formControlName="email"
-            id="email"
-            matInput
-            placeholder="example@gmail.com"
-            type="email"
-          />
-          <mat-icon matSuffix> email</mat-icon>
-        </mat-form-field>
         <div
-          class="validation-container"
-          *ngIf="
-            emailForm.controls['email']?.invalid &&
-            emailForm.controls['email']?.touched
-          "
+          *ngIf="basicInformationForm.controls['first_name']?.touched 
+                &&basicInformationForm.controls['first_name'].errors?.['required']"
         >
-          <div *ngIf="emailForm.controls['email'].errors?.['pattern']">
-            Enter in the format:name&#64;example.com
-          </div>
-          <div
-            *ngIf="emailForm.controls['email']?.touched &&  emailForm.controls['email'].errors?.['required']"
-          >
-            *Email is required!
-          </div>
+          *first name is required
         </div>
-        <div class="backendError" *ngIf="backendError">
-          {{ backendError }}
+        <div
+          *ngIf="basicInformationForm.controls['first_name'].errors?.['minlength']"
+        >
+          *Name should be minimum 5 characters
         </div>
+        <div
+          *ngIf="basicInformationForm.controls['first_name'].errors?.['maxlength']"
+        >
+          *Name should be maximum 20 characters
+        </div>
+      </div>
+      <mat-form-field appearance="fill" [hideRequiredMarker]="true">
+        <mat-label>Last Name</mat-label>
+        <input
+          formControlName="last_name"
+          id="ln"
+          matInput
+          placeholder="Enter Last Name"
+          type="text"
+        />
+        <mat-icon matSuffix> name</mat-icon>
+      </mat-form-field>
+      <div
+        class="validation-container"
+        *ngIf="
+          basicInformationForm.controls['last_name']?.invalid &&
+          basicInformationForm.controls['last_name']?.touched
+        "
+      >
+        <div
+          *ngIf="basicInformationForm.controls['last_name']?.touched 
+              &&basicInformationForm.controls['last_name'].errors?.['required']"
+        >
+          *last name is required
+        </div>
+        <div
+          *ngIf="basicInformationForm.controls['last_name'].errors?.['minlength']"
+        >
+          *Name should be minimum 5 characters
+        </div>
+        <div
+          *ngIf="basicInformationForm.controls['last_name'].errors?.['maxlength']"
+        >
+          *Name should be maximum 20 characters
+        </div>
+      </div>
+      <mat-form-field>
+        <mat-label>MM/DD/YYYY</mat-label>
+        <input [matDatepicker]="picker" formControlName="birthdate" matInput />
+        <mat-datepicker-toggle
+          [for]="picker"
+          matIconSuffix
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <div
+        class="validation-container"
+        *ngIf="
+          basicInformationForm.controls['birthdate']?.invalid &&
+          basicInformationForm.controls['birthdate']?.touched
+        "
+      >
+        <div>*birthdate is required</div>
+        <div>*example: 1/1/2001</div>
+      </div>
+      <div class="backendError" *ngIf="backendError">
+        {{ backendError }}
+      </div>
+      <button
+        [disabled]="
+          !basicInformationForm.valid || checkBasicInformationChanges()
+        "
+        color="primary"
+        mat-raised-button
+        type="submit"
+        (click)="updateBasicInformation()"
+      >
+        Update
+      </button>
+    </form>
+  </div>
+  <div class="d-flex flex-column" >
+    <h2>
+      Update E-mail
+      <mat-chip selected color="accent">{{
+        currentUser.verified ? "Verified" : "Not Verified"
+      }}</mat-chip>
+    </h2>
+    <form
+      #form1="ngForm"
+      class="d-flex flex-column"
+      *ngIf="emailForm"
+      [formGroup]="emailForm"
+    >
+      <mat-form-field appearance="fill">
+        <mat-label>E-mail</mat-label>
+        <input
+          formControlName="email"
+          id="email"
+          matInput
+          placeholder="example@gmail.com"
+          type="email"
+        />
+        <mat-icon matSuffix> email</mat-icon>
+      </mat-form-field>
+      <div
+        class="validation-container"
+        *ngIf="
+          emailForm.controls['email']?.invalid &&
+          emailForm.controls['email']?.touched
+        "
+      >
+        <div *ngIf="emailForm.controls['email'].errors?.['pattern']">
+          Enter in the format:name&#64;example.com
+        </div>
+        <div
+          *ngIf="emailForm.controls['email']?.touched &&  emailForm.controls['email'].errors?.['required']"
+        >
+          *Email is required!
+        </div>
+      </div>
+      <div class="backendError" *ngIf="backendError">
+        {{ backendError }}
+      </div>
+      <div class="d-flex flex-row align-self-center">
         <button
           [disabled]="
             !emailForm.valid ||
@@ -211,132 +210,141 @@
         >
           Update
         </button>
-      </form>
-    </div>
-  </mat-grid-tile>
-  <mat-grid-tile>
-    <div class="d-flex flex-column">
-      <h2>Update Password</h2>
-      <form
-        #form1="ngForm"
-        class="d-flex flex-column"
-        *ngIf="changePasswordForm"
-        [formGroup]="changePasswordForm"
+        <mat-divider  *ngIf="!currentUser.verified" [vertical]="true"></mat-divider>
+        <button
+        *ngIf="!currentUser.verified"
+          [disabled]="!emailForm.valid"
+          color="primary"
+          mat-raised-button
+          type="submit"
+          (click)="verifyEmail()"
+        >
+          Verify
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="d-flex flex-column" >
+    <h2>Update Password</h2>
+    <form
+      #form1="ngForm"
+      class="d-flex flex-column"
+      *ngIf="changePasswordForm"
+      [formGroup]="changePasswordForm"
+    >
+      <mat-form-field appearance="fill">
+        <mat-label>Current Password</mat-label>
+        <input
+          formControlName="currentPassword"
+          id="currentPassword"
+          matInput
+          placeholder="Enter Current Password"
+          type="password"
+        />
+        <mat-icon matSuffix> password</mat-icon>
+      </mat-form-field>
+      <div
+        class="validation-container"
+        *ngIf="
+          changePasswordForm.controls['currentPassword']?.invalid &&
+          changePasswordForm.controls['currentPassword']?.touched
+        "
       >
-        <mat-form-field appearance="fill">
-          <mat-label>Current Password</mat-label>
-          <input
-            formControlName="currentPassword"
-            id="currentPassword"
-            matInput
-            placeholder="Enter Current Password"
-            type="password"
-          />
-          <mat-icon matSuffix> password</mat-icon>
-        </mat-form-field>
         <div
-          class="validation-container"
-          *ngIf="
-            changePasswordForm.controls['currentPassword']?.invalid &&
-            changePasswordForm.controls['currentPassword']?.touched
-          "
+          *ngIf="changePasswordForm.controls['currentPassword'].errors?.['required']"
         >
-          <div
-            *ngIf="changePasswordForm.controls['currentPassword'].errors?.['required']"
-          >
-            *currentPassword is required
-          </div>
+          *currentPassword is required
         </div>
-        <mat-form-field appearance="fill">
-          <mat-label>New Password</mat-label>
-          <input
-            formControlName="newPassword"
-            id="newPassword"
-            matInput
-            placeholder="Enter Password"
-            type="password"
-          />
-          <mat-icon matSuffix> password</mat-icon>
-        </mat-form-field>
+      </div>
+      <mat-form-field appearance="fill">
+        <mat-label>New Password</mat-label>
+        <input
+          formControlName="newPassword"
+          id="newPassword"
+          matInput
+          placeholder="Enter Password"
+          type="password"
+        />
+        <mat-icon matSuffix> password</mat-icon>
+      </mat-form-field>
+      <div
+        class="validation-container"
+        *ngIf="
+          changePasswordForm.controls['newPassword']?.invalid &&
+          changePasswordForm.controls['newPassword']?.touched
+        "
+      >
         <div
-          class="validation-container"
-          *ngIf="
-            changePasswordForm.controls['newPassword']?.invalid &&
-            changePasswordForm.controls['newPassword']?.touched
-          "
+          *ngIf="changePasswordForm.controls['newPassword'].errors?.['required']"
         >
-          <div
-            *ngIf="changePasswordForm.controls['newPassword'].errors?.['required']"
-          >
-            *password is required
-          </div>
-          <div
-            class="valText1"
-            *ngIf="changePasswordForm.controls['newPassword'].errors?.['minlength']"
-          >
-            *password must be minimum 10 characters
-          </div>
+          *password is required
+        </div>
+        <div
+          class="valText1"
+          *ngIf="changePasswordForm.controls['newPassword'].errors?.['minlength']"
+        >
+          *password must be minimum 10 characters
+        </div>
 
-          <div
-            *ngIf="changePasswordForm.controls['newPassword'].errors?.['passwordStrength']"
-          >
-            *password must have lower case, upper case and numeric characters
-            and symbols.
-          </div>
-        </div>
-        <mat-form-field appearance="fill">
-          <mat-label>Re-enter Password</mat-label>
-          <input
-            formControlName="cNewPassword"
-            id="cNewPassword"
-            matInput
-            placeholder="Re-enter Password"
-            type="password"
-          />
-          <mat-icon matSuffix> password</mat-icon>
-        </mat-form-field>
         <div
-          class="validation-container"
+          *ngIf="changePasswordForm.controls['newPassword'].errors?.['passwordStrength']"
+        >
+          *password must have lower case, upper case and numeric characters and
+          symbols.
+        </div>
+      </div>
+      <mat-form-field appearance="fill">
+        <mat-label>Re-enter Password</mat-label>
+        <input
+          formControlName="cNewPassword"
+          id="cNewPassword"
+          matInput
+          placeholder="Re-enter Password"
+          type="password"
+        />
+        <mat-icon matSuffix> password</mat-icon>
+      </mat-form-field>
+      <div
+        class="validation-container"
+        *ngIf="
+          changePasswordForm.controls['cNewPassword']?.invalid &&
+          changePasswordForm.controls['cNewPassword']?.touched
+        "
+      >
+        <div
+          *ngIf="changePasswordForm.controls['cNewPassword'].errors?.['required']"
+        >
+          *confirm Password is required
+        </div>
+        <div
           *ngIf="
-            changePasswordForm.controls['cNewPassword']?.invalid &&
-            changePasswordForm.controls['cNewPassword']?.touched
+            !changePasswordForm.controls['cNewPassword'].errors ||
+            changePasswordForm.controls['cNewPassword']?.invalid
           "
         >
-          <div
-            *ngIf="changePasswordForm.controls['cNewPassword'].errors?.['required']"
-          >
-            *confirm Password is required
-          </div>
-          <div
-            *ngIf="
-              !changePasswordForm.controls['cNewPassword'].errors ||
-              changePasswordForm.controls['cNewPassword']?.invalid
-            "
-          >
-            *confirm password must match password
-          </div>
+          *confirm password must match password
         </div>
-        <div class="backendError" *ngIf="backendError">
-          {{ backendError }}
-        </div>
-        <div class="d-flex flex-row align-items-center password-btns">
-          <button
-            [disabled]="!changePasswordForm.valid"
-            color="primary"
-            mat-raised-button
-            type="submit"
-            (click)="updatePassword()"
-          >
-            Update
-          </button>
-          <a class="forget-password" (click)="sendForgetPasswordEmail()"
-            >Forget Password?</a
-          >
-        </div>
-      </form>
-    </div>
-  </mat-grid-tile>
-</mat-grid-list>
+      </div>
+      <div class="backendError" *ngIf="backendError">
+        {{ backendError }}
+      </div>
+      <div class="d-flex flex-row align-items-center password-btns">
+        <button
+          [disabled]="!changePasswordForm.valid"
+          color="primary"
+          mat-raised-button
+          type="submit"
+          (click)="updatePassword()"
+        >
+          Update
+        </button>
+        <a class="forget-password" (click)="sendForgetPasswordEmail()"
+          >Forget Password?</a
+        >
+      </div>
+    </form>
+  </div>
+</div>
 
 <ng-template #otpModal>
   <app-modal [modalRef]="modalRef" [title]="'Verify OTP'">

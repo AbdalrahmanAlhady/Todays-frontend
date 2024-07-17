@@ -13,6 +13,7 @@ export interface User {
   media?: Media[];
   birthdate: Date;
   gender: 'male' | 'female';
+  verified:boolean;
   createdAt?:Date;
   updatedAt?:Date;
 }

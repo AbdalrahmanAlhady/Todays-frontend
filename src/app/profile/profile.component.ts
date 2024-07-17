@@ -67,13 +67,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
   listenToViewMedia() {
+    this.subscriptions.add(
     this.shareDataService.$viewMedia.subscribe((res) => {
       if (res.type === 'img') {
         this.viewedImgUrl = res.url;
       } else if (res.type === 'video') {
         this.viewedVideoUrl = res.url;
       }
-    });
+    }));
   }
   viewMedia(type: 'img' | 'video', url: string) {
     this.shareDataService.$viewMedia.next({ type, url });

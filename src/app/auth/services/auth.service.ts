@@ -1,16 +1,17 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { User } from '../../shared/models/user.model';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { EndPoint } from 'src/app/shared/endpoints/EndPoint';
 import { jwtDecode } from 'jwt-decode';
 import { UserService } from 'src/app/shared/services/user.service';
-
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  signedIn: boolean = false;
+  subscriptions = new Subscription();
   public $userAccessToken = new BehaviorSubject<string | null>(
     JSON.parse(localStorage.getItem('accessToken')!)
   );
@@ -18,17 +19,21 @@ export class AuthService {
   public $userRefreshToken = new BehaviorSubject<string | null>(
     JSON.parse(localStorage.getItem('refreshToken')!)
   );
+
   constructor(private http: HttpClient, private injector: Injector) {}
 
-  isUserAuthorized() {
-    return !!this.$userAccessToken.getValue();
-  }
   accessTokenExpiry() {
-    let accessToken = jwtDecode(this.$userAccessToken.getValue()!);
+    let accessToken = jwtDecode(
+      this.$userAccessToken.getValue()! ||
+        JSON.parse(localStorage.getItem('accessToken')!)
+    );
     return Math.floor((accessToken.exp! - Math.floor(Date.now() / 1000)) / 60);
   }
   refreshTokenExpiry() {
-    let refreshToken = jwtDecode(this.$userRefreshToken.getValue()!);
+    let refreshToken = jwtDecode(
+      this.$userRefreshToken.getValue()! ||
+        JSON.parse(localStorage.getItem('refreshToken')!)
+    );
     return Math.floor((refreshToken.exp! - Math.floor(Date.now() / 1000)) / 60);
   }
   signup(user: User) {
@@ -91,13 +96,13 @@ export class AuthService {
       .updateUser(userService.getCurrentUserId(), { online: false })
       .subscribe({
         next: (res) => {
+          this.signedIn = false;
           localStorage.clear();
           window.location.reload();
         },
         error: (err) => {
           console.log(err.error.message);
-          
         },
-      });
+      })
   }
 }

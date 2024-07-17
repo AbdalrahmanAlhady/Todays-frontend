@@ -22,6 +22,7 @@ import { Conversation } from 'src/app/shared/models/conversation.model';
 import { ConversationService } from 'src/app/shared/services/conversation.service';
 import { ShareDataService } from 'src/app/shared/services/share-data.service';
 import { ScrollDirective } from 'src/app/shared/directives/scroll.directive';
+import { LocalStorageService } from 'src/app/shared/services/local-storage.service';
 
 @Component({
   selector: 'app-conversation',
@@ -36,7 +37,6 @@ export class ConversationComponent implements OnInit, OnDestroy {
   socketConnectionData!: Socket<DefaultEventsMap, DefaultEventsMap>;
   currentUser!: User;
   otherUser!: User;
-  isAuth: boolean = false;
   subscriptions = new Subscription();
   messages: Message[] = [];
   newMessage: Message = {
@@ -47,7 +47,8 @@ export class ConversationComponent implements OnInit, OnDestroy {
     receiver_id: '',
   };
   totalMessageCount: number = 0;
-  currentMessagesPage = 0;
+  currentMessagesPage: number = 0;
+  messagesPerPage: number = 5;
   conversationStatusOfCurrentUser: 'minimzed' | 'closed' | 'active' = 'active';
   constructor(
     private authService: AuthService,
@@ -56,11 +57,13 @@ export class ConversationComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private conversationService: ConversationService,
     private shareDataService: ShareDataService,
-    private render: Renderer2
+    private render: Renderer2,
+    private localStorageService: LocalStorageService
   ) {}
 
   ngOnInit(): void {
-    Promise.all([this.getCurrentUser(), this.getMessagesCountOfConversation()])
+    this.getCurrentUser();
+    Promise.all([this.getMessagesCountOfConversation()])
       .then(() => {
         this.getMessagesOfConversation();
         this.determineOtherUser();
@@ -71,58 +74,57 @@ export class ConversationComponent implements OnInit, OnDestroy {
         console.error('An error occurred:', error);
       });
   }
-  getCurrentUser(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.subscriptions.add(
-        this.userService
-          .getUser(this.userService.getCurrentUserId())
-          .subscribe((res) => {
-            this.currentUser = this.userService.spreadUserMedia(res.body!.user);
-            resolve();
-          }, reject)
-      );
-      this.isAuth = this.authService.isUserAuthorized();
-    });
+  getCurrentUser() {
+    this.currentUser = this.userService.spreadUserMedia(
+      this.localStorageService.getItem('user')
+    );
   }
   getMessagesCountOfConversation(): Promise<void> {
     let messagesPerPage = 5;
     return new Promise((resolve, reject) => {
-      this.messageService
-        .countConversationMessages(this.conversation.id!)
-        .subscribe((res) => {
-          this.totalMessageCount = res.body!.messagesCount;
-          this.currentMessagesPage = Math.ceil(
-            this.totalMessageCount / messagesPerPage
-          );
-          resolve(); // Resolve the Promise when the asynchronous operation completes
-        }, reject);
+      this.subscriptions.add(
+        this.messageService
+          .countConversationMessages(this.conversation.id!)
+          .subscribe((res) => {
+            this.totalMessageCount = res.body!.messagesCount;
+            this.currentMessagesPage = Math.ceil(
+              this.totalMessageCount / messagesPerPage
+            );
+            resolve(); // Resolve the Promise when the asynchronous operation completes
+          }, reject)
+      );
     });
   }
   getMessagesOfConversation() {
-    this.messageService
-      .getMessagesOfConversation(
-        this.conversation.id!,
-        this.currentMessagesPage + '',
-        5 + ''
-      )
-      .subscribe((res) => {
-        this.scrollDirective.prepareFor('up');
-        let oldFirstMessage: Message =
-          this.messages[0] || res.body!.messages.rows[0];
-        if (this.messages.length === 0) {
-          this.messages = res.body!.messages.rows;
-        } else {
-          this.messages.unshift(...res.body!.messages.rows);
-          setTimeout(() => this.scrollDirective.restore());
-        }
-        this.currentMessagesPage--;
-      });
+    this.subscriptions.add(
+      this.messageService
+        .getMessagesOfConversation(
+          this.conversation.id!,
+          this.currentMessagesPage + '',
+          this.messagesPerPage + ''
+        )
+        .subscribe((res) => {
+          this.scrollDirective.prepareFor('up');
+          if (this.messages.length === 0) {
+            this.messages = res.body!.messages.rows;
+            if (this.messages.length < this.messagesPerPage) {
+              this.getMessagesOfConversation();
+            }
+          } else {
+            this.messages.unshift(...res.body!.messages.rows);
+            setTimeout(() => this.scrollDirective.restore());
+          }
+          this.currentMessagesPage--;
+        })
+    );
   }
   sendMessage() {
     this.newMessage.conversation_id = this.conversation.id!;
-    this.messageService.sendMessage(this.newMessage).subscribe((res) => {
-      this.messages.push(res.body!.message);
-    });
+    this.subscriptions.add(
+      this.messageService.sendMessage(this.newMessage).subscribe((res) => {
+        this.messages.push(res.body!.message);
+      })
+    );
     this.newMessage.body = '';
   }
   determineOtherUser() {
@@ -133,9 +135,11 @@ export class ConversationComponent implements OnInit, OnDestroy {
     if (this.otherUser) this.newMessage.receiver_id = this.otherUser.id!;
   }
   listenToNewMessage() {
-    this.messageService.$newMessageToConversation.subscribe((message) => {
-      this.messages.push(message);
-    });
+    this.subscriptions.add(
+      this.messageService.$newMessageToConversation.subscribe((message) => {
+        this.messages.push(message);
+      })
+    );
   }
   seenMessages() {
     let seenCount = 0;
@@ -144,23 +148,22 @@ export class ConversationComponent implements OnInit, OnDestroy {
         message.receiver_id === this.currentUser.id &&
         message.seen === false
       ) {
-        this.messageService
-          .seenMessages(message.id!, message.sender_id)
-          .subscribe((res) => {
-            if (res.body?.message === 'updated') {
-              message.seen = true;
-              seenCount++;
-            }
-          });
+        this.subscriptions.add(
+          this.messageService
+            .seenMessages(message.id!, message.sender_id)
+            .subscribe((res) => {
+              if (res.body?.message === 'updated') {
+                message.seen = true;
+                seenCount++;
+              }
+            })
+        );
       }
     });
     this.shareDataService.$userSeenMessage.next({
       sender_id: this.otherUser.id!,
       count: seenCount,
     });
-  }
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
   }
   changeConversationStatus(action: 'minimzed' | 'closed' | 'active') {
     let first_user_status = this.conversation.first_user_status;
@@ -171,24 +174,25 @@ export class ConversationComponent implements OnInit, OnDestroy {
       second_user_status = action;
     }
     this.conversationStatusOfCurrentUser = action;
-
-    this.conversationService
-      .updateConversation(
-        this.conversation.id!,
-        first_user_status,
-        second_user_status
-      )
-      .subscribe((res) => {
-        if (res.body?.message === 'updated') {
-          this.conversation.first_user_status = first_user_status;
-          this.conversation.second_user_status = second_user_status;
-          if (action === 'closed') {
-            this.conversationService.$closeConversation.next(
-              this.conversation.id!
-            );
+    this.subscriptions.add(
+      this.conversationService
+        .updateConversation(
+          this.conversation.id!,
+          first_user_status,
+          second_user_status
+        )
+        .subscribe((res) => {
+          if (res.body?.message === 'updated') {
+            this.conversation.first_user_status = first_user_status;
+            this.conversation.second_user_status = second_user_status;
+            if (action === 'closed') {
+              this.conversationService.$closeConversation.next(
+                this.conversation.id!
+              );
+            }
           }
-        }
-      });
+        })
+    );
   }
   listenToSeenMessage() {
     this.socketService.socket.on('seen-message', (message_id: string) => {
@@ -201,5 +205,8 @@ export class ConversationComponent implements OnInit, OnDestroy {
   }
   onScroll() {
     console.log('s');
+  }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }

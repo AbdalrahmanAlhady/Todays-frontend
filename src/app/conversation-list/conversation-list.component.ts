@@ -8,6 +8,7 @@ import { ConversationService } from '../shared/services/conversation.service';
 import { Message } from '../shared/models/message.model';
 import { MessageService } from '../shared/services/message.service';
 import { ShareDataService } from '../shared/services/share-data.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-conversation-list',
@@ -19,6 +20,7 @@ export class ConversationListComponent implements OnInit, OnDestroy {
   conversations: Conversation[] = [];
   openedConversations: Map<string, Conversation> = new Map();
   unseenMessagesPerUserConversation: Map<string, number> = new Map();
+  subscriptions = new Subscription();
   constructor(
     private socketService: SocketService,
     private conversationService: ConversationService,
@@ -27,6 +29,7 @@ export class ConversationListComponent implements OnInit, OnDestroy {
     private shareDataService: ShareDataService
   ) {}
   ngOnInit(): void {
+    this.subscriptions.add(
     this.socketService.$socketConnected.subscribe((socketConnected) => {
       if (socketConnected) {
         Promise.all([
@@ -42,12 +45,13 @@ export class ConversationListComponent implements OnInit, OnDestroy {
             console.error('An error occurred:', error);
           });
       }
-    });
+    }));
   }
   getOnlineFriends(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.socketService.ListenToOnlineFriends();
       this.socketService.getOnlineFriends();
+      this.subscriptions.add(
       this.socketService.$onlineFriendsList.subscribe((userList) => {
         this.onlineFriendsList = userList;
         this.onlineFriendsList.forEach((friend) => {
@@ -55,18 +59,19 @@ export class ConversationListComponent implements OnInit, OnDestroy {
           this.calcUnseenMessages(friend);
         });
         resolve();
-      }, reject);
+      }, reject))
     });
   }
 
   getConversationsOfCurrentUser(): Promise<void> {
     return new Promise((resolve, reject) => {
+      this.subscriptions.add(
       this.conversationService
         .getConversationsOfUser(this.userService.getCurrentUserId())
         .subscribe((res) => {
           this.conversations = res.body!.conversations.rows;
           resolve();
-        }, reject);
+        }, reject))
     });
   }
 
@@ -81,6 +86,7 @@ export class ConversationListComponent implements OnInit, OnDestroy {
     if (foundConversation) {
       this.changeConversationStatus(foundConversation, 'active');
     } else if (!foundConversation) {
+      this.subscriptions.add(
       this.conversationService
         .createConversation(
           this.userService.getCurrentUserId(),
@@ -94,7 +100,7 @@ export class ConversationListComponent implements OnInit, OnDestroy {
             res.body!.conversation.id!,
             res.body!.conversation!
           );
-        });
+        }))
     }
   }
   changeConversationStatus(
@@ -108,6 +114,7 @@ export class ConversationListComponent implements OnInit, OnDestroy {
     } else {
       second_user_status = action;
     }
+    this.subscriptions.add(
     this.conversationService
       .updateConversation(
         conversation.id!,
@@ -124,7 +131,7 @@ export class ConversationListComponent implements OnInit, OnDestroy {
             this.openedConversations.set(conversation.id!, conversation);
           }
         }
-      });
+      }));
   }
   calcUnseenMessages(onlineFriend: User) {
     this.conversations.forEach((conversation) => {
@@ -132,6 +139,7 @@ export class ConversationListComponent implements OnInit, OnDestroy {
         conversation.first_user_id === onlineFriend.id ||
         conversation.second_user_id === onlineFriend.id
       ) {
+        this.subscriptions.add(
         this.conversationService
           .getUnseenMessages(
             conversation.id!,
@@ -142,7 +150,7 @@ export class ConversationListComponent implements OnInit, OnDestroy {
               onlineFriend.id!,
               res.body!.messages.count
             );
-          });
+          }));
       }
     });
   }
@@ -153,14 +161,18 @@ export class ConversationListComponent implements OnInit, OnDestroy {
     });
   }
   listenToCloseConversation() {
+    this.subscriptions.add(
     this.conversationService.$closeConversation.subscribe((conversation_id) => {
       this.openedConversations.delete(conversation_id);
-    });
+    }));
   }
   listenToUpdateUnseenCount() {
+    this.subscriptions.add(
     this.shareDataService.$userSeenMessage.subscribe((res) => {
       this.unseenMessagesPerUserConversation.set(res.sender_id, res.count);
-    });
+    }));
   }
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 }

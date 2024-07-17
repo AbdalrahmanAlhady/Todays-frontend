@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ShareDataService } from 'src/app/shared/services/share-data.service';
+import { LocalStorageService } from 'src/app/shared/services/local-storage.service';
+import { UserService } from 'src/app/shared/services/user.service';
 
 @Component({
   selector: 'app-signin',
@@ -55,11 +57,11 @@ export class SigninComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     private modalService: BsModalService,
-    private shareDataService: ShareDataService
+    private shareDataService: ShareDataService,
+    private localStorageService: LocalStorageService,
+    private userService: UserService
   ) {}
-  ngOnInit(): void {
-   
-  }
+  ngOnInit(): void {}
 
   switchToSignup() {
     this.router.navigate(['/signup']);
@@ -69,19 +71,24 @@ export class SigninComponent implements OnInit, OnDestroy {
       this.authService.signin(formData.email, formData.password).subscribe({
         next: (res) => {
           if (res.body?.accessToken && res.body?.refreshToken) {
-            localStorage.setItem(
+            this.localStorageService.setItem(
               'accessToken',
-              JSON.stringify(res.body.accessToken!)!
+              res.body.accessToken!
             );
-            localStorage.setItem(
+            this.localStorageService.setItem(
               'refreshToken',
-              JSON.stringify(res.body.refreshToken!)!
+              res.body.refreshToken
+            );
+            this.localStorageService.setItem(
+              'user',
+              this.userService.spreadUserMedia(res.body.user)
             );
             this.authService.$userAccessToken.next(res.body?.accessToken);
+            this.authService.signedIn = true;
             this.router.navigate(['/']);
           }
         },
-        error: (error) => {          
+        error: (error) => {
           this.backendError = error.message;
         },
       })
@@ -89,10 +96,12 @@ export class SigninComponent implements OnInit, OnDestroy {
   }
 
   sendForgetPasswordEmail() {
+    this.subscriptions.add(
     this.authService.sendOTP(this.forgetPasswordForm.value.email!).subscribe({
       next: (res) => {
         if (res.status === 200) {
-          this.modalRef =this.modalService.show(this.otpModal);
+          this.modalRef = this.modalService.show(this.otpModal);
+          this.subscriptions.add(
           this.shareDataService.$informationUpdated.subscribe((res) => {
             if (res) {
               this.modalRef?.hide();
@@ -102,13 +111,13 @@ export class SigninComponent implements OnInit, OnDestroy {
                 window.location.reload();
               }, 2000);
             }
-          });
+          }))
         }
       },
       error: (err) => {
         this.backendError = err.error.message;
       },
-    });
+    }))
   }
   ngOnDestroy() {
     this.subscriptions.unsubscribe();

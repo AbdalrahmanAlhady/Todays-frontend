@@ -17,7 +17,7 @@ class PermissionsService {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {     
-    if (this.authService.isUserAuthorized()) {
+    if (this.authService.$userAccessToken.getValue()) {
       return true;
     } else {
       this.router.navigate(['/signin']);

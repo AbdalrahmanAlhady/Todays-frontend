@@ -6,11 +6,13 @@ import { AuthService } from '../../auth/services/auth.service';
 import { Router } from '@angular/router';
 import { EndPoint } from '../endpoints/EndPoint';
 import { Friendship } from '../models/friendship.model';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
+  $currentUser = new Subject<User>();
   constructor(
     private authService: AuthService,
     private http: HttpClient,
@@ -82,13 +84,17 @@ export class UserService {
       { observe: 'response' }
     );
   }
-  spreadUserMedia( userContainsMedia: User) {
-    const coverMedia = userContainsMedia.media?.find(media => media.for === 'cover');
+  spreadUserMedia(userContainsMedia: User) {
+    const coverMedia = userContainsMedia.media?.find(
+      (media) => media.for === 'cover'
+    );
     userContainsMedia.profileCoverImg = coverMedia ? coverMedia.url : undefined;
-  
-    const profileMedia = userContainsMedia.media?.find(media => media.for === 'profile');
+
+    const profileMedia = userContainsMedia.media?.find(
+      (media) => media.for === 'profile'
+    );
     userContainsMedia.profileImg = profileMedia ? profileMedia.url : undefined;
-  let {media,...user} = userContainsMedia
+    let { media, ...user } = userContainsMedia;
     return user;
   }
 }

@@ -27,7 +27,7 @@
       >
         <mat-icon>image</mat-icon>View Image
       </button>
-      <button mat-menu-item (click)="coverInput.click()">
+      <button mat-menu-item (click)="coverInput.click()" *ngIf="sameUser">
         <input
           class="file-input"
           type="file"
@@ -69,7 +69,7 @@
         >
           <mat-icon>image</mat-icon>View Image
         </button>
-        <button mat-button (click)="imageInput.click()">
+        <button mat-button (click)="imageInput.click()" *ngIf="sameUser">
           <input
             class="file-input"
             type="file"

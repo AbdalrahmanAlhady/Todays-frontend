@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthService } from 'src/app/auth/services/auth.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { Comment } from '../models/comment.model';
 import { Subject } from 'rxjs';
 import { EndPoint } from '../endpoints/EndPoint';

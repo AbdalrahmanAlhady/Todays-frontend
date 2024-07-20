@@ -5,7 +5,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { AuthService } from '../auth/services/auth.service';
+import { AuthService } from '../shared/services/auth.service';
 import { User } from '../shared/models/user.model';
 import { PostsService } from '../shared/services/posts.service';
 import { Post } from '../shared/models/post.model';
@@ -58,6 +58,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.profileOwner = this.userService.spreadUserMedia(res.body!.user);
           this.sameUser =
             this.profileOwner.id === this.userService.getCurrentUserId();
+            console.log(this.sameUser);
+            
           this.getFirstPageOfPostsOfProfileOwner();
           this.checkFriendshipStatus(); 
           this.listenToNewUserPosts();

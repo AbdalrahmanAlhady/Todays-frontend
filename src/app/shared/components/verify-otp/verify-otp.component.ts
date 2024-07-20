@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Subscription, timeout } from 'rxjs';
 import { ShareDataService } from '../../services/share-data.service';
-import { AuthService } from 'src/app/auth/services/auth.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CustomvalidationService } from 'src/app/auth/services/customvalidation.service';
 

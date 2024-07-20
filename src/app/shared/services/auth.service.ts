@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
-import { User } from '../../shared/models/user.model';
+import { User } from '../models/user.model';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { EndPoint } from 'src/app/shared/endpoints/EndPoint';
 import { jwtDecode } from 'jwt-decode';
@@ -90,19 +90,25 @@ export class AuthService {
       { observe: 'response' }
     );
   }
-  signout() {
-    const userService = this.injector.get<UserService>(UserService);
-    userService
-      .updateUser(userService.getCurrentUserId(), { online: false })
+  signout(user_id: string) {
+    this.http
+      .post<{message: string }>(
+        `${EndPoint.API_ROOT}/${EndPoint.AUTH_API.Signout}/${user_id}`,
+        {},
+        { observe: 'response', headers: { skip: 'true' } }
+      )
       .subscribe({
         next: (res) => {
-          this.signedIn = false;
-          localStorage.clear();
-          window.location.reload();
+          if (res.body?.message === 'user signed out') {
+            
+            this.signedIn = false;
+            localStorage.clear();
+            window.location.reload();
+          }
         },
         error: (err) => {
           console.log(err.error.message);
         },
-      })
+      });
   }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { User } from '../models/user.model';
-import { AuthService } from '../../auth/services/auth.service';
+import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { EndPoint } from '../endpoints/EndPoint';
 import { Friendship } from '../models/friendship.model';

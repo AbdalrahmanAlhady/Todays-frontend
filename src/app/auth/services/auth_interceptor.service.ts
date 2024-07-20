@@ -5,14 +5,16 @@ import {
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
-import { AuthService } from './auth.service';
+import { AuthService } from '../../shared/services/auth.service';
 import { switchMap } from 'rxjs';
+import { LocalStorageService } from 'src/app/shared/services/local-storage.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,private localStorageService:LocalStorageService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {  
+    const user = this.localStorageService.getItem('user');
     // If the request header contains 'skip', bypass the interceptor
     if (req.headers.get('skip')) {
       return next.handle(req);
@@ -24,7 +26,7 @@ export class AuthInterceptor implements HttpInterceptor {
       const accessTokenExpiry = this.authService.accessTokenExpiry();
       // If the refresh token is about to expire, sign out the user
       if (refreshTokenExpiry <= 10) {
-        this.authService.signout();
+        this.authService.signout(user.id);
       } 
       // If the access token is about to expire, refresh it
       else if (accessTokenExpiry <= 1) {

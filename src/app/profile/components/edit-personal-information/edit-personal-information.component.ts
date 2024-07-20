@@ -10,7 +10,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs';
-import { AuthService } from 'src/app/auth/services/auth.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { CustomvalidationService } from 'src/app/auth/services/customvalidation.service';
 import { User } from 'src/app/shared/models/user.model';
 import { ShareDataService } from 'src/app/shared/services/share-data.service';

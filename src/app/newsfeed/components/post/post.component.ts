@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { AuthService } from 'src/app/auth/services/auth.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { Post } from 'src/app/shared/models/post.model';
 import { CommentsService } from 'src/app/shared/services/comments.service';
 import { PostsService } from 'src/app/shared/services/posts.service';
@@ -153,7 +153,6 @@ export class PostComponent implements OnInit, OnDestroy {
           this.post.likes = res.body?.newPostLikes!;
           this.countLikes();
           this.postLikedByCurrentUser = false;
-          console.log(this.post.likes);
         })
       );
     } else {

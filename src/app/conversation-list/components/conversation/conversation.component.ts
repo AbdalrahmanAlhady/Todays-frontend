@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Socket } from 'socket.io-client';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
-import { AuthService } from '../../../auth/services/auth.service';
+import { AuthService } from '../../../shared/services/auth.service';
 import { count, Subscription } from 'rxjs';
 import { SocketService } from '../../../shared/services/socket.service';
 import { Message } from '../../../shared/models/message.model';

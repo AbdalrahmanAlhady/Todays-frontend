@@ -6,6 +6,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs';
 import { Friendship } from 'src/app/shared/models/friendship.model';
@@ -38,7 +39,8 @@ export class SideSectionComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
     private mediaUploadService: MediaUploadService,
     private shareDataService: ShareDataService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
   ngOnInit(): void {
     if (this.title === 'Media' && this.profileOwner) {
@@ -69,7 +71,7 @@ export class SideSectionComponent implements OnInit, OnDestroy {
         .subscribe((res) => {
           this.friendships = res.body!.friendships.rows;
           this.friendships.forEach((friendship) => {
-            if (friendship.receiver !== this.profileOwner.id) {
+            if (friendship.receiver?.id !== this.profileOwner.id) {
               friendship.receiver = this.userService.spreadUserMedia(
                 friendship.receiver!
               );
@@ -201,6 +203,12 @@ export class SideSectionComponent implements OnInit, OnDestroy {
         }
       })
     );
+  }
+  goToFriendProfile(id: string) {
+    this.router.navigate(['/profile', id]);
+   setTimeout(() => {
+     window.location.reload();
+   },100)
   }
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();

@@ -1,4 +1,4 @@
-<div class="col-5 media">
+<div class="col-5">
   <div class="d-flex flex-row justify-content-between">
     <span class="title">{{ title }}</span>
     <button
@@ -18,7 +18,7 @@
   </div>
   <mat-grid-list
     cols="3"
-    rowHeight="1:1"
+    rowHeight="1:1.5"
     *ngIf="
       title === 'Media'
         ? media && media.length > 0
@@ -64,7 +64,7 @@
       >
         <a
           *ngIf="friend"
-          routerLink="/profile/{{ friend.id }}"
+          (click)="goToFriendProfile(friend.id!)"
           class="user-container"
         >
           <img
@@ -112,9 +112,7 @@
 <!-- show all modal content -->
 <ng-template #showAllModal>
   <app-modal [modalRef]="modalRef" [title]="title">
-    <div
-      class="col-5 media"
-    >
+    <div class="col-5">
       <mat-grid-list
         cols="3"
         rowHeight="1:1"

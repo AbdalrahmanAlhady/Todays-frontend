@@ -1,5 +1,5 @@
 import { Component, DoCheck, OnDestroy, OnInit } from '@angular/core';
-import { AuthService } from '../auth/services/auth.service';
+import { AuthService } from '../shared/services/auth.service';
 import { User } from '../shared/models/user.model';
 import { Notification } from '../shared/models/notification.model';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -24,7 +24,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   notifications: Notification[] = [];
   unseenNotificationsCount: number = 0;
   subscriptions = new Subscription();
-
+  currentPage: number = 1;
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -66,14 +66,21 @@ export class NavbarComponent implements OnInit, OnDestroy {
   trackByFn(idx: number, item: any) {
     return item.id;
   }
-  getUserNotification() {
-    this.subscriptions.add(
+  getUserNotification() {    
+    this.subscriptions.add( 
       this.notificationService
-        .getUserNotification(this.userService.getCurrentUserId())
+        .getUserNotification(
+          this.userService.getCurrentUserId(),
+          this.currentPage + '',
+          '5'
+        )
         .subscribe((res) => {
-          this.notifications = res.body!.notifications!.rows!;
-          console.log(this.notifications);
-          
+          if (this.notifications.length === 0) {
+            this.notifications = res.body!.notifications!.rows!;
+          } else {
+            this.notifications.push(...res.body!.notifications!.rows!);
+          }
+          this.currentPage++;
           this.countUnseenNotifications();
         })
     );
@@ -90,22 +97,25 @@ export class NavbarComponent implements OnInit, OnDestroy {
     if (this.unseenNotificationsCount > 0) {
       this.notifications.forEach((notification) => {
         this.subscriptions.add(
-        this.notificationService.seenNotification(notification.id!).subscribe({
-          next: (res) => {
-            if (res.body?.message === 'notification updated') {
-              notification.seen = true;
-              this.unseenNotificationsCount--;
-            }
-          },
-          error: (err) => {
-            console.log(err);
-          },
-        }));
+          this.notificationService
+            .seenNotification(notification.id!)
+            .subscribe({
+              next: (res) => {
+                if (res.body?.message === 'notification updated') {
+                  notification.seen = true;
+                  this.unseenNotificationsCount--;
+                }
+              },
+              error: (err) => {
+                console.log(err);
+              },
+            })
+        );
       });
     }
   }
   signout() {
-    this.authService.signout();
+    this.authService.signout(this.user.id!);
   }
   ngOnDestroy() {
     this.subscriptions.unsubscribe();

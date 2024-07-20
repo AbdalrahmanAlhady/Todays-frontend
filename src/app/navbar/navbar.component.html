@@ -15,10 +15,19 @@
         yPosition="above"
         xPosition="before"
       >
-        <app-notification
-          *ngFor="let notification of notifications; trackBy: trackByFn"
-          [notification]="notification"
-        ></app-notification>
+        <div
+          infiniteScroll
+          [infiniteScrollDistance]="1"
+          [infiniteScrollThrottle]="500"
+          [scrollWindow]="false"
+          (scrolled)="getUserNotification()"
+          style="height: 200px; overflow-y:scroll ;"
+        >
+          <app-notification
+            *ngFor="let notification of notifications; trackBy: trackByFn"
+            [notification]="notification"
+          ></app-notification>
+        </div>
       </mat-menu>
     </button>
     <mat-divider class="divider-right" [vertical]="true"></mat-divider>

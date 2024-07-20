@@ -32,7 +32,6 @@ a {
 
 mat-divider {
     border: 1px white solid;
-    margin-right: 15px;
     min-height: 40px
 }
 .divider-left {

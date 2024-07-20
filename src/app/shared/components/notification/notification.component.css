@@ -7,9 +7,12 @@
 
 .notification {
   background-color: #016d81d4;
-  margin: 5px;
-  padding: 10px;
+  margin: 10px;
+  padding: 15px;
   border-radius: 5px;
+}
+.btns-container{
+margin-top: 10px;
 }
 
 a {

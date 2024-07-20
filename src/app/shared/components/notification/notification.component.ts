@@ -21,7 +21,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
     private userService: UserService,
   ) {}
   ngOnInit() {
-    this.sender = this.notification.sender!;
+    this.sender =this.userService.spreadUserMedia(this.notification.sender!);
   }
 
   goToComment() {

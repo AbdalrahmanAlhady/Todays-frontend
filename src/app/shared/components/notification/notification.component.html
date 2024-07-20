@@ -17,8 +17,7 @@
         *ngIf="!sender.profileImg"
       ></i>
     </a>
-    <p class="message">
-      {{ notification.message }}
+    <p class="message" [innerHTML]="notification.message">
     </p>
   </div>
 

@@ -14,5 +14,6 @@ export class ShareDataService {
   $informationUpdated = new Subject<boolean>();
   $viewMedia = new Subject<{type:'img' | 'video', url:string}>();
   $userSeenMessage = new Subject<{sender_id:string,count:number}>();
+  $deleteNotification = new Subject<string>();
   constructor() { }
 }

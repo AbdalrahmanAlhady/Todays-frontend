@@ -60,7 +60,7 @@
       ></app-empty-cover>
     </div>
     <div class="profile-info align-items-center d-flex flex-row">
-      <mat-menu #imageMenu="matMenu">
+      <mat-menu #imageMenu="matMenu" >
         <!-- option to upload profile image or view -->
         <button
           mat-menu-item
@@ -133,9 +133,6 @@
               ? "friends"
               : viewerOwnerFriendshipStatus
           }}
-        </button>
-        <button mat-raised-button *ngIf="!sameUser">
-          <mat-icon>chat</mat-icon>message
         </button>
         <button
           mat-raised-button

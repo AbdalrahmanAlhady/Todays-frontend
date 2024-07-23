@@ -14,6 +14,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ShareDataService } from 'src/app/shared/services/share-data.service';
 import { LocalStorageService } from 'src/app/shared/services/local-storage.service';
 import { UserService } from 'src/app/shared/services/user.service';
+import { SocketService } from 'src/app/shared/services/socket.service';
 
 @Component({
   selector: 'app-signin',
@@ -59,9 +60,11 @@ export class SigninComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
     private shareDataService: ShareDataService,
     private localStorageService: LocalStorageService,
-    private userService: UserService
+    private userService: UserService,
+    private socketService: SocketService
   ) {}
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   switchToSignup() {
     this.router.navigate(['/signup']);
@@ -85,11 +88,12 @@ export class SigninComponent implements OnInit, OnDestroy {
             );
             this.authService.$userAccessToken.next(res.body?.accessToken);
             this.authService.signedIn = true;
+            this.socketService.connectToSockets();
             this.router.navigate(['/']);
           }
         },
-        error: (error) => {
-          this.backendError = error.message;
+        error: (error) => {          
+          this.backendError = error.error.message;
         },
       })
     );

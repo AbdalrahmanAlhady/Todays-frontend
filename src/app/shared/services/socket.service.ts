@@ -4,6 +4,8 @@ import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { UserService } from './user.service';
 import { User } from '../models/user.model';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { de } from 'timeago.js/lib/lang';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +15,20 @@ export class SocketService {
   socketConnectionData!: Socket<DefaultEventsMap, DefaultEventsMap>;
   $onlineFriendsList = new Subject<User[]>();
   $socketConnected = new BehaviorSubject<boolean>(false);
-  constructor(private userService: UserService) {
-    this.connectToSockets();
+  constructor(private userService: UserService, private router: Router) {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        if (
+          event.url === '/signup' ||
+          event.url === '/signin' ||
+          event.url === ''
+        ) {
+          return;
+        } else {
+          this.connectToSockets();
+        }
+      }
+    });
   }
   connectToSockets() {
     if (!this.$socketConnected.getValue()) {
@@ -37,5 +51,8 @@ export class SocketService {
       'get-online-friends',
       this.userService.getCurrentUserId()
     );
+  }
+  disconnect() {
+    this.socket.disconnect();
   }
 }

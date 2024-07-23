@@ -110,7 +110,7 @@ export class CreateCommentComponent implements OnInit, OnDestroy {
       this.mediaToDisplay = undefined;
       this.mediaUrlToDisplay = { displayUrl: null, fileType: '' };
       this.percentage = NaN;
-    }, 2000);
+    }, 500);
   }
 
   ngOnDestroy() {

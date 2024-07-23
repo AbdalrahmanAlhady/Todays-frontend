@@ -21,7 +21,7 @@
           [infiniteScrollThrottle]="500"
           [scrollWindow]="false"
           (scrolled)="getUserNotification()"
-          style="height: 200px; overflow-y:scroll ;"
+          class="notifications-container"
         >
           <app-notification
             *ngFor="let notification of notifications; trackBy: trackByFn"
@@ -31,7 +31,7 @@
       </mat-menu>
     </button>
     <mat-divider class="divider-right" [vertical]="true"></mat-divider>
-    <a *ngIf="user" routerLink="/profile/{{ user.id }}">
+    <a *ngIf="user" (click)="goToProfile(user.id!)">
       <img
         class="user-profile-img"
         [src]="user.profileImg"

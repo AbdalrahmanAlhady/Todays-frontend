@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { NotificationService } from '../../services/notification.service';
 import { UserService } from '../../services/user.service';
 import {Subscription} from "rxjs";
+import { ShareDataService } from '../../services/share-data.service';
 
 @Component({
   selector: 'app-notification',
@@ -19,6 +20,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
     private router: Router,
     private notificationService: NotificationService,
     private userService: UserService,
+    private shareDataService: ShareDataService
   ) {}
   ngOnInit() {
     this.sender =this.userService.spreadUserMedia(this.notification.sender!);
@@ -39,7 +41,11 @@ export class NotificationComponent implements OnInit, OnDestroy {
           this.notification.sender_id,
           this.notification.receiver_id,
         )
-        .subscribe((res) => {}),
+        .subscribe((res) => {
+          if (res.body?.message === 'accepted') {
+          this.shareDataService.$deleteNotification.next(this.notification.id!);
+          }
+        }),
     );
   }
   declineFriendship() {
@@ -49,7 +55,11 @@ export class NotificationComponent implements OnInit, OnDestroy {
           this.notification.sender_id,
           this.notification.receiver_id,
         )
-        .subscribe((res) => {}),
+        .subscribe((res) => {
+          if (res.body?.message === 'declined') {
+            this.shareDataService.$deleteNotification.next(this.notification.id!);
+            }
+        }),
     );
   }
   ngOnDestroy() {

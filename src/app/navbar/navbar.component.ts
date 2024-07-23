@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { user } from '@angular/fire/auth';
 import { SocketService } from '../shared/services/socket.service';
 import { LocalStorageService } from '../shared/services/local-storage.service';
+import { ShareDataService } from '../shared/services/share-data.service';
 
 @Component({
   selector: 'app-navbar',
@@ -31,7 +32,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private notificationService: NotificationService,
     private socketService: SocketService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private shareDataService: ShareDataService
   ) {}
 
   ngOnInit(): void {
@@ -50,6 +52,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
             );
             this.listenToNotification();
             this.getUserNotification();
+            this.shareDataService.$deleteNotification.subscribe((id) => {
+              this.notifications = this.notifications.filter(
+                (notification) => notification.id !== id
+              );
+            });
           }
         }
       }
@@ -58,7 +65,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   listenToNotification() {
     this.socketService.socket.on('notify', (notification: Notification) => {
-      this.notifications.push(notification);
+      this.notifications.unshift(notification);
       this.unseenNotificationsCount++;
     });
   }
@@ -66,8 +73,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   trackByFn(idx: number, item: any) {
     return item.id;
   }
-  getUserNotification() {    
-    this.subscriptions.add( 
+  getUserNotification() {
+    this.subscriptions.add(
       this.notificationService
         .getUserNotification(
           this.userService.getCurrentUserId(),
@@ -103,7 +110,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
               next: (res) => {
                 if (res.body?.message === 'notification updated') {
                   notification.seen = true;
-                  this.unseenNotificationsCount--;
+                  if (this.unseenNotificationsCount > 0)
+                    this.unseenNotificationsCount--;
                 }
               },
               error: (err) => {
@@ -114,7 +122,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
       });
     }
   }
+  goToProfile(id: string) {
+    this.router.navigate(['/profile', id]);
+    if (this.router.url.includes('/profile/')) {
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+    }
+  }
   signout() {
+    this.socketService.disconnect();
     this.authService.signout(this.user.id!);
   }
   ngOnDestroy() {

@@ -96,42 +96,51 @@ export class ConversationComponent implements OnInit, OnDestroy {
     });
   }
   getMessagesOfConversation() {
-    this.subscriptions.add(
-      this.messageService
-        .getMessagesOfConversation(
-          this.conversation.id!,
-          this.currentMessagesPage + '',
-          this.messagesPerPage + ''
-        )
-        .subscribe((res) => {
-          this.scrollDirective.prepareFor('up');
-          if (this.messages.length === 0) {
-            this.messages = res.body!.messages.rows;
-            if (this.messages.length < this.messagesPerPage) {
+    if (this.currentMessagesPage > 0) {
+      this.subscriptions.add(
+        this.messageService
+          .getMessagesOfConversation(
+            this.conversation.id!,
+            this.currentMessagesPage + '',
+            this.messagesPerPage + ''
+          )
+          .subscribe((res) => {
+            this.scrollDirective.prepareFor('up');
+            this.messages.unshift(...res.body!.messages.rows);
+            this.currentMessagesPage--;
+            if (
+              this.messages.length < this.messagesPerPage &&
+              this.currentMessagesPage > 0
+            ) {
               this.getMessagesOfConversation();
             }
-          } else {
-            this.messages.unshift(...res.body!.messages.rows);
             setTimeout(() => this.scrollDirective.restore());
-          }
-          this.currentMessagesPage--;
-        })
-    );
+          })
+      );
+    }
   }
   sendMessage() {
     this.newMessage.conversation_id = this.conversation.id!;
     this.subscriptions.add(
       this.messageService.sendMessage(this.newMessage).subscribe((res) => {
+        setTimeout(() => this.scrollDirective.reset());
         this.messages.push(res.body!.message);
       })
     );
     this.newMessage.body = '';
   }
   determineOtherUser() {
+    this.conversation.first_user = this.userService.spreadUserMedia(
+      this.conversation.first_user!
+    );
+    this.conversation.second_user = this.userService.spreadUserMedia(
+      this.conversation.second_user!
+    );
     this.otherUser =
-      this.conversation.first_user_id === this.userService.getCurrentUserId()
+      this.conversation.first_user?.id == this.currentUser.id
         ? this.conversation.second_user!
         : this.conversation.first_user!;
+    debugger;
     if (this.otherUser) this.newMessage.receiver_id = this.otherUser.id!;
   }
   listenToNewMessage() {

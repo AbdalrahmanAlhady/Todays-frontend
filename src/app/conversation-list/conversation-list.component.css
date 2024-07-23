@@ -6,7 +6,6 @@ p {
 
 .online-user-list {
     padding: 15px;
-    height: 100%;
     overflow-y: auto;
 }
 
@@ -67,7 +66,9 @@ a {
 }
 
 .bi-person-circle {
-    color: #016d81d4
+    color: #016d81d4;
+    font-size: 50px;
+    margin-right: 10px;
 }
 .user-status{
     color: #05e705; font-weight: 500

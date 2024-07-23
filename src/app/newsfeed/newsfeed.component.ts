@@ -27,7 +27,7 @@ export class NewsfeedComponent implements OnInit, OnDestroy {
     );
     this.subscriptions.add(
       this.postsService.$newPost.subscribe((post) => {
-        this.posts.push(post);
+        this.posts.unshift(post);
       })
     );
   }
